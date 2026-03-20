@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "ecount-erp": {
+      "command": "node",
+      "args": ["/absolute/path/to/astrosECOUNT/build/index.js"],
+      "env": {
+        "ECOUNT_COM_CODE": "회사코드",
+        "ECOUNT_USER_ID": "사용자ID",
+        "ECOUNT_API_CERT_KEY": "API인증키",
+        "ECOUNT_ZONE": "AU1",
+        "ECOUNT_LAN_TYPE": "ko-KR"
+      }
+    }
+  }
+}
