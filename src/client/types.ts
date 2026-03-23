@@ -4,7 +4,7 @@ export interface EcountError {
 }
 
 export interface EcountResponse<T> {
-  Status: string;
+  Status: number | string;
   Error: EcountError | null;
   Data: T;
 }
@@ -13,6 +13,16 @@ export interface EcountListData<T> {
   Result: T[];
   TotalCount: number;
   PageCount: number;
+}
+
+export interface EcountLoginData {
+  Code: string;
+  Datas: {
+    SESSION_ID: string;
+    HOST_URL: string;
+    COM_CODE: string;
+    USER_ID: string;
+  };
 }
 
 export interface SessionInfo {

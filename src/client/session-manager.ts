@@ -1,7 +1,7 @@
 import { logger } from "../utils/logger.js";
 import { NetworkError, EcountApiError } from "../utils/error-handler.js";
 import type { EcountConfig } from "../config.js";
-import type { EcountResponse, SessionInfo } from "./types.js";
+import type { EcountResponse, EcountLoginData } from "./types.js";
 
 // Session expiry error codes (to be confirmed in Phase 2.5)
 const SESSION_EXPIRED_CODES = ["SESSION_EXPIRED", "INVALID_SESSION", "-1"];
@@ -52,15 +52,16 @@ export class SessionManager {
       );
     }
 
-    const data = (await response.json()) as EcountResponse<SessionInfo>;
+    const data = (await response.json()) as EcountResponse<EcountLoginData>;
+    const status = Number(data.Status);
 
-    if (data.Status !== "200" || data.Error) {
+    if (status !== 200 || data.Error) {
       const errorMsg = data.Error?.Message || "로그인 실패";
       const errorCode = data.Error?.ErrorCode || "UNKNOWN";
       throw new EcountApiError(errorCode, errorMsg);
     }
 
-    this.sessionId = data.Data.SESSION_ID;
+    this.sessionId = data.Data.Datas.SESSION_ID;
     logger.info("ECOUNT 세션 로그인 성공", { sessionId: this.sessionId.substring(0, 8) + "..." });
     return this.sessionId;
   }

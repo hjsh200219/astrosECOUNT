@@ -73,7 +73,7 @@ export class EcountClient {
     }
 
     // Normal error
-    if (data.Status !== "200" || data.Error) {
+    if (Number(data.Status) !== 200 || data.Error) {
       throw new EcountApiError(
         data.Error?.ErrorCode || "UNKNOWN",
         data.Error?.Message || "API 호출 실패"
