@@ -12,7 +12,7 @@ export class SessionManager {
   private baseUrl: string;
 
   constructor(private config: EcountConfig) {
-    this.baseUrl = `https://oapi${config.ECOUNT_ZONE}.ecount.com`;
+    this.baseUrl = `https://sboapi${config.ECOUNT_ZONE}.ecount.com`;
   }
 
   async getSessionId(): Promise<string> {
@@ -30,7 +30,7 @@ export class SessionManager {
   async login(): Promise<string> {
     logger.info("ECOUNT 세션 로그인 시도...");
 
-    const url = `${this.baseUrl}/OAPI/V2/OAPIAccessToken/GetAccessToken`;
+    const url = `${this.baseUrl}/OAPI/V2/OAPILogin`;
 
     let response: Response;
     try {

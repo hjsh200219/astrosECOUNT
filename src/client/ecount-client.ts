@@ -9,15 +9,15 @@ export class EcountClient {
   public readonly sessionManager: SessionManager;
 
   constructor(config: EcountConfig) {
-    this.baseUrl = `https://oapi${config.ECOUNT_ZONE}.ecount.com/OAPI/V2`;
+    this.baseUrl = `https://sboapi${config.ECOUNT_ZONE}.ecount.com/OAPI/V2`;
     this.sessionManager = new SessionManager(config);
   }
 
   async post<T>(endpoint: string, params: Record<string, unknown> = {}): Promise<T> {
     const sessionId = await this.sessionManager.getSessionId();
-    const url = `${this.baseUrl}/${endpoint}`;
+    const url = `${this.baseUrl}/${endpoint}?SESSION_ID=${encodeURIComponent(sessionId)}`;
 
-    logger.debug("ECOUNT API 호출", { endpoint, url });
+    logger.debug("ECOUNT API 호출", { endpoint, url: `${this.baseUrl}/${endpoint}` });
     const startTime = Date.now();
 
     let response: Response;
@@ -25,7 +25,7 @@ export class EcountClient {
       response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ SESSION_ID: sessionId, ...params }),
+        body: JSON.stringify(params),
         signal: AbortSignal.timeout(30_000),
       });
     } catch (error) {
@@ -44,13 +44,14 @@ export class EcountClient {
       this.sessionManager.invalidateSession();
 
       const newSessionId = await this.sessionManager.getSessionId();
+      const retryUrl = `${this.baseUrl}/${endpoint}?SESSION_ID=${encodeURIComponent(newSessionId)}`;
 
       let retryResponse: Response;
       try {
-        retryResponse = await fetch(url, {
+        retryResponse = await fetch(retryUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ SESSION_ID: newSessionId, ...params }),
+          body: JSON.stringify(params),
           signal: AbortSignal.timeout(30_000),
         });
       } catch (error) {
