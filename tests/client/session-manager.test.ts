@@ -17,7 +17,7 @@ function mockFetchSuccess(sessionId = "test-session-id-12345") {
       Promise.resolve({
         Status: "200",
         Error: null,
-        Data: { SESSION_ID: sessionId },
+        Data: { Datas: { SESSION_ID: sessionId } },
       }),
   });
 }
@@ -78,7 +78,7 @@ describe("SessionManager", () => {
       await manager.login();
 
       expect(mockFn).toHaveBeenCalledWith(
-        "https://oapiAU1.ecount.com/OAPI/V2/OAPIAccessToken/GetAccessToken",
+        "https://sboapiAU1.ecount.com/OAPI/V2/OAPILogin",
         expect.objectContaining({
           method: "POST",
           body: expect.stringContaining("TEST"),
@@ -123,7 +123,7 @@ describe("SessionManager", () => {
           Promise.resolve({
             Status: "200",
             Error: null,
-            Data: { SESSION_ID: "dedup-session" },
+            Data: { Datas: { SESSION_ID: "dedup-session" } },
           }),
       });
 

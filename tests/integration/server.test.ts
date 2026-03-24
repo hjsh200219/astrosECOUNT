@@ -45,9 +45,9 @@ describe("Server Integration", () => {
 
       registerAllTools(server2, client);
 
-      // 2 connection + 11 master-data + 12 sales + 7 purchase
-      // + 8 inventory + 6 production + 10 accounting + 3 other = 59
-      expect(toolSpy).toHaveBeenCalledTimes(59);
+      // 3 connection + 4 master-data + 3 sales + 2 purchase
+      // + 4 inventory + 3 production + 1 accounting + 2 other + 1 board = 23
+      expect(toolSpy).toHaveBeenCalledTimes(23);
     });
 
     it("should verify all 8 tool categories are registered", async () => {
@@ -76,36 +76,39 @@ describe("Server Integration", () => {
       toolSpy.mockRestore();
 
       // Connection tools
+      expect(toolNames).toContain("ecount_zone");
       expect(toolNames).toContain("ecount_login");
       expect(toolNames).toContain("ecount_status");
 
       // Master-data tools
+      expect(toolNames).toContain("ecount_save_customer");
       expect(toolNames).toContain("ecount_save_product");
-      expect(toolNames).toContain("ecount_list_customers");
 
       // Sales tools
       expect(toolNames).toContain("ecount_save_sale");
-      expect(toolNames).toContain("ecount_list_quotations");
+      expect(toolNames).toContain("ecount_save_quotation");
 
       // Purchase tools
       expect(toolNames).toContain("ecount_save_purchase");
       expect(toolNames).toContain("ecount_list_purchase_orders");
 
       // Inventory tools
-      expect(toolNames).toContain("ecount_list_inventory_by_product");
-      expect(toolNames).toContain("ecount_save_barcode_scan");
+      expect(toolNames).toContain("ecount_list_inventory_balance");
+      expect(toolNames).toContain("ecount_view_inventory_balance");
 
       // Production tools
-      expect(toolNames).toContain("ecount_save_production_order");
-      expect(toolNames).toContain("ecount_list_bom");
+      expect(toolNames).toContain("ecount_save_job_order");
+      expect(toolNames).toContain("ecount_save_goods_issued");
 
       // Accounting tools
-      expect(toolNames).toContain("ecount_save_account_slip");
-      expect(toolNames).toContain("ecount_list_bank_accounts");
+      expect(toolNames).toContain("ecount_save_invoice_auto");
 
       // Other tools
-      expect(toolNames).toContain("ecount_save_outsourcing");
-      expect(toolNames).toContain("ecount_list_lot_tracking");
+      expect(toolNames).toContain("ecount_save_open_market_order");
+      expect(toolNames).toContain("ecount_save_clock_in_out");
+
+      // Board tools
+      expect(toolNames).toContain("ecount_create_board");
     });
 
     it("should start gracefully without config (no tools registered)", async () => {
@@ -194,51 +197,57 @@ describe("Server Integration", () => {
       const categories = [
         {
           name: "connection",
-          count: 2,
+          count: 3,
           import: () => import("../../src/tools/connection.js"),
           fn: "registerConnectionTools",
         },
         {
           name: "master-data",
-          count: 11,
+          count: 4,
           import: () => import("../../src/tools/master-data.js"),
           fn: "registerMasterDataTools",
         },
         {
           name: "sales",
-          count: 12,
+          count: 3,
           import: () => import("../../src/tools/sales.js"),
           fn: "registerSalesTools",
         },
         {
           name: "purchase",
-          count: 7,
+          count: 2,
           import: () => import("../../src/tools/purchase.js"),
           fn: "registerPurchaseTools",
         },
         {
           name: "inventory",
-          count: 8,
+          count: 4,
           import: () => import("../../src/tools/inventory.js"),
           fn: "registerInventoryTools",
         },
         {
           name: "production",
-          count: 6,
+          count: 3,
           import: () => import("../../src/tools/production.js"),
           fn: "registerProductionTools",
         },
         {
           name: "accounting",
-          count: 10,
+          count: 1,
           import: () => import("../../src/tools/accounting.js"),
           fn: "registerAccountingTools",
         },
         {
           name: "other",
-          count: 3,
+          count: 2,
           import: () => import("../../src/tools/other.js"),
           fn: "registerOtherTools",
+        },
+        {
+          name: "board",
+          count: 1,
+          import: () => import("../../src/tools/board.js"),
+          fn: "registerBoardTools",
         },
       ];
 

@@ -68,7 +68,8 @@ export class SessionManager {
 
   isSessionExpiredError(response: EcountResponse<unknown>): boolean {
     if (!response.Error) return false;
-    return SESSION_EXPIRED_CODES.includes(response.Error.ErrorCode);
+    const code = response.Error.Code || response.Error.ErrorCode || "";
+    return SESSION_EXPIRED_CODES.includes(code);
   }
 
   invalidateSession(): void {

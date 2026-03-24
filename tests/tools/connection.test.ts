@@ -21,14 +21,21 @@ describe("registerConnectionTools", () => {
     expect(() => registerConnectionTools(server, client)).not.toThrow();
   });
 
-  it("should register exactly two tools", () => {
+  it("should register exactly three tools", () => {
     const server = new McpServer({ name: "test", version: "0.1" });
     const client = new EcountClient(mockConfig);
 
     const toolSpy = vi.spyOn(server, "tool");
     registerConnectionTools(server, client);
 
-    expect(toolSpy).toHaveBeenCalledTimes(2);
+    expect(toolSpy).toHaveBeenCalledTimes(3);
+    expect(toolSpy).toHaveBeenCalledWith(
+      "ecount_zone",
+      expect.any(String),
+      expect.any(Object),
+      expect.any(Object),
+      expect.any(Function)
+    );
     expect(toolSpy).toHaveBeenCalledWith(
       "ecount_login",
       expect.any(String),
@@ -61,7 +68,7 @@ describe("registerConnectionTools", () => {
           Promise.resolve({
             Status: "200",
             Error: null,
-            Data: { SESSION_ID: "abcdefghijklmnop" },
+            Data: { Datas: { SESSION_ID: "abcdefghijklmnop" } },
           }),
       }) as unknown as typeof fetch;
 

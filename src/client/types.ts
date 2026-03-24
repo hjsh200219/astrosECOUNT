@@ -1,12 +1,18 @@
 export interface EcountError {
-  ErrorCode: string;
+  /** V2 uses "Code", some older docs show "ErrorCode" */
+  Code?: string;
+  ErrorCode?: string;
   Message: string;
+  MessageDetail?: string;
 }
 
 export interface EcountResponse<T> {
   Status: number | string;
   Error: EcountError | null;
+  /** Some responses include top-level Errors array */
+  Errors: EcountError[] | null;
   Data: T;
+  Timestamp?: string;
 }
 
 export interface EcountListData<T> {

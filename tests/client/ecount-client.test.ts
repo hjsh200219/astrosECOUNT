@@ -10,6 +10,18 @@ const mockConfig: EcountConfig = {
   ECOUNT_LAN_TYPE: "ko-KR",
 };
 
+function loginResponse(sessionId = "test-sid") {
+  return {
+    ok: true,
+    json: () =>
+      Promise.resolve({
+        Status: "200",
+        Error: null,
+        Data: { Datas: { SESSION_ID: sessionId } },
+      }),
+  };
+}
+
 describe("EcountClient", () => {
   let originalFetch: typeof globalThis.fetch;
 
@@ -23,16 +35,8 @@ describe("EcountClient", () => {
 
   it("should call endpoint with SESSION_ID", async () => {
     globalThis.fetch = vi.fn().mockImplementation((url: string) => {
-      if (url.includes("GetAccessToken")) {
-        return Promise.resolve({
-          ok: true,
-          json: () =>
-            Promise.resolve({
-              Status: "200",
-              Error: null,
-              Data: { SESSION_ID: "test-sid" },
-            }),
-        });
+      if (url.includes("OAPILogin")) {
+        return Promise.resolve(loginResponse("test-sid"));
       }
       return Promise.resolve({
         ok: true,
@@ -51,18 +55,10 @@ describe("EcountClient", () => {
     expect(result).toEqual({ Result: [{ id: 1 }] });
   });
 
-  it("should include SESSION_ID in request body", async () => {
+  it("should include SESSION_ID in URL query param", async () => {
     const mockFn = vi.fn().mockImplementation((url: string) => {
-      if (url.includes("GetAccessToken")) {
-        return Promise.resolve({
-          ok: true,
-          json: () =>
-            Promise.resolve({
-              Status: "200",
-              Error: null,
-              Data: { SESSION_ID: "my-session-id" },
-            }),
-        });
+      if (url.includes("OAPILogin")) {
+        return Promise.resolve(loginResponse("my-session-id"));
       }
       return Promise.resolve({
         ok: true,
@@ -84,24 +80,17 @@ describe("EcountClient", () => {
       url.includes("Product/ListProduct")
     );
     expect(apiCall).toBeDefined();
-    const body = JSON.parse(apiCall![1].body);
-    expect(body.SESSION_ID).toBe("my-session-id");
-    expect(body.PAGE_NO).toBe(1);
+    // SESSION_ID is in URL query param, not body
+    expect(apiCall![0]).toContain("SESSION_ID=my-session-id");
   });
 
   it("should retry on session expired", async () => {
     let apiCallCount = 0;
+    let loginCount = 0;
     globalThis.fetch = vi.fn().mockImplementation((url: string) => {
-      if (url.includes("GetAccessToken")) {
-        return Promise.resolve({
-          ok: true,
-          json: () =>
-            Promise.resolve({
-              Status: "200",
-              Error: null,
-              Data: { SESSION_ID: `sid-${apiCallCount}` },
-            }),
-        });
+      if (url.includes("OAPILogin")) {
+        loginCount++;
+        return Promise.resolve(loginResponse(`sid-${loginCount}`));
       }
       apiCallCount++;
       if (apiCallCount === 1) {
@@ -111,6 +100,7 @@ describe("EcountClient", () => {
             Promise.resolve({
               Status: "500",
               Error: { ErrorCode: "SESSION_EXPIRED", Message: "expired" },
+              Errors: null,
               Data: null,
             }),
         });
@@ -121,6 +111,7 @@ describe("EcountClient", () => {
           Promise.resolve({
             Status: "200",
             Error: null,
+            Errors: null,
             Data: { success: true },
           }),
       });
@@ -134,16 +125,8 @@ describe("EcountClient", () => {
 
   it("should throw EcountApiError on API error", async () => {
     globalThis.fetch = vi.fn().mockImplementation((url: string) => {
-      if (url.includes("GetAccessToken")) {
-        return Promise.resolve({
-          ok: true,
-          json: () =>
-            Promise.resolve({
-              Status: "200",
-              Error: null,
-              Data: { SESSION_ID: "sid" },
-            }),
-        });
+      if (url.includes("OAPILogin")) {
+        return Promise.resolve(loginResponse("sid"));
       }
       return Promise.resolve({
         ok: true,
@@ -151,6 +134,7 @@ describe("EcountClient", () => {
           Promise.resolve({
             Status: "500",
             Error: { ErrorCode: "INVALID_PARAM", Message: "잘못된 파라미터" },
+            Errors: null,
             Data: null,
           }),
       });
@@ -162,16 +146,8 @@ describe("EcountClient", () => {
 
   it("should throw NetworkError on fetch failure", async () => {
     globalThis.fetch = vi.fn().mockImplementation((url: string) => {
-      if (url.includes("GetAccessToken")) {
-        return Promise.resolve({
-          ok: true,
-          json: () =>
-            Promise.resolve({
-              Status: "200",
-              Error: null,
-              Data: { SESSION_ID: "sid" },
-            }),
-        });
+      if (url.includes("OAPILogin")) {
+        return Promise.resolve(loginResponse("sid"));
       }
       return Promise.reject(new Error("ECONNREFUSED"));
     }) as unknown as typeof fetch;
@@ -182,17 +158,11 @@ describe("EcountClient", () => {
 
   it("should throw EcountApiError after retry also fails with API error", async () => {
     let apiCallCount = 0;
+    let loginCount = 0;
     globalThis.fetch = vi.fn().mockImplementation((url: string) => {
-      if (url.includes("GetAccessToken")) {
-        return Promise.resolve({
-          ok: true,
-          json: () =>
-            Promise.resolve({
-              Status: "200",
-              Error: null,
-              Data: { SESSION_ID: `sid-${apiCallCount}` },
-            }),
-        });
+      if (url.includes("OAPILogin")) {
+        loginCount++;
+        return Promise.resolve(loginResponse(`sid-${loginCount}`));
       }
       apiCallCount++;
       if (apiCallCount === 1) {
@@ -203,6 +173,7 @@ describe("EcountClient", () => {
             Promise.resolve({
               Status: "500",
               Error: { ErrorCode: "SESSION_EXPIRED", Message: "expired" },
+              Errors: null,
               Data: null,
             }),
         });
@@ -214,6 +185,7 @@ describe("EcountClient", () => {
           Promise.resolve({
             Status: "500",
             Error: { ErrorCode: "SERVER_ERROR", Message: "서버 오류" },
+            Errors: null,
             Data: null,
           }),
       });

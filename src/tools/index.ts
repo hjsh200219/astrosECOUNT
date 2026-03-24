@@ -8,6 +8,7 @@ import { registerInventoryTools } from "./inventory.js";
 import { registerProductionTools } from "./production.js";
 import { registerAccountingTools } from "./accounting.js";
 import { registerOtherTools } from "./other.js";
+import { registerBoardTools } from "./board.js";
 
 export function registerAllTools(server: McpServer, client: EcountClient): void {
   registerConnectionTools(server, client);
@@ -18,4 +19,5 @@ export function registerAllTools(server: McpServer, client: EcountClient): void 
   registerProductionTools(server, client);
   registerAccountingTools(server, client);
   registerOtherTools(server, client);
+  registerBoardTools(server, client);
 }
