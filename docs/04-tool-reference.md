@@ -2,6 +2,68 @@
 
 > 소스 코드 기준 | 수집일: 2026-03-24
 
+## 시스템 아키텍처
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     Claude Desktop / Claude Code                │
+│                        (AI 클라이언트)                            │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │ MCP Protocol (stdio)
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    astrosECOUNT MCP Server                      │
+│  ┌──────────┐  ┌──────────────┐  ┌───────────────────────┐     │
+│  │ server.ts │→│ tool-factory  │→│ 23개 MCP 도구 등록      │     │
+│  │          │  │ (Save/Query)  │  │ connection(3) master(4)│     │
+│  │ McpServer│  └──────┬───────┘  │ sales(3) purchase(2)   │     │
+│  │ v1.0.0   │         │          │ inventory(4) prod(3)   │     │
+│  └──────────┘         │          │ accounting(1) other(2) │     │
+│                       │          │ board(1)               │     │
+│  ┌────────────────────▼───────────────────────────────────┐     │
+│  │              EcountClient                               │    │
+│  │  ┌──────────────────┐  ┌────────────────────────┐      │    │
+│  │  │ SessionManager   │  │ post() / postRaw()     │      │    │
+│  │  │ - auto login     │  │ - V2 API: /OAPI/V2/... │      │    │
+│  │  │ - session cache  │  │ - V3 API: /ec5/api/... │      │    │
+│  │  │ - auto refresh   │  │ - session retry (1회)  │      │    │
+│  │  │ - deduplication  │  │ - 30s timeout          │      │    │
+│  │  └──────────────────┘  └────────────────────────┘      │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │ HTTPS (REST API)
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                   ECOUNT ERP Cloud Server                       │
+│  V2 API: oapi{ZONE}.ecount.com/OAPI/V2/{Endpoint}              │
+│  V3 API: oapi{ZONE}.ecount.com/ec5/api/app.oapi.v3/action/...  │
+│  내부 API: login{ZONE}.ecount.com/ec5/api/app.inventory/...     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Save vs Query 처리 흐름
+
+```
+[Save 도구 호출]                              [Query 도구 호출]
+     │                                              │
+     ▼                                              ▼
+{ ListKey: [{BulkDatas: params}] }           params 직접 전달
+     │                                              │
+     ▼                                              ▼
+  EcountClient.post(endpoint, body)
+     │
+     ▼
+  SessionManager.getSessionId()  ←── 세션 없으면 자동 로그인
+     │                                (Promise deduplication)
+     ▼
+  HTTPS POST → ECOUNT API
+     │
+     ▼
+  응답: Status 200 → Data 반환 | 세션 만료 → 재로그인 1회 재시도
+```
+
+---
+
 ## 도구 분류 요약
 
 | 카테고리 | 도구 수 | Query | Save | 소스 파일 |
@@ -227,3 +289,45 @@
 - **엔드포인트**: `/ec5/api/app.oapi.v3/action/CreateOApiBoardAction`
 - **API 버전**: V3 (postRaw 사용, V2와 다른 패턴)
 - **주요 입력**: bizz_sid, title, body_ctt, progress_status, label, cust, prod, dept, pjt, pic, complt_dtm
+
+---
+
+## 내부 Web API 도구 (향후 구현)
+
+> 내부 Web API 역공학으로 확인된 조회 기능. 현재 MCP 도구로 미구현 상태.
+> 기술 상세: [07-internal-api-reverse-engineering.md](07-internal-api-reverse-engineering.md)
+
+### V5 App API 엔드포인트 패턴
+
+```
+POST https://login{ZONE}.ecount.com/ec5/api/app.{MODULE}/action/{ACTION}:{bizz_type}:{mode}
+인증: ?ec_req_sid={SESSION_ID}&xce=none
+인코딩: __$KeyPack 압축 JSON → Base64 응답
+```
+
+### 확인된 V5 App API 조회 엔드포인트 (9개)
+
+| 모듈 | Action | bizz_type | 메뉴 | bizz_sid | 확인 건수 | 구현 상태 |
+|------|--------|-----------|------|----------|----------|----------|
+| `app.inventory` | `SelectInventorySearchListAction` | `sales` | 판매조회 | `B_000000E040205` | 622건 | 미구현 |
+| `app.inventory` | `SelectInventorySearchListAction` | `purchases` | 구매조회 | `B_000000E040303` | 261건 | 미구현 |
+| `app.inventory` | `SelectInventorySearchListAction` | `quotation` | 견적서조회 | `B_000000E040201` | 3건 | 미구현 |
+| `app.inventory` | `SelectInventorySearchListAction` | `sales_order` | 주문서조회 | `B_000000E040203` | 0건 | 미구현 |
+| `app.vatslip` | `SelectVatSlipListAction` | `vatslipkor` | 세금계산서 | `B_000000E010727` | 147건 | 미구현 |
+| `app.account` | `SelectAccountSearchListAction` | `account_slip` | 회계전표 | — | 1,609건 | 미구현 |
+| `app.account` | `SelectAccountSearchBalProcessAction` | `account_bond` | 채권관리 | — | 0건 | 미구현 |
+| `app.account` | `SelectAccountSearchBalProcessAction` | `account_debt` | 채무관리 | — | 0건 | 미구현 |
+| `app.tax` | `SelectVatfilingListAction` | `vat_filing` | 부가세신고서 | `B_000000E030215` | 1건 | 미구현 |
+
+### V3 Legacy SSR 메뉴 (fetch 캡처 불가)
+
+| 페이지 ID | 메뉴 | 추정 건수 | 비고 |
+|-----------|------|----------|------|
+| ESA001M | 거래처리스트 | ~320건 | 서버사이드 렌더링 |
+| ESA009M | 품목등록 | ~29건 | 서버사이드 렌더링 |
+| ESG005M | 발주서조회 | ~30건 | Open API로 대체 가능 |
+| ESJ005M | 작업지시서조회 | 0건 | 데이터 없음 |
+| ESJ010M | 생산입고조회 | 0건 | 데이터 없음 |
+| ESS015R | 일별이익현황 | — | 리포트 형태 |
+
+> 구현 시 KeyPack 인코더/디코더 및 웹 로그인 모듈 필요. V3 Legacy 메뉴는 HTML 파싱 또는 별도 접근 전략 필요.

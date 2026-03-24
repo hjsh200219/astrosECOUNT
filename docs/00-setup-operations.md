@@ -54,6 +54,7 @@ ECOUNT_LAN_TYPE=ko-KR
 | 1일 허용량 | 5,000건 |
 | 요청 타임아웃 | 30초 |
 | 발주서 조회 기간 | 최대 31일 |
+| 내부 API Rate Limit | 불명확 (세션 기반) |
 
 ## V2 vs V3 API 차이
 
@@ -90,6 +91,31 @@ ECOUNT API는 두 가지 에러 형식을 사용합니다:
 | INVALID_SESSION | 유효하지 않은 세션 | 자동 재로그인 |
 | -1 | 세션 에러 | 자동 재로그인 |
 | Search Range Is Less Than 31 | 조회 기간 초과 | 31일 이내로 조정 |
+
+## 내부 Web API 인증 (역공학)
+
+Open API와 별개로, ECOUNT 웹 UI의 내부 API에 접근할 수 있습니다.
+
+| 구분 | Open API | 내부 Web API |
+|------|----------|-------------|
+| 인증 방식 | `SESSION_ID` (OAPILogin) | `ec_req_sid` (웹 로그인) |
+| 호스트 | `oapi{ZONE}.ecount.com` | `login{ZONE}.ecount.com` |
+| 로그인 URL | `/OAPI/V2/OAPILogin` | `/Login/Login2` |
+| 인코딩 | 표준 JSON | `__$KeyPack` 압축 + Base64 |
+| 커버리지 | ~17% (품목, 재고, 발주) | ~100% (모든 웹 메뉴) |
+
+```
+# 웹 로그인
+POST https://login.ecount.com/Login/Login2
+Content-Type: application/x-www-form-urlencoded
+
+COM_CODE=635188&USER_ID=astroscorp&USER_PASSWD=<password>
+→ 쿠키에서 ec_req_sid 추출
+```
+
+> 상세 기술 문서: [07-internal-api-reverse-engineering.md](07-internal-api-reverse-engineering.md)
+
+---
 
 ## Claude Desktop 연동
 

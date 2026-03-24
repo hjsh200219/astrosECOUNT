@@ -24,7 +24,7 @@ flowchart TD
         INV_CHECK --> INV_LOC[창고별 재고 확인]
     end
 
-    subgraph 판매["4. 판매 프로세스 [I]"]
+    subgraph 판매["4. 판매 프로세스 [V] 622건"]
         INV_CHECK --> QUOTE[견적서 작성]
         QUOTE --> SO[수주 등록]
         SO --> SALE[매출전표 발행]
@@ -52,13 +52,13 @@ flowchart TD
     style 구매 fill:#e8f5e9
     style 입고 fill:#e3f2fd
     style 재고 fill:#e8f5e9
-    style 판매 fill:#fff3e0
+    style 판매 fill:#e8f5e9
     style 회계 fill:#fff3e0
     style 생산 fill:#fff3e0
     style 기타 fill:#f3e5f5
 ```
 
-**색상 범례**: 녹색 = VERIFIED (실데이터 확인), 주황 = INFERRED (스키마 추론), 보라 = INFERRED (독립 기능)
+**색상 범례**: 녹색 = VERIFIED (실데이터 확인, 판매 622건 포함), 주황 = INFERRED (스키마 추론), 보라 = INFERRED (독립 기능)
 
 ---
 
@@ -155,34 +155,54 @@ flowchart LR
 
 ---
 
-## 3. 판매 프로세스 `[INFERRED]`
+## 3. 판매 프로세스 `[VERIFIED]` — 622건 실데이터
 
-> Save 도구(ecount_save_quotation, ecount_save_sale_order, ecount_save_sale) 스키마에서 추론
+> 내부 Web API 역공학으로 **622건** 판매 실데이터 확인 (2025-09 ~ 2026-03)
+> 엔드포인트: `SelectInventorySearchListAction:sales:list`
 
 ```mermaid
 flowchart LR
-    Q["견적서<br/>(save_quotation)"] --> SO["수주<br/>(save_sale_order)"]
-    SO --> S["매출전표<br/>(save_sale)"]
+    Q["견적서 3건<br/>(quotation)"] --> SO["수주 0건<br/>(sales_order)"]
+    SO --> S["매출 622건<br/>(sales)"]
     S --> INV["세금계산서<br/>(save_invoice_auto)"]
+    S --> ACC["회계반영<br/>(conn_acc_slip=Y)"]
 ```
 
-### 견적→수주→매출 데이터 흐름 (스키마 기반 추론)
+### 판매 데이터에서 확인된 패턴 (622건 분석)
 
-| 단계 | 도구 | 핵심 필드 | 흐름 |
-|------|------|----------|------|
-| 견적 | `save_quotation` | CUST, PROD_CD, QTY, PRICE | 가격/수량 제시 |
-| 수주 | `save_sale_order` | CUST, PROD_CD, QTY, WH_CD | 주문 확정, 출고창고 지정 |
-| 매출 | `save_sale` | CUST, PROD_CD, QTY, WH_CD, IO_TYPE | 실제 출고, 거래유형 지정 |
-| 계산서 | `save_invoice_auto` | CUST, UPLOAD_SER_NO | 매출전표 기반 자동 발행 |
+| 패턴 | 증거 |
+|------|------|
+| 최대 거래처: 씨제이프레시웨이 | 대량 계육+돈육 거래 |
+| 거래처 20+개사 | 엠비케이, 더맛있는하루, 엘에스티씨 등 |
+| 주력 출고: 창고 42 (상품_삼진2냉장) | 622건 중 대다수 |
+| 보조 출고: 창고 43 (상품_동일냉장) | |
+| CJ벌크 전용: 창고 44 (일죽창고) | |
+| 거래유형: 면세 (코드 12) | 전체 판매 면세 거래 |
+| 회계 자동 반영 | `conn_acc_slip = "Y"` |
+| 작성자: JYOH (일반), MJCHOI (CJ벌크) | 업무 분담 확인 |
+| 전자결재 연동 | `edms$edms$edms_date` 필드 존재 |
+| 프로젝트별 관리 | 돈육(00007), 계육(00003) 분류 |
+
+### 견적→수주→매출 데이터 흐름
+
+| 단계 | 확인 건수 | 핵심 필드 | 데이터 소스 |
+|------|----------|----------|------------|
+| 견적 | **3건** | CUST, PROD_CD, QTY, PRICE | 내부 API `[V]` |
+| 수주 | **0건** | CUST, PROD_CD, QTY, WH_CD | 내부 API `[V]` |
+| 매출 | **622건** | CUST, PROD_CD, QTY, WH_CD, TRX_TYPE | 내부 API `[V]` |
+| 계산서 | 미확인 | CUST, UPLOAD_SER_NO | `[I]` 스키마 추론 |
+
+> 수주 0건 → 견적→매출 직행 패턴 (수주 단계 미사용)
 
 ### 판매 프로세스에서 사용되는 공통 키
 
-| 키 | 역할 | 연결 엔티티 |
-|----|------|------------|
-| CUST | 거래처 | CUSTOMER 마스터 |
-| PROD_CD | 품목 | PRODUCT 마스터 |
-| WH_CD | 출고창고 | WAREHOUSE (4x 상품창고) |
-| UPLOAD_SER_NO | 전표번호 | 견적→수주→매출 추적 |
+| 키 | 역할 | 연결 엔티티 | 검증 상태 |
+|----|------|------------|----------|
+| CUST / inv_s$cust_nm | 거래처 | CUSTOMER 마스터 | `[V]` 20+개사 |
+| PROD_CD / inv_s$prod_summary | 품목 | PRODUCT 마스터 | `[V]` |
+| WH_CD / inv_s$wh_cd | 출고창고 | WAREHOUSE (42/43/44) | `[V]` |
+| PJT_CD / inv_s$pjt_cd | 프로젝트 | PROJECT | `[V]` |
+| UPLOAD_SER_NO | 전표번호 | 견적→매출 추적 | `[I]` |
 
 ---
 
@@ -225,21 +245,73 @@ flowchart LR
 
 ## 업무 흐름 요약 — 수입육 유통 전체 사이클
 
-```
-[해외 공급사] → 발주(PO) → 선적 → 미착창고(2x) → 도착 → 미통관창고(3x)
-                                                            ↓
-[국내 고객] ← 매출전표 ← 출고 ← 상품창고(4x) ← 통관완료
-                ↓
-          세금계산서 발행
+```mermaid
+flowchart TD
+    subgraph 외부["해외 공급사"]
+        AURORA["오로라 (10001)<br/>돈육+계육 70%"]
+        VIBRA["비브라<br/>계육 전문 30%"]
+    end
+
+    subgraph 구매["① 구매/발주 [V] 30건"]
+        PO["발주서 작성<br/>Open API 조회 가능"]
+        EDMS["전자결재 (EDMS=9)"]
+    end
+
+    subgraph 물류["② 수입 물류 [V]"]
+        WH10["발주 창고 (10)"]
+        WH2X["미착 창고 (2x)<br/>38.5% 재고"]
+        WH3X["미통관 창고 (3x)<br/>12.8% 재고"]
+        WH4X["상품 창고 (4x)<br/>48.7% 재고"]
+    end
+
+    subgraph 재고["③ 재고 관리 [V] 1,358톤"]
+        INV["재고 조회 4종<br/>Open API 완전 지원"]
+    end
+
+    subgraph 판매["④ 판매 [V] 622건"]
+        QUOTE["견적 3건 ✅"]
+        SO["수주 0건 ✅ (미사용)"]
+        SALE["매출 622건 ✅<br/>내부 API 조회"]
+    end
+
+    subgraph 매입["⑤ 구매(매입) [V] 261건"]
+        PURCHASE["매입 261건 ✅<br/>내부 API 조회"]
+    end
+
+    subgraph 회계["⑥ 회계 [I]"]
+        INVOICE["세금계산서 (미확인)"]
+    end
+
+    AURORA --> PO
+    VIBRA --> PO
+    PO --> EDMS
+    EDMS --> WH10
+    WH10 -->|선적| WH2X
+    WH2X -->|도착| WH3X
+    WH3X -->|통관완료| WH4X
+    WH4X --> INV
+    INV --> QUOTE
+    QUOTE --> SO
+    SO --> SALE
+    SALE --> INVOICE
+    PO --> PURCHASE
+
+    style 외부 fill:#e3f2fd
+    style 구매 fill:#e8f5e9
+    style 물류 fill:#e8f5e9
+    style 재고 fill:#e8f5e9
+    style 판매 fill:#e8f5e9
+    style 매입 fill:#e8f5e9
+    style 회계 fill:#fff3e0
 ```
 
-| 전체 사이클 단계 | 관찰 가능 여부 | MCP 도구 |
-|----------------|---------------|----------|
-| 1. 발주서 작성 | `[V]` 조회+저장 | list_purchase_orders |
-| 2. 선적/미착 | `[V]` 재고로 확인 | list_inventory_by_location |
-| 3. 통관 | `[V]` 재고로 확인 | list_inventory_by_location |
-| 4. 상품 입고 | `[V]` 재고로 확인 | list_inventory_balance |
-| 5. 견적/수주 | `[I]` 저장만 가능 | save_quotation, save_sale_order |
-| 6. 매출/출고 | `[I]` 저장만 가능 | save_sale |
-| 7. 세금계산서 | `[I]` 저장만 가능 | save_invoice_auto |
-| 8. 매입전표 | `[I]` 저장만 가능 | save_purchase |
+| 전체 사이클 단계 | 관찰 가능 여부 | 데이터 소스 | 건수 |
+|----------------|---------------|------------|------|
+| 1. 발주서 작성 | `[V]` 조회+저장 | Open API list_purchase_orders | 30건 |
+| 2. 선적/미착 | `[V]` 재고로 확인 | Open API list_inventory_by_location | |
+| 3. 통관 | `[V]` 재고로 확인 | Open API list_inventory_by_location | |
+| 4. 상품 입고 | `[V]` 재고로 확인 | Open API list_inventory_balance | 1,358톤 |
+| 5. 견적/수주 | **`[V]`** 조회 가능 | 내부 API quotation/sales_order | 3건/0건 |
+| 6. 매출/출고 | **`[V]`** 622건 확인 | 내부 API sales:list | **622건** |
+| 7. 세금계산서 | `[I]` 미확인 | (미캡처) | |
+| 8. 매입전표 | **`[V]`** 261건 확인 | 내부 API purchases:list | **261건** |
