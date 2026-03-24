@@ -1,0 +1,12 @@
+{
+  "TRACE_ID": "33339902d26e47948337b02b5bdefc4d",
+  "EXPIRE_DATE": "",
+  "QUANTITY_INFO": "시간당 연속 오류 제한 건수 : 0/30건, 1일 허용량 : 3/5000건",
+  "TotalCnt": 3,
+  "Result": [
+    {
+      "PROD_CD": "12404",
+      "BAL_QTY": 179575
+    }
+  ]
+}

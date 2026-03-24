@@ -78,7 +78,7 @@ describe("SessionManager", () => {
       await manager.login();
 
       expect(mockFn).toHaveBeenCalledWith(
-        "https://sboapiAU1.ecount.com/OAPI/V2/OAPILogin",
+        "https://oapiAU1.ecount.com/OAPI/V2/OAPILogin",
         expect.objectContaining({
           method: "POST",
           body: expect.stringContaining("TEST"),

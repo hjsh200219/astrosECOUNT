@@ -1,0 +1,17 @@
+{
+  "Status": 200,
+  "EnableNoL4": false,
+  "RefreshTimestamp": "639094116244616044:1",
+  "UtcOffeset": 480,
+  "Data": {
+    "ZONE": "AA",
+    "COM_CODE": "635188",
+    "CS_COM_CODE": "",
+    "ACCESS_ALL": "",
+    "DB_SHARD_NO": "1",
+    "DOMAIN": ".ecount.com",
+    "STATUS": "E",
+    "DB_CON_FLAG": "31",
+    "SIP": "5a474b5943170902021a1e0f1d"
+  }
+}

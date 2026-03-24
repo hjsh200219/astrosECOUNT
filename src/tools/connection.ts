@@ -5,8 +5,10 @@ import { formatResponse } from "../utils/response-formatter.js";
 import { handleToolError } from "../utils/error-handler.js";
 import { NetworkError } from "../utils/error-handler.js";
 import { logger } from "../utils/logger.js";
+import type { EcountConfig } from "../config.js";
+import { apiHostPrefix } from "../config.js";
 
-export function registerConnectionTools(server: McpServer, client: EcountClient): void {
+export function registerConnectionTools(server: McpServer, client: EcountClient, config: EcountConfig): void {
   server.tool(
     "ecount_zone",
     "ECOUNT ERP Zone 정보를 조회합니다. 회사코드로 해당 회사의 Zone과 도메인 정보를 확인할 때 사용합니다.",
@@ -16,7 +18,7 @@ export function registerConnectionTools(server: McpServer, client: EcountClient)
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {
       try {
-        const url = "https://sboapi.ecount.com/OAPI/V2/Zone";
+        const url = `https://${apiHostPrefix(config)}.ecount.com/OAPI/V2/Zone`;
         logger.debug("ECOUNT Zone API 호출", { COM_CODE: params.COM_CODE });
 
         let response: Response;

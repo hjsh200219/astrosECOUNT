@@ -13,7 +13,7 @@ export function createServer(): McpServer {
   try {
     const config = loadConfig();
     const client = new EcountClient(config);
-    registerAllTools(server, client);
+    registerAllTools(server, client, config);
     logger.info("ECOUNT ERP 도구 등록 완료");
   } catch (error) {
     logger.warn("ECOUNT 설정 누락 - 도구 미등록 상태로 시작", {

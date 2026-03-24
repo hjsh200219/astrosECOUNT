@@ -1,5 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { EcountClient } from "../client/ecount-client.js";
+import type { EcountConfig } from "../config.js";
 import { registerConnectionTools } from "./connection.js";
 import { registerMasterDataTools } from "./master-data.js";
 import { registerSalesTools } from "./sales.js";
@@ -10,8 +11,8 @@ import { registerAccountingTools } from "./accounting.js";
 import { registerOtherTools } from "./other.js";
 import { registerBoardTools } from "./board.js";
 
-export function registerAllTools(server: McpServer, client: EcountClient): void {
-  registerConnectionTools(server, client);
+export function registerAllTools(server: McpServer, client: EcountClient, config: EcountConfig): void {
+  registerConnectionTools(server, client, config);
   registerMasterDataTools(server, client);
   registerSalesTools(server, client);
   registerPurchaseTools(server, client);

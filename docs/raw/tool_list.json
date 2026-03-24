@@ -1,0 +1,1600 @@
+[
+  {
+    "name": "ecount_zone",
+    "description": "ECOUNT ERP Zone 정보를 조회합니다. 회사코드로 해당 회사의 Zone과 도메인 정보를 확인할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "COM_CODE": {
+          "type": "string",
+          "description": "회사코드 (6자리)"
+        }
+      },
+      "required": [
+        "COM_CODE"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_login",
+    "description": "ECOUNT ERP에 수동으로 로그인합니다. 세션 상태를 확인하거나 강제 재로그인할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_status",
+    "description": "현재 ECOUNT ERP 세션 상태를 조회합니다. 세션이 유효한지 확인할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_save_customer",
+    "description": "ECOUNT ERP에 거래처를 등록하거나 수정합니다. 새 거래처를 추가하거나 기존 거래처 정보를 변경할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "BUSINESS_NO": {
+          "type": "string",
+          "description": "거래처코드"
+        },
+        "CUST_NAME": {
+          "type": "string",
+          "description": "회사명"
+        },
+        "BOSS_NAME": {
+          "type": "string",
+          "description": "대표자명"
+        },
+        "UPTAE": {
+          "type": "string",
+          "description": "업태"
+        },
+        "JONGMOK": {
+          "type": "string",
+          "description": "종목"
+        },
+        "TEL": {
+          "type": "string",
+          "description": "전화번호"
+        },
+        "EMAIL": {
+          "type": "string",
+          "description": "이메일"
+        },
+        "POST_NO": {
+          "type": "string",
+          "description": "우편번호"
+        },
+        "ADDR": {
+          "type": "string",
+          "description": "주소"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "비고"
+        },
+        "GUBUN": {
+          "type": "string",
+          "description": "구분"
+        },
+        "EMP_CD": {
+          "type": "string",
+          "description": "담당사원코드"
+        },
+        "G_GUBUN": {
+          "type": "string",
+          "description": "거래처코드구분 (01:사업자등록번호, 02:주민등록번호, 03:외국인)"
+        },
+        "G_BUSINESS_TYPE": {
+          "type": "string",
+          "description": "세무신고거래처구분 (1:거래처동일, 2:검색입력, 3:직접입력)"
+        },
+        "G_BUSINESS_CD": {
+          "type": "string",
+          "description": "세무신고거래처코드"
+        },
+        "TAX_REG_ID": {
+          "type": "string",
+          "description": "종사업장번호"
+        },
+        "FAX": {
+          "type": "string",
+          "description": "Fax"
+        },
+        "HP_NO": {
+          "type": "string",
+          "description": "모바일"
+        },
+        "DM_POST": {
+          "type": "string",
+          "description": "DM우편번호"
+        },
+        "DM_ADDR": {
+          "type": "string",
+          "description": "DM주소"
+        },
+        "REMARKS_WIN": {
+          "type": "string",
+          "description": "검색창내용"
+        },
+        "FOREIGN_FLAG": {
+          "type": "string",
+          "description": "외환거래처사용여부 (Y/N)"
+        },
+        "EXCHANGE_CODE": {
+          "type": "string",
+          "description": "외화코드"
+        },
+        "CUST_GROUP1": {
+          "type": "string",
+          "description": "거래처그룹1코드"
+        },
+        "CUST_GROUP2": {
+          "type": "string",
+          "description": "거래처그룹2코드"
+        },
+        "URL_PATH": {
+          "type": "string",
+          "description": "홈페이지"
+        },
+        "OUTORDER_YN": {
+          "type": "string",
+          "description": "출하대상거래처구분 (Y/N)"
+        },
+        "IO_CODE_SL": {
+          "type": "string",
+          "description": "거래유형(영업) 부가세코드"
+        },
+        "IO_CODE_BY": {
+          "type": "string",
+          "description": "거래유형(구매) 부가세코드"
+        },
+        "MANAGE_BOND_NO": {
+          "type": "string",
+          "description": "채권번호관리 (B:기본설정, M:필수입력, Y:선택입력, N:사용안함)"
+        },
+        "MANAGE_DEBIT_NO": {
+          "type": "string",
+          "description": "채무번호관리 (B:기본설정, M:필수입력, Y:선택입력, N:사용안함)"
+        },
+        "CUST_LIMIT": {
+          "type": "string",
+          "description": "거래처별여신한도"
+        },
+        "O_RATE": {
+          "type": "string",
+          "description": "출고조정률"
+        },
+        "I_RATE": {
+          "type": "string",
+          "description": "입고조정률"
+        },
+        "PRICE_GROUP": {
+          "type": "string",
+          "description": "영업단가그룹"
+        },
+        "PRICE_GROUP2": {
+          "type": "string",
+          "description": "구매단가그룹"
+        },
+        "CUST_LIMIT_TERM": {
+          "type": "string",
+          "description": "여신기간 (최대 365일)"
+        }
+      },
+      "required": [
+        "BUSINESS_NO",
+        "CUST_NAME"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_save_product",
+    "description": "ECOUNT ERP에 품목을 등록하거나 수정합니다. 새 품목을 추가하거나 기존 품목 정보를 변경할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "PROD_DES": {
+          "type": "string",
+          "description": "품목명"
+        },
+        "SIZE_DES": {
+          "type": "string",
+          "description": "규격"
+        },
+        "UNIT": {
+          "type": "string",
+          "description": "단위"
+        },
+        "PROD_TYPE": {
+          "type": "string",
+          "description": "품목구분"
+        },
+        "BAL_FLAG": {
+          "type": "string",
+          "description": "재고관리여부"
+        },
+        "IN_PRICE": {
+          "type": "string",
+          "description": "입고단가"
+        },
+        "OUT_PRICE": {
+          "type": "string",
+          "description": "출고단가"
+        },
+        "BAR_CODE": {
+          "type": "string",
+          "description": "바코드"
+        },
+        "CLASS_CD": {
+          "type": "string",
+          "description": "분류코드"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "비고"
+        },
+        "OUT_PRICE_VAT": {
+          "type": "string",
+          "description": "출고단가VAT포함여부 (0:미포함, 1:포함)"
+        },
+        "IN_PRICE_VAT": {
+          "type": "string",
+          "description": "입고단가VAT포함여부 (0:미포함, 1:포함)"
+        },
+        "REMARKS_WIN": {
+          "type": "string",
+          "description": "검색창내용"
+        },
+        "CLASS_CD2": {
+          "type": "string",
+          "description": "품목그룹2코드"
+        },
+        "CLASS_CD3": {
+          "type": "string",
+          "description": "품목그룹3코드"
+        },
+        "TAX": {
+          "type": "string",
+          "description": "부가가치세율(매출)"
+        },
+        "VAT_RATE_BY": {
+          "type": "string",
+          "description": "부가세율(매입)"
+        },
+        "CS_FLAG": {
+          "type": "string",
+          "description": "C-Portal사용여부 (1:사용, 0:미사용)"
+        },
+        "INSPECT_TYPE_CD": {
+          "type": "string",
+          "description": "품질검사유형"
+        },
+        "INSPECT_STATUS": {
+          "type": "string",
+          "description": "품질검사방법 (L:전수, S:샘플링)"
+        },
+        "ITEM_TYPE": {
+          "type": "string",
+          "description": "관리항목 (B:기본설정, M:필수입력, Y:선택입력, N:사용안함)"
+        },
+        "SERIAL_TYPE": {
+          "type": "string",
+          "description": "시리얼/로트 (B:기본설정, M:필수입력, Y:선택입력, N:사용안함)"
+        }
+      },
+      "required": [
+        "PROD_CD",
+        "PROD_DES"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_view_product",
+    "description": "ECOUNT ERP 특정 품목의 상세 정보를 조회합니다. 품목 코드로 단일 품목의 전체 정보를 확인할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "PROD_TYPE": {
+          "type": "string",
+          "description": "품목구분"
+        },
+        "COMMA_FLAG": {
+          "type": "string",
+          "description": "Comma포함여부 (Y/N, 기본값 N)"
+        }
+      },
+      "required": [
+        "PROD_CD"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_list_products",
+    "description": "ECOUNT ERP 품목 목록을 조회합니다. 전체 품목 목록이나 특정 조건의 품목을 검색할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "PROD_TYPE": {
+          "type": "string",
+          "description": "품목구분"
+        },
+        "FROM_PROD_CD": {
+          "type": "string",
+          "description": "품목코드 시작 범위"
+        },
+        "TO_PROD_CD": {
+          "type": "string",
+          "description": "품목코드 종료 범위"
+        },
+        "COMMA_FLAG": {
+          "type": "string",
+          "description": "Comma포함여부 (Y/N, 기본값 N)"
+        }
+      },
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_save_quotation",
+    "description": "ECOUNT ERP 견적서를 저장합니다. 거래처에게 제품 견적을 등록하거나 수정할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "QTY": {
+          "type": "string",
+          "description": "수량"
+        },
+        "UPLOAD_SER_NO": {
+          "type": "string",
+          "description": "전표번호 (수정 시 사용)"
+        },
+        "IO_DATE": {
+          "type": "string",
+          "description": "견적일자 (YYYYMMDD)"
+        },
+        "CUST": {
+          "type": "string",
+          "description": "거래처코드"
+        },
+        "WH_CD": {
+          "type": "string",
+          "description": "창고코드"
+        },
+        "PRICE": {
+          "type": "string",
+          "description": "단가"
+        },
+        "SUPPLY_AMT": {
+          "type": "string",
+          "description": "공급가액"
+        },
+        "VAT_AMT": {
+          "type": "string",
+          "description": "부가세액"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "비고"
+        },
+        "CUST_DES": {
+          "type": "string",
+          "description": "거래처명"
+        },
+        "EMP_CD": {
+          "type": "string",
+          "description": "담당자코드"
+        },
+        "IO_TYPE": {
+          "type": "string",
+          "description": "구분(거래유형) 부가세유형코드"
+        },
+        "EXCHANGE_TYPE": {
+          "type": "string",
+          "description": "외화종류 코드"
+        },
+        "EXCHANGE_RATE": {
+          "type": "string",
+          "description": "환율"
+        },
+        "PJT_CD": {
+          "type": "string",
+          "description": "프로젝트코드"
+        },
+        "DOC_NO": {
+          "type": "string",
+          "description": "견적No."
+        },
+        "TTL_CTT": {
+          "type": "string",
+          "description": "제목"
+        },
+        "REF_DES": {
+          "type": "string",
+          "description": "참조"
+        },
+        "COLL_TERM": {
+          "type": "string",
+          "description": "결제조건"
+        },
+        "AGREE_TERM": {
+          "type": "string",
+          "description": "유효기간"
+        },
+        "PROD_DES": {
+          "type": "string",
+          "description": "품목명"
+        },
+        "SIZE_DES": {
+          "type": "string",
+          "description": "규격"
+        },
+        "UQTY": {
+          "type": "string",
+          "description": "추가수량"
+        },
+        "USER_PRICE_VAT": {
+          "type": "string",
+          "description": "단가(VAT포함)"
+        },
+        "SUPPLY_AMT_F": {
+          "type": "string",
+          "description": "공급가액(외화)"
+        },
+        "ITEM_CD": {
+          "type": "string",
+          "description": "관리항목코드"
+        }
+      },
+      "required": [
+        "PROD_CD",
+        "QTY"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_save_sale_order",
+    "description": "ECOUNT ERP 수주(판매 주문)를 저장합니다. 고객으로부터 받은 주문을 등록하거나 수정할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "QTY": {
+          "type": "string",
+          "description": "수량"
+        },
+        "UPLOAD_SER_NO": {
+          "type": "string",
+          "description": "전표번호 (수정 시 사용)"
+        },
+        "IO_DATE": {
+          "type": "string",
+          "description": "수주일자 (YYYYMMDD)"
+        },
+        "CUST": {
+          "type": "string",
+          "description": "거래처코드"
+        },
+        "WH_CD": {
+          "type": "string",
+          "description": "창고코드"
+        },
+        "PRICE": {
+          "type": "string",
+          "description": "단가"
+        },
+        "SUPPLY_AMT": {
+          "type": "string",
+          "description": "공급가액"
+        },
+        "VAT_AMT": {
+          "type": "string",
+          "description": "부가세액"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "비고"
+        },
+        "TIME_DATE": {
+          "type": "string",
+          "description": "납기일"
+        },
+        "CUST_DES": {
+          "type": "string",
+          "description": "거래처명"
+        },
+        "EMP_CD": {
+          "type": "string",
+          "description": "담당자코드"
+        },
+        "IO_TYPE": {
+          "type": "string",
+          "description": "구분(거래유형) 부가세유형코드"
+        },
+        "EXCHANGE_TYPE": {
+          "type": "string",
+          "description": "외화종류 코드"
+        },
+        "EXCHANGE_RATE": {
+          "type": "string",
+          "description": "환율"
+        },
+        "PJT_CD": {
+          "type": "string",
+          "description": "프로젝트코드"
+        },
+        "DOC_NO": {
+          "type": "string",
+          "description": "주문No."
+        },
+        "PROD_DES": {
+          "type": "string",
+          "description": "품목명"
+        },
+        "SIZE_DES": {
+          "type": "string",
+          "description": "규격"
+        },
+        "UQTY": {
+          "type": "string",
+          "description": "추가수량"
+        },
+        "USER_PRICE_VAT": {
+          "type": "string",
+          "description": "단가(VAT포함)"
+        },
+        "SUPPLY_AMT_F": {
+          "type": "string",
+          "description": "공급가액(외화)"
+        },
+        "ITEM_CD": {
+          "type": "string",
+          "description": "관리항목코드"
+        }
+      },
+      "required": [
+        "PROD_CD",
+        "QTY"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_save_sale",
+    "description": "ECOUNT ERP 매출전표를 저장합니다. 실제 판매(출하) 거래를 등록하거나 수정할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "QTY": {
+          "type": "string",
+          "description": "수량"
+        },
+        "WH_CD": {
+          "type": "string",
+          "description": "출하창고코드"
+        },
+        "UPLOAD_SER_NO": {
+          "type": "string",
+          "description": "전표번호 (수정 시 사용)"
+        },
+        "IO_DATE": {
+          "type": "string",
+          "description": "판매일자 (YYYYMMDD)"
+        },
+        "CUST": {
+          "type": "string",
+          "description": "거래처코드"
+        },
+        "CUST_DES": {
+          "type": "string",
+          "description": "거래처명"
+        },
+        "EMP_CD": {
+          "type": "string",
+          "description": "담당사원코드"
+        },
+        "PRICE": {
+          "type": "string",
+          "description": "단가"
+        },
+        "SUPPLY_AMT": {
+          "type": "string",
+          "description": "공급가액"
+        },
+        "VAT_AMT": {
+          "type": "string",
+          "description": "부가세액"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "비고"
+        },
+        "PROD_DES": {
+          "type": "string",
+          "description": "품목명"
+        },
+        "SIZE_DES": {
+          "type": "string",
+          "description": "규격"
+        },
+        "IO_TYPE": {
+          "type": "string",
+          "description": "구분(거래유형) 부가세유형코드"
+        },
+        "EXCHANGE_TYPE": {
+          "type": "string",
+          "description": "외화종류 코드"
+        },
+        "EXCHANGE_RATE": {
+          "type": "string",
+          "description": "환율"
+        },
+        "PJT_CD": {
+          "type": "string",
+          "description": "프로젝트코드"
+        },
+        "UQTY": {
+          "type": "string",
+          "description": "추가수량"
+        },
+        "USER_PRICE_VAT": {
+          "type": "string",
+          "description": "단가(VAT포함)"
+        },
+        "SUPPLY_AMT_F": {
+          "type": "string",
+          "description": "공급가액(외화)"
+        },
+        "ITEM_CD": {
+          "type": "string",
+          "description": "관리항목코드"
+        }
+      },
+      "required": [
+        "PROD_CD",
+        "QTY",
+        "WH_CD"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_save_purchase",
+    "description": "ECOUNT ERP 구매(매입) 전표를 저장합니다. 실제 구매 거래를 등록하거나 수정할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "QTY": {
+          "type": "string",
+          "description": "수량"
+        },
+        "WH_CD": {
+          "type": "string",
+          "description": "입고창고코드"
+        },
+        "UPLOAD_SER_NO": {
+          "type": "string",
+          "description": "전표번호 (수정 시 사용)"
+        },
+        "IO_DATE": {
+          "type": "string",
+          "description": "구매일자 (YYYYMMDD)"
+        },
+        "CUST": {
+          "type": "string",
+          "description": "거래처코드"
+        },
+        "CUST_DES": {
+          "type": "string",
+          "description": "거래처명"
+        },
+        "EMP_CD": {
+          "type": "string",
+          "description": "담당사원코드"
+        },
+        "PRICE": {
+          "type": "string",
+          "description": "단가"
+        },
+        "SUPPLY_AMT": {
+          "type": "string",
+          "description": "공급가액"
+        },
+        "VAT_AMT": {
+          "type": "string",
+          "description": "부가세액"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "비고"
+        },
+        "IO_TYPE": {
+          "type": "string",
+          "description": "구분(거래유형) 부가세유형코드"
+        },
+        "EXCHANGE_TYPE": {
+          "type": "string",
+          "description": "외화종류 코드"
+        },
+        "EXCHANGE_RATE": {
+          "type": "string",
+          "description": "환율"
+        },
+        "PJT_CD": {
+          "type": "string",
+          "description": "프로젝트코드"
+        },
+        "PROD_DES": {
+          "type": "string",
+          "description": "품목명"
+        },
+        "SIZE_DES": {
+          "type": "string",
+          "description": "규격"
+        },
+        "UQTY": {
+          "type": "string",
+          "description": "추가수량"
+        },
+        "USER_PRICE_VAT": {
+          "type": "string",
+          "description": "단가(VAT포함)"
+        },
+        "SUPPLY_AMT_F": {
+          "type": "string",
+          "description": "공급가액(외화)"
+        },
+        "ITEM_CD": {
+          "type": "string",
+          "description": "관리항목코드"
+        }
+      },
+      "required": [
+        "PROD_CD",
+        "QTY",
+        "WH_CD"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_list_purchase_orders",
+    "description": "ECOUNT ERP 발주 목록을 조회합니다. 특정 기간의 발주(구매 주문) 내역을 확인할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "BASE_DATE_FROM": {
+          "type": "string",
+          "description": "조회 시작일 (YYYYMMDD)"
+        },
+        "BASE_DATE_TO": {
+          "type": "string",
+          "description": "조회 종료일 (YYYYMMDD)"
+        },
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "CUST_CD": {
+          "type": "string",
+          "description": "거래처코드"
+        },
+        "EMP_CD": {
+          "type": "string",
+          "description": "담당자코드"
+        },
+        "WH_CD": {
+          "type": "string",
+          "description": "창고코드"
+        },
+        "PAGE_CURRENT": {
+          "type": "number",
+          "default": 1,
+          "description": "현재 페이지 번호"
+        },
+        "PAGE_SIZE": {
+          "type": "number",
+          "default": 26,
+          "description": "페이지당 건수"
+        }
+      },
+      "required": [
+        "BASE_DATE_FROM",
+        "BASE_DATE_TO"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_view_inventory_balance",
+    "description": "ECOUNT ERP 특정 품목의 재고 잔량을 조회합니다. 품목코드와 기준일자를 지정하여 해당 시점의 재고 현황을 확인할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "BASE_DATE": {
+          "type": "string",
+          "description": "기준일자 (YYYYMMDD)"
+        },
+        "WH_CD": {
+          "type": "string",
+          "description": "창고코드"
+        },
+        "ZERO_FLAG": {
+          "type": "string",
+          "description": "재고 0인 품목 포함 여부 (Y/N)"
+        },
+        "BAL_FLAG": {
+          "type": "string",
+          "description": "재고관리 품목만 조회 여부 (Y/N)"
+        },
+        "DEL_GUBUN": {
+          "type": "string",
+          "description": "삭제 품목 포함 여부 (Y/N)"
+        }
+      },
+      "required": [
+        "PROD_CD",
+        "BASE_DATE"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_list_inventory_balance",
+    "description": "ECOUNT ERP 재고 잔량 목록을 조회합니다. 기준일자 기준으로 전체 또는 특정 품목의 재고 현황을 확인할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "BASE_DATE": {
+          "type": "string",
+          "description": "기준일자 (YYYYMMDD)"
+        },
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "WH_CD": {
+          "type": "string",
+          "description": "창고코드"
+        },
+        "ZERO_FLAG": {
+          "type": "string",
+          "description": "재고 0인 품목 포함 여부 (Y/N)"
+        },
+        "BAL_FLAG": {
+          "type": "string",
+          "description": "재고관리 품목만 조회 여부 (Y/N)"
+        },
+        "DEL_GUBUN": {
+          "type": "string",
+          "description": "삭제 품목 포함 여부 (Y/N)"
+        }
+      },
+      "required": [
+        "BASE_DATE"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_view_inventory_by_location",
+    "description": "ECOUNT ERP 특정 품목의 로케이션별 재고 잔량을 조회합니다. 창고 내 로케이션 단위로 재고 위치와 수량을 확인할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "BASE_DATE": {
+          "type": "string",
+          "description": "기준일자 (YYYYMMDD)"
+        },
+        "WH_CD": {
+          "type": "string",
+          "description": "창고코드"
+        },
+        "ZERO_FLAG": {
+          "type": "string",
+          "description": "재고 0인 품목 포함 여부 (Y/N)"
+        },
+        "BAL_FLAG": {
+          "type": "string",
+          "description": "재고관리 품목만 조회 여부 (Y/N)"
+        },
+        "DEL_GUBUN": {
+          "type": "string",
+          "description": "삭제 품목 포함 여부 (Y/N)"
+        }
+      },
+      "required": [
+        "PROD_CD",
+        "BASE_DATE"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_list_inventory_by_location",
+    "description": "ECOUNT ERP 로케이션별 재고 잔량 목록을 조회합니다. 기준일자 기준으로 창고 내 로케이션별 재고 현황을 확인할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "BASE_DATE": {
+          "type": "string",
+          "description": "기준일자 (YYYYMMDD)"
+        },
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "WH_CD": {
+          "type": "string",
+          "description": "창고코드"
+        },
+        "ZERO_FLAG": {
+          "type": "string",
+          "description": "재고 0인 품목 포함 여부 (Y/N)"
+        },
+        "BAL_FLAG": {
+          "type": "string",
+          "description": "재고관리 품목만 조회 여부 (Y/N)"
+        },
+        "DEL_GUBUN": {
+          "type": "string",
+          "description": "삭제 품목 포함 여부 (Y/N)"
+        }
+      },
+      "required": [
+        "BASE_DATE"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": true
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_save_job_order",
+    "description": "ECOUNT ERP 작업지시를 저장합니다. 생산을 위한 작업지시를 등록하거나 수정할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "QTY": {
+          "type": "string",
+          "description": "지시수량"
+        },
+        "UPLOAD_SER_NO": {
+          "type": "string",
+          "description": "전표번호 (수정 시 사용)"
+        },
+        "IO_DATE": {
+          "type": "string",
+          "description": "작업지시일자 (YYYYMMDD)"
+        },
+        "WH_CD": {
+          "type": "string",
+          "description": "창고코드"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "비고"
+        },
+        "CUST": {
+          "type": "string",
+          "description": "거래처코드"
+        },
+        "EMP_CD": {
+          "type": "string",
+          "description": "담당자코드"
+        },
+        "PROD_DES": {
+          "type": "string",
+          "description": "품목명"
+        },
+        "SIZE_DES": {
+          "type": "string",
+          "description": "규격"
+        },
+        "PJT_CD": {
+          "type": "string",
+          "description": "프로젝트코드"
+        },
+        "ITEM_CD": {
+          "type": "string",
+          "description": "관리항목코드"
+        }
+      },
+      "required": [
+        "PROD_CD",
+        "QTY"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_save_goods_issued",
+    "description": "ECOUNT ERP 생산 자재 출고(불출)를 저장합니다. 생산에 사용할 자재를 창고에서 출고 처리할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "QTY": {
+          "type": "string",
+          "description": "출고수량"
+        },
+        "UPLOAD_SER_NO": {
+          "type": "string",
+          "description": "전표번호 (수정 시 사용)"
+        },
+        "IO_DATE": {
+          "type": "string",
+          "description": "출고일자 (YYYYMMDD)"
+        },
+        "WH_CD": {
+          "type": "string",
+          "description": "창고코드"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "비고"
+        },
+        "CUST": {
+          "type": "string",
+          "description": "거래처코드"
+        },
+        "EMP_CD": {
+          "type": "string",
+          "description": "담당자코드"
+        },
+        "PROD_DES": {
+          "type": "string",
+          "description": "품목명"
+        },
+        "SIZE_DES": {
+          "type": "string",
+          "description": "규격"
+        },
+        "PJT_CD": {
+          "type": "string",
+          "description": "프로젝트코드"
+        },
+        "ITEM_CD": {
+          "type": "string",
+          "description": "관리항목코드"
+        }
+      },
+      "required": [
+        "PROD_CD",
+        "QTY"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_save_goods_receipt",
+    "description": "ECOUNT ERP 생산 완료 입고를 저장합니다. 생산이 완료된 제품을 창고에 입고 처리할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "QTY": {
+          "type": "string",
+          "description": "입고수량"
+        },
+        "UPLOAD_SER_NO": {
+          "type": "string",
+          "description": "전표번호 (수정 시 사용)"
+        },
+        "IO_DATE": {
+          "type": "string",
+          "description": "입고일자 (YYYYMMDD)"
+        },
+        "WH_CD": {
+          "type": "string",
+          "description": "창고코드"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "비고"
+        },
+        "CUST": {
+          "type": "string",
+          "description": "거래처코드"
+        },
+        "EMP_CD": {
+          "type": "string",
+          "description": "담당자코드"
+        },
+        "PROD_DES": {
+          "type": "string",
+          "description": "품목명"
+        },
+        "SIZE_DES": {
+          "type": "string",
+          "description": "규격"
+        },
+        "PJT_CD": {
+          "type": "string",
+          "description": "프로젝트코드"
+        },
+        "ITEM_CD": {
+          "type": "string",
+          "description": "관리항목코드"
+        }
+      },
+      "required": [
+        "PROD_CD",
+        "QTY"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_save_invoice_auto",
+    "description": "ECOUNT ERP 자동 세금계산서(청구서)를 저장합니다. 매출 또는 매입 거래에 대한 전표를 자동으로 생성하고 등록할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "SL_DATE": {
+          "type": "string",
+          "description": "전표일자 (YYYYMMDD)"
+        },
+        "CUST": {
+          "type": "string",
+          "description": "거래처코드"
+        },
+        "SUPPLY_AMT": {
+          "type": "string",
+          "description": "공급가액"
+        },
+        "SLIP_TYPE": {
+          "type": "string",
+          "description": "전표구분 (1: 매출, 2: 매입)"
+        },
+        "VAT_AMT": {
+          "type": "string",
+          "description": "부가세액"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "비고"
+        },
+        "CUST_DES": {
+          "type": "string",
+          "description": "거래처명"
+        },
+        "EMP_CD": {
+          "type": "string",
+          "description": "담당자코드"
+        },
+        "PJT_CD": {
+          "type": "string",
+          "description": "프로젝트코드"
+        },
+        "UPLOAD_SER_NO": {
+          "type": "string",
+          "description": "순번"
+        },
+        "ITEM_CD": {
+          "type": "string",
+          "description": "관리항목코드"
+        }
+      },
+      "required": [
+        "SL_DATE",
+        "CUST",
+        "SUPPLY_AMT"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_save_open_market_order",
+    "description": "ECOUNT ERP 오픈마켓 주문을 저장합니다. 쇼핑몰이나 오픈마켓에서 발생한 주문 데이터를 등록하거나 수정할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "PROD_CD": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "QTY": {
+          "type": "string",
+          "description": "수량"
+        },
+        "IO_DATE": {
+          "type": "string",
+          "description": "주문일자 (YYYYMMDD)"
+        },
+        "CUST": {
+          "type": "string",
+          "description": "거래처코드"
+        },
+        "WH_CD": {
+          "type": "string",
+          "description": "창고코드"
+        },
+        "PRICE": {
+          "type": "string",
+          "description": "단가"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "비고"
+        },
+        "CUST_DES": {
+          "type": "string",
+          "description": "거래처명"
+        },
+        "EMP_CD": {
+          "type": "string",
+          "description": "담당자코드"
+        },
+        "PROD_DES": {
+          "type": "string",
+          "description": "품목명"
+        },
+        "SIZE_DES": {
+          "type": "string",
+          "description": "규격"
+        },
+        "UPLOAD_SER_NO": {
+          "type": "string",
+          "description": "순번"
+        },
+        "SUPPLY_AMT": {
+          "type": "string",
+          "description": "공급가액"
+        },
+        "VAT_AMT": {
+          "type": "string",
+          "description": "부가세액"
+        }
+      },
+      "required": [
+        "PROD_CD",
+        "QTY"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_save_clock_in_out",
+    "description": "ECOUNT ERP 출퇴근 기록을 저장합니다. 사원의 출근 또는 퇴근 시간을 등록할 때 사용합니다.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "EMP_CD": {
+          "type": "string",
+          "description": "사원코드"
+        },
+        "CLOCK_TYPE": {
+          "type": "string",
+          "description": "출퇴근구분 (I: 출근, O: 퇴근)"
+        },
+        "CLOCK_DATE": {
+          "type": "string",
+          "description": "출퇴근일자 (YYYYMMDD)"
+        },
+        "CLOCK_TIME": {
+          "type": "string",
+          "description": "출퇴근시간 (HHmm)"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "비고"
+        },
+        "EMP_DES": {
+          "type": "string",
+          "description": "사원명"
+        },
+        "DEPT_CD": {
+          "type": "string",
+          "description": "부서코드"
+        }
+      },
+      "required": [
+        "EMP_CD",
+        "CLOCK_TYPE"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "ecount_create_board",
+    "description": "ECOUNT ERP 게시판에 글을 등록합니다. 게시판ID를 지정하여 새 글을 작성할 때 사용합니다. (V3 API)",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "bizz_sid": {
+          "type": "string",
+          "description": "게시판 ID (예: B_000000E072000)"
+        },
+        "title": {
+          "type": "string",
+          "description": "제목 (최대 200자)"
+        },
+        "body_ctt": {
+          "type": "string",
+          "description": "내용 (텍스트, 최대 5MB)"
+        },
+        "progress_status": {
+          "type": "string",
+          "description": "진행상태 코드 또는 명"
+        },
+        "label": {
+          "type": "string",
+          "description": "라벨 코드 또는 명"
+        },
+        "cust": {
+          "type": "string",
+          "description": "거래처코드"
+        },
+        "cust_nm": {
+          "type": "string",
+          "description": "거래처명"
+        },
+        "prod": {
+          "type": "string",
+          "description": "품목코드"
+        },
+        "prod_nm": {
+          "type": "string",
+          "description": "품목명"
+        },
+        "dept": {
+          "type": "string",
+          "description": "부서코드"
+        },
+        "dept_nm": {
+          "type": "string",
+          "description": "부서명"
+        },
+        "pjt": {
+          "type": "string",
+          "description": "프로젝트코드"
+        },
+        "pjt_nm": {
+          "type": "string",
+          "description": "프로젝트명"
+        },
+        "pic": {
+          "type": "string",
+          "description": "담당자코드"
+        },
+        "pic_nm": {
+          "type": "string",
+          "description": "담당자명"
+        },
+        "complt_dtm": {
+          "type": "string",
+          "description": "완료일시 (YYYYMMDD HH:MM)"
+        },
+        "record_range_dtm": {
+          "type": "string",
+          "description": "날짜/시간 (YYYYMMDD HH:MM HH:MM)"
+        }
+      },
+      "required": [
+        "bizz_sid"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  }
+]

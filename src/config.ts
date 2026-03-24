@@ -6,9 +6,15 @@ const envSchema = z.object({
   ECOUNT_API_CERT_KEY: z.string().min(1, "ECOUNT_API_CERT_KEY is required"),
   ECOUNT_ZONE: z.string().min(1, "ECOUNT_ZONE is required").default("AU1"),
   ECOUNT_LAN_TYPE: z.string().default("ko-KR"),
+  ECOUNT_API_MODE: z.enum(["production", "sandbox"]).default("production"),
 });
 
 export type EcountConfig = z.infer<typeof envSchema>;
+
+/** Returns the API host prefix: "oapi" for production, "sboapi" for sandbox */
+export function apiHostPrefix(config: EcountConfig): string {
+  return config.ECOUNT_API_MODE === "sandbox" ? "sboapi" : "oapi";
+}
 
 export function loadConfig(): EcountConfig {
   const result = envSchema.safeParse(process.env);

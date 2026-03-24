@@ -1,7 +1,7 @@
 import { SessionManager } from "./session-manager.js";
 import { NetworkError, EcountApiError } from "../utils/error-handler.js";
 import { logger } from "../utils/logger.js";
-import type { EcountConfig } from "../config.js";
+import { apiHostPrefix, type EcountConfig } from "../config.js";
 import type { EcountResponse } from "./types.js";
 
 export class EcountClient {
@@ -10,7 +10,7 @@ export class EcountClient {
   public readonly sessionManager: SessionManager;
 
   constructor(config: EcountConfig) {
-    this.hostUrl = `https://sboapi${config.ECOUNT_ZONE}.ecount.com`;
+    this.hostUrl = `https://${apiHostPrefix(config)}${config.ECOUNT_ZONE}.ecount.com`;
     this.baseUrl = `${this.hostUrl}/OAPI/V2`;
     this.sessionManager = new SessionManager(config);
   }

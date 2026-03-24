@@ -1,0 +1,56 @@
+{
+  "TRACE_ID": "3b7d1d9b106b4a909734c6e837dafba5",
+  "EXPIRE_DATE": "",
+  "QUANTITY_INFO": "시간당 연속 오류 제한 건수 : 0/30건, 1일 허용량 : 2/5000건",
+  "TotalCnt": 23,
+  "Result": [
+    {
+      "PROD_CD": "12404",
+      "BAL_QTY": 179575
+    },
+    {
+      "PROD_CD": "12407",
+      "BAL_QTY": 0
+    },
+    {
+      "PROD_CD": "12420",
+      "BAL_QTY": 104025
+    },
+    {
+      "PROD_CD": "12430",
+      "BAL_QTY": 174046
+    },
+    {
+      "PROD_CD": "12431",
+      "BAL_QTY": 437433
+    },
+    {
+      "PROD_CD": "5036",
+      "BAL_QTY": 22500
+    },
+    {
+      "PROD_CD": "5130",
+      "BAL_QTY": 22500
+    },
+    {
+      "PROD_CD": "6951",
+      "BAL_QTY": 45000
+    },
+    {
+      "PROD_CD": "6959",
+      "BAL_QTY": 90000
+    },
+    {
+      "PROD_CD": "8594",
+      "BAL_QTY": 47040
+    },
+    {
+      "PROD_CD": "8816",
+      "BAL_QTY": 24075
+    },
+    {
+      "PROD_CD": "8820",
+      "BAL_QTY": 211680
+    }
+  ]
+}

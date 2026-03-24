@@ -1,6 +1,6 @@
 import { logger } from "../utils/logger.js";
 import { NetworkError, EcountApiError } from "../utils/error-handler.js";
-import type { EcountConfig } from "../config.js";
+import { apiHostPrefix, type EcountConfig } from "../config.js";
 import type { EcountResponse, EcountLoginData } from "./types.js";
 
 // Session expiry error codes (to be confirmed in Phase 2.5)
@@ -12,7 +12,7 @@ export class SessionManager {
   private baseUrl: string;
 
   constructor(private config: EcountConfig) {
-    this.baseUrl = `https://sboapi${config.ECOUNT_ZONE}.ecount.com`;
+    this.baseUrl = `https://${apiHostPrefix(config)}${config.ECOUNT_ZONE}.ecount.com`;
   }
 
   async getSessionId(): Promise<string> {
