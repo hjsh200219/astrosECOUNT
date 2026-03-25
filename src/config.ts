@@ -26,3 +26,36 @@ export function loadConfig(): EcountConfig {
   }
   return result.data;
 }
+
+/** Internal Web API authentication config (optional — requires WEB_ID + WEB_PW) */
+export interface InternalApiConfig {
+  ECOUNT_ZONE: string;
+  ECOUNT_COM_CODE: string;
+  ECOUNT_WEB_ID: string;
+  ECOUNT_WEB_PW: string;
+}
+
+/**
+ * Load internal API config from environment.
+ * Returns null if ECOUNT_WEB_ID or ECOUNT_WEB_PW are not set.
+ * Both must be present for internal API to be enabled.
+ */
+export function loadInternalApiConfig(): InternalApiConfig | null {
+  const webId = process.env.ECOUNT_WEB_ID;
+  const webPw = process.env.ECOUNT_WEB_PW;
+
+  if (!webId || !webPw) return null;
+
+  // Inherit ZONE and COM_CODE from base config env vars
+  const zone = process.env.ECOUNT_ZONE || "AU1";
+  const comCode = process.env.ECOUNT_COM_CODE;
+
+  if (!comCode) return null;
+
+  return {
+    ECOUNT_ZONE: zone,
+    ECOUNT_COM_CODE: comCode,
+    ECOUNT_WEB_ID: webId,
+    ECOUNT_WEB_PW: webPw,
+  };
+}

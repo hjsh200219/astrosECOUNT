@@ -14,7 +14,7 @@ describe("Server Integration", () => {
   });
 
   describe("createServer", () => {
-    it("should create server and register all 50 tools with valid config", async () => {
+    it("should create server and register all 54 tools with valid config", async () => {
       process.env.ECOUNT_COM_CODE = "TESTCO";
       process.env.ECOUNT_USER_ID = "testuser";
       process.env.ECOUNT_API_CERT_KEY = "testkey123";
@@ -56,8 +56,9 @@ describe("Server Integration", () => {
       // + 4 inventory + 3 production + 1 accounting + 2 other + 1 board
       // + 1 bl-parser + 2 contacts + 3 business-rules + 1 pdf-stamp
       // + 3 email-templates + 4 exchange-rate + 4 shipment-tracking
-      // + 1 logistics-kpi + 4 contracts + 4 internal-api = 50
-      expect(toolSpy).toHaveBeenCalledTimes(50);
+      // + 1 logistics-kpi + 4 contracts + 4 internal-api
+      // + 1 inventory-verify + 1 stale-shipments + 1 csv-export + 1 daily-report = 54
+      expect(toolSpy).toHaveBeenCalledTimes(54);
     });
 
     it("should verify all 8 tool categories are registered", async () => {
@@ -162,6 +163,18 @@ describe("Server Integration", () => {
       expect(toolNames).toContain("ecount_list_purchases_internal");
       expect(toolNames).toContain("ecount_list_vatslips");
       expect(toolNames).toContain("ecount_list_account_slips");
+
+      // Inventory verify tools
+      expect(toolNames).toContain("ecount_verify_inventory");
+
+      // Stale shipment tools
+      expect(toolNames).toContain("ecount_stale_shipments");
+
+      // CSV export tools
+      expect(toolNames).toContain("ecount_export_csv");
+
+      // Daily report tools
+      expect(toolNames).toContain("ecount_daily_report");
     });
 
     it("should start gracefully without config (no tools registered)", async () => {

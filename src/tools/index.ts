@@ -20,6 +20,10 @@ import { registerShipmentTrackingTools } from "./shipment-tracking.js";
 import { registerLogisticsKpiTools } from "./logistics-kpi.js";
 import { registerContractTools } from "./contracts.js";
 import { registerInternalApiTools } from "./internal-api.js";
+import { registerInventoryVerifyTools } from "./inventory-verify.js";
+import { registerStaleShipmentTools } from "./stale-shipments.js";
+import { registerCsvExportTools } from "./csv-export.js";
+import { registerDailyReportTools } from "./daily-report.js";
 
 export function registerAllTools(server: McpServer, client: EcountClient, config: EcountConfig): void {
   registerConnectionTools(server, client, config);
@@ -41,6 +45,11 @@ export function registerAllTools(server: McpServer, client: EcountClient, config
   registerShipmentTrackingTools(server);
   registerLogisticsKpiTools(server);
   registerContractTools(server);
+  // Category B+ tools (additional utilities)
+  registerInventoryVerifyTools(server);
+  registerStaleShipmentTools(server);
+  registerCsvExportTools(server);
+  registerDailyReportTools(server);
   // Category B tools (EcountClient dependency - internal API)
   registerInternalApiTools(server, client);
 }

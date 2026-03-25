@@ -43,3 +43,70 @@ describe("registerContactTools", () => {
     expect(() => registerContactTools(server)).not.toThrow();
   });
 });
+
+describe("contact email and phone data", () => {
+  it("should have email on all 13 contacts", () => {
+    const all = listContacts({});
+    expect(all.length).toBe(13);
+    for (const contact of all) {
+      expect(contact.email, `${contact.name} is missing email`).toBeTruthy();
+      expect(contact.email!.length, `${contact.name} email is empty`).toBeGreaterThan(0);
+    }
+  });
+
+  it("should have phone on all 13 contacts", () => {
+    const all = listContacts({});
+    expect(all.length).toBe(13);
+    for (const contact of all) {
+      expect(contact.phone, `${contact.name} is missing phone`).toBeTruthy();
+      expect(contact.phone!.length, `${contact.name} phone is empty`).toBeGreaterThan(0);
+    }
+  });
+
+  it("should have valid email format (contains @) for all contacts", () => {
+    const all = listContacts({});
+    for (const contact of all) {
+      expect(contact.email, `${contact.name} email should contain @`).toContain("@");
+    }
+  });
+
+  it("lookupContact should return email and phone", () => {
+    const contact = lookupContact("김민수");
+    expect(contact).not.toBeNull();
+    expect(contact!.email).toBeTruthy();
+    expect(contact!.email).toContain("@");
+    expect(contact!.phone).toBeTruthy();
+  });
+
+  it("lookupContact for Maria Silva should return email and phone", () => {
+    const contact = lookupContact("Maria Silva");
+    expect(contact).not.toBeNull();
+    expect(contact!.email).toBeTruthy();
+    expect(contact!.email).toContain("@");
+    expect(contact!.phone).toBeTruthy();
+  });
+
+  it("아스트로스 contacts should use @astros.co.kr domain", () => {
+    const astros = listContacts({ company: "아스트로스" });
+    expect(astros.length).toBe(5);
+    for (const c of astros) {
+      expect(c.email).toContain("@astros.co.kr");
+    }
+  });
+
+  it("삼현INT contacts should use @samhyun-int.co.kr domain", () => {
+    const contacts = listContacts({ company: "삼현INT" });
+    expect(contacts.length).toBe(2);
+    for (const c of contacts) {
+      expect(c.email).toContain("@samhyun-int.co.kr");
+    }
+  });
+
+  it("정운관세법인 contacts should use @jungwoon.co.kr domain", () => {
+    const contacts = listContacts({ company: "정운관세법인" });
+    expect(contacts.length).toBe(3);
+    for (const c of contacts) {
+      expect(c.email).toContain("@jungwoon.co.kr");
+    }
+  });
+});

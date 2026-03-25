@@ -1,5 +1,6 @@
 import { formatError, type McpResponse } from "./response-formatter.js";
 import { logger } from "./logger.js";
+import { CircuitBreakerOpen } from "../client/circuit-breaker.js";
 
 export class EcountApiError extends Error {
   constructor(
@@ -26,6 +27,9 @@ export class NetworkError extends Error {
 }
 
 export function handleToolError(error: unknown): McpResponse {
+  if (error instanceof CircuitBreakerOpen) {
+    return formatError("ECOUNT 내부 API가 일시적으로 사용 불가합니다. 잠시 후 다시 시도해주세요.");
+  }
   if (error instanceof EcountApiError) {
     return formatError(`ECOUNT 오류 [${error.errorCode}]: ${error.message}`);
   }
