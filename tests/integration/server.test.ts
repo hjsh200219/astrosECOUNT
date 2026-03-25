@@ -14,7 +14,7 @@ describe("Server Integration", () => {
   });
 
   describe("createServer", () => {
-    it("should create server and register all 30 tools with valid config", async () => {
+    it("should create server and register all 50 tools with valid config", async () => {
       process.env.ECOUNT_COM_CODE = "TESTCO";
       process.env.ECOUNT_USER_ID = "testuser";
       process.env.ECOUNT_API_CERT_KEY = "testkey123";
@@ -54,8 +54,10 @@ describe("Server Integration", () => {
 
       // 3 connection + 4 master-data + 3 sales + 2 purchase
       // + 4 inventory + 3 production + 1 accounting + 2 other + 1 board
-      // + 1 bl-parser + 2 contacts + 3 business-rules + 1 pdf-stamp = 30
-      expect(toolSpy).toHaveBeenCalledTimes(30);
+      // + 1 bl-parser + 2 contacts + 3 business-rules + 1 pdf-stamp
+      // + 3 email-templates + 4 exchange-rate + 4 shipment-tracking
+      // + 1 logistics-kpi + 4 contracts + 4 internal-api = 50
+      expect(toolSpy).toHaveBeenCalledTimes(50);
     });
 
     it("should verify all 8 tool categories are registered", async () => {
@@ -132,6 +134,34 @@ describe("Server Integration", () => {
 
       // PDF stamp tools
       expect(toolNames).toContain("ecount_stamp_pdf");
+
+      // Email template tools
+      expect(toolNames).toContain("ecount_list_email_templates");
+      expect(toolNames).toContain("ecount_get_email_template");
+      expect(toolNames).toContain("ecount_render_email");
+
+      // Exchange rate tools
+      expect(toolNames).toContain("ecount_get_exchange_rate");
+      expect(toolNames).toContain("ecount_set_exchange_rate");
+      expect(toolNames).toContain("ecount_convert_currency");
+
+      // Shipment tracking tools
+      expect(toolNames).toContain("ecount_add_shipment");
+      expect(toolNames).toContain("ecount_list_shipments");
+      expect(toolNames).toContain("ecount_update_shipment_status");
+
+      // Logistics KPI tools
+      expect(toolNames).toContain("ecount_calc_logistics_kpi");
+
+      // Contract tools
+      expect(toolNames).toContain("ecount_add_contract");
+      expect(toolNames).toContain("ecount_list_contracts");
+
+      // Internal API tools
+      expect(toolNames).toContain("ecount_list_sales_internal");
+      expect(toolNames).toContain("ecount_list_purchases_internal");
+      expect(toolNames).toContain("ecount_list_vatslips");
+      expect(toolNames).toContain("ecount_list_account_slips");
     });
 
     it("should start gracefully without config (no tools registered)", async () => {

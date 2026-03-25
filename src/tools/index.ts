@@ -14,6 +14,12 @@ import { registerBLParserTool } from "./bl-parser.js";
 import { registerContactTools } from "./contacts.js";
 import { registerBusinessRuleTools } from "./business-rules.js";
 import { registerPdfStampTool } from "./pdf-stamp.js";
+import { registerEmailTemplateTools } from "./email-templates.js";
+import { registerExchangeRateTools } from "./exchange-rate.js";
+import { registerShipmentTrackingTools } from "./shipment-tracking.js";
+import { registerLogisticsKpiTools } from "./logistics-kpi.js";
+import { registerContractTools } from "./contracts.js";
+import { registerInternalApiTools } from "./internal-api.js";
 
 export function registerAllTools(server: McpServer, client: EcountClient, config: EcountConfig): void {
   registerConnectionTools(server, client, config);
@@ -30,4 +36,11 @@ export function registerAllTools(server: McpServer, client: EcountClient, config
   registerContactTools(server);
   registerBusinessRuleTools(server);
   registerPdfStampTool(server);
+  registerEmailTemplateTools(server);
+  registerExchangeRateTools(server);
+  registerShipmentTrackingTools(server);
+  registerLogisticsKpiTools(server);
+  registerContractTools(server);
+  // Category B tools (EcountClient dependency - internal API)
+  registerInternalApiTools(server, client);
 }
