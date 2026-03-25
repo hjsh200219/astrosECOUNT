@@ -10,6 +10,10 @@ import { registerProductionTools } from "./production.js";
 import { registerAccountingTools } from "./accounting.js";
 import { registerOtherTools } from "./other.js";
 import { registerBoardTools } from "./board.js";
+import { registerBLParserTool } from "./bl-parser.js";
+import { registerContactTools } from "./contacts.js";
+import { registerBusinessRuleTools } from "./business-rules.js";
+import { registerPdfStampTool } from "./pdf-stamp.js";
 
 export function registerAllTools(server: McpServer, client: EcountClient, config: EcountConfig): void {
   registerConnectionTools(server, client, config);
@@ -21,4 +25,9 @@ export function registerAllTools(server: McpServer, client: EcountClient, config
   registerAccountingTools(server, client);
   registerOtherTools(server, client);
   registerBoardTools(server, client);
+  // Category B tools (no EcountClient dependency)
+  registerBLParserTool(server);
+  registerContactTools(server);
+  registerBusinessRuleTools(server);
+  registerPdfStampTool(server);
 }

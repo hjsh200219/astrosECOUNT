@@ -14,7 +14,7 @@ describe("Server Integration", () => {
   });
 
   describe("createServer", () => {
-    it("should create server and register all 59 tools with valid config", async () => {
+    it("should create server and register all 30 tools with valid config", async () => {
       process.env.ECOUNT_COM_CODE = "TESTCO";
       process.env.ECOUNT_USER_ID = "testuser";
       process.env.ECOUNT_API_CERT_KEY = "testkey123";
@@ -43,11 +43,19 @@ describe("Server Integration", () => {
         ECOUNT_LAN_TYPE: "ko-KR",
       });
 
-      registerAllTools(server2, client);
+      registerAllTools(server2, client, {
+        ECOUNT_COM_CODE: "TESTCO",
+        ECOUNT_USER_ID: "testuser",
+        ECOUNT_API_CERT_KEY: "testkey123",
+        ECOUNT_ZONE: "AU1",
+        ECOUNT_LAN_TYPE: "ko-KR",
+        ECOUNT_API_MODE: "production",
+      });
 
       // 3 connection + 4 master-data + 3 sales + 2 purchase
-      // + 4 inventory + 3 production + 1 accounting + 2 other + 1 board = 23
-      expect(toolSpy).toHaveBeenCalledTimes(23);
+      // + 4 inventory + 3 production + 1 accounting + 2 other + 1 board
+      // + 1 bl-parser + 2 contacts + 3 business-rules + 1 pdf-stamp = 30
+      expect(toolSpy).toHaveBeenCalledTimes(30);
     });
 
     it("should verify all 8 tool categories are registered", async () => {
@@ -109,6 +117,21 @@ describe("Server Integration", () => {
 
       // Board tools
       expect(toolNames).toContain("ecount_create_board");
+
+      // BL Parser tools
+      expect(toolNames).toContain("ecount_parse_bl");
+
+      // Contact tools
+      expect(toolNames).toContain("ecount_lookup_contact");
+      expect(toolNames).toContain("ecount_list_contacts");
+
+      // Business rule tools
+      expect(toolNames).toContain("ecount_get_customs_broker");
+      expect(toolNames).toContain("ecount_get_warehouse_mapping");
+      expect(toolNames).toContain("ecount_list_business_rules");
+
+      // PDF stamp tools
+      expect(toolNames).toContain("ecount_stamp_pdf");
     });
 
     it("should start gracefully without config (no tools registered)", async () => {
