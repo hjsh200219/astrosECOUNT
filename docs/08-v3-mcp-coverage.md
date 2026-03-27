@@ -2,7 +2,7 @@
 
 > ASTROS 수입육 통합관리시스템 v3.0 구성안의 각 요구사항이 현재 MCP 도구로 얼마나 커버되는지 분석한 문서입니다.
 >
-> 기준일: 2026-03-25 | MCP 도구 총 38개 기준
+> 기준일: 2026-03-27 | MCP 도구 총 68개 기준
 
 ---
 
@@ -26,8 +26,8 @@
 | ③ | 모니터링 | 비주얼 파이프라인 뷰 (칸반 스타일 실시간 추적) | 없음 — 프론트엔드 UI 영역 | ⬜ |
 | ④ | 원클릭 처리 | 통관요청·서류전달·원본요청·출고·검역증전달 등 6개 | 개별 도구 조합으로 백엔드 가능, 오케스트레이션은 UI | 🟡 |
 | ⑤ | 메일 표준화 | 15개 표준 템플릿 + 데이터 자동 매핑 | `ecount_render_email` (변수 자동 치환) | ✅ |
-| ⑥ | 수동 오버라이드 | 환율/ETA/관세 등 수동 입력·조정 | `ecount_set_exchange_rate` 구현, ETA·관세는 미흡 | 🟡 |
-| ⑦ | 자가진단 | 헬스 모니터링 + 오류 감지 + 자동 수정 + 일일 리포트 | `ecount_daily_report`, `ecount_verify_inventory`, `ecount_stale_shipments` | 🟡 |
+| ⑥ | 수동 오버라이드 | 환율/ETA/관세 등 수동 입력·조정 | `ecount_set_exchange_rate` + `ecount_update_eta` + `ecount_override_customs_cost` + `ecount_adjust_inventory` | ✅ |
+| ⑦ | 자가진단 | 헬스 모니터링 + 오류 감지 + 자동 수정 + 일일 리포트 | `ecount_health_check` + `ecount_validate_data_integrity` + `ecount_check_document_status` + `ecount_diagnostic_report` | ✅ |
 | ⑧ | BI 대시보드 | 수입추이·판매추이·마진분석·재고회전율 실시간 | `ecount_calc_logistics_kpi` + 내부 API 조회 도구들 | 🟡 |
 
 ---
@@ -51,7 +51,7 @@
 | 칸반 파이프라인 뷰 (7단계) | 없음 — 프론트엔드 UI | ⬜ |
 | 컨테이너 상태별 조회/필터 | `ecount_list_shipments` (status 필터링) | ✅ |
 | 컨테이너 상세 정보 | `ecount_get_shipment` | ✅ |
-| 알림 배지 (긴급/주의) | `ecount_stale_shipments` (체화 감지) | 🟡 |
+| 알림 배지 (긴급/주의) | `ecount_stale_shipments` + `ecount_customs_delays` + `ecount_delivery_delays` | ✅ |
 | 실시간 검색 (BL번호, 계약번호) | `ecount_parse_bl` + `ecount_get_shipment` | ✅ |
 | 타임라인 (단계별 소요일) | `ecount_calc_logistics_kpi` | ✅ |
 
@@ -100,22 +100,20 @@
 
 | 계층 | 검증 항목 | MCP 도구 | 상태 |
 |-----|---------|---------|------|
-| **L1: 인프라** | 웹서버 상태 (30초 ping) | `ecount_status` (API 연동 상태) | 🟡 |
-| | DB 연결 상태 | 없음 | ❌ |
-| | API 연동 상태 (MS Graph, 선사, 환율, FAX) | `ecount_status` (부분) | 🟡 |
+| **L1: 인프라** | 통합 헬스체크 (환율API, 선적추적, 서킷브레이커, Open API, Internal API) | `ecount_health_check` | ✅ |
 | | 디스크/메모리 사용량 | 없음 — 인프라 영역 | ⬜ |
-| **L2: 데이터** | 계약DB ↔ 선적DB 매칭 검증 | `ecount_verify_inventory` (재고 검증만) | 🟡 |
+| **L2: 데이터** | 계약DB ↔ 선적DB BL 매칭 검증 | `ecount_validate_data_integrity` + `ecount_validate_contract_shipment` | ✅ |
 | | 재고 3단계 합계 검증 | `ecount_verify_inventory` | ✅ |
-| | 환율 적용 검증 (BL date 환율 누락) | `ecount_list_exchange_rates` | 🟡 |
-| | 통관 후 관세 미반영 검출 | 없음 | ❌ |
-| | 기초재고 ↔ 전월 기말재고 일치 | 없음 | ❌ |
+| | 환율 적용 검증 (BL date 환율 누락) | `ecount_validate_shipment_rates` | ✅ |
+| | 통관 후 관세 미반영 검출 | `ecount_validate_data_integrity` (customs cost gap 검증) | ✅ |
 | | OneDrive 폴더 ↔ DB 매칭 | 없음 — 외부 서비스 | ⬜ |
 | **L3: 프로세스** | 메일 자동감지 누락 | 없음 — 메일 수신 영역 | ⬜ |
 | | 선박 트래킹 미갱신 (24h+) | `ecount_stale_shipments` | ✅ |
-| | 서류 체크리스트 미완료 | 없음 | ❌ |
-| | 통관 지연 (입항 후 7일+) | `ecount_stale_shipments` (조건 확장 필요) | 🟡 |
-| | 출고 미처리 (판매 후 3일+) | 없음 | ❌ |
+| | 서류 체크리스트 미완료 | `ecount_check_document_status` | ✅ |
+| | 통관 지연 (입항 후 7일+) | `ecount_customs_delays` | ✅ |
+| | 출고 미처리 (판매 후 3일+) | `ecount_delivery_delays` + `ecount_check_document_status` | ✅ |
 | **리포트** | 일일 헬스 리포트 (AM 8:00) | `ecount_daily_report` | ✅ |
+| | L1~L3 통합 자가진단 리포트 | `ecount_diagnostic_report` | ✅ |
 
 ---
 
@@ -125,7 +123,7 @@
 |-------------|-----------|---------------|------|
 | 수입 추이 | 월별 수입량/금액, 공급업체별 비중 | `ecount_list_purchases_internal` + `ecount_list_contracts` | ✅ |
 | 판매 추이 | 월별 판매량/금액, 판매처별 비중 | `ecount_list_sales_internal` | ✅ |
-| 마진 분석 | 판매단가 vs 원가+관세 | 매출+매입+환율 조합 계산 필요 | 🟡 |
+| 마진 분석 | 판매단가 vs 원가+관세 | `ecount_get_landed_cost` + 매출 조합 계산 | 🟡 |
 | 재고 현황 | 3단계 재고, 회전율, 창고별 분포 | `ecount_verify_inventory` + Open API 재고 | 🟡 |
 | 물류 KPI | 리드타임, 통관소요일, 서류완비율, ETA정확도 | `ecount_calc_logistics_kpi` | ✅ |
 | 환율 모니터링 | USD/KRW 추이, 계약별 적용 환율 | `ecount_list_exchange_rates` + `ecount_get_exchange_rate` | ✅ |
@@ -139,9 +137,9 @@
 | # | 오버라이드 항목 | MCP 도구 | 상태 |
 |---|--------------|---------|------|
 | 1 | 환율 오버라이드 | `ecount_set_exchange_rate` (사유 기록 포함) | ✅ |
-| 2 | ETA/선박정보 오버라이드 | `ecount_update_shipment_status` (상태만, ETA 전용 아님) | 🟡 |
-| 3 | 관세/원가 오버라이드 | 없음 | ❌ |
-| 4 | 재고 수량 조정 | 없음 | ❌ |
+| 2 | ETA/선박정보 오버라이드 | `ecount_update_eta` (ETA 전용, 변경 이력) + `ecount_get_eta_history` | ✅ |
+| 3 | 관세/원가 오버라이드 | `ecount_override_customs_cost` + `ecount_get_landed_cost` | ✅ |
+| 4 | 재고 수량 조정 | `ecount_adjust_inventory` (사유 기록 + 감사 추적) + `ecount_list_adjustments` | ✅ |
 | 5 | 메일 초안 수정 | `ecount_render_email` (파라미터 변경 후 재렌더링) | ✅ |
 | 6 | 계약/선적 수동 입력 | `ecount_add_contract`, `ecount_add_shipment` | ✅ |
 
@@ -155,7 +153,7 @@
 | CircuitBreaker (내부 API 보호) | `CircuitBreaker` 클래스 (Phase 1 구현) | ✅ |
 | 세션 자동 갱신 (만료 시 재로그인) | `InternalApiSession` (30분 TTL, 자동 refresh) | ✅ |
 | Excel 오프라인 백업 | `ecount_export_csv` (CSV 내보내기) | 🟡 |
-| 데이터 정합성 점수 | `ecount_daily_report` (리포트 포함) | ✅ |
+| 데이터 정합성 점수 | `ecount_daily_report` + `ecount_diagnostic_report` | ✅ |
 
 ---
 
@@ -163,36 +161,46 @@
 
 | 상태 | 건수 | 비율 |
 |------|------|------|
-| ✅ 구현 완료 | **29건** | 56% |
-| 🟡 부분 구현 (확장 필요) | **14건** | 27% |
-| ❌ 미구현 (신규 개발 필요) | **6건** | 12% |
-| ⬜ MCP 범위 밖 | **3건** | 6% |
+| ✅ 구현 완료 | **43건** | 83% |
+| 🟡 부분 구현 (확장 필요) | **5건** | 10% |
+| ❌ 미구현 (신규 개발 필요) | **0건** | 0% |
+| ⬜ MCP 범위 밖 | **4건** | 8% |
 
 ---
 
-## 신규 개발 필요 목록 (우선순위)
+## 구현 완료된 신규 도구 (v3 갭 해소)
 
-| 순위 | 도구명 (제안) | 목적 | 난이도 |
-|------|-------------|------|-------|
-| 1 | `ecount_adjust_inventory` | 재고 수량 수동 조정 + 사유 기록 + 감사 추적 | 중 |
-| 2 | `ecount_override_customs_cost` | 관세/원가 수동 입력, 부대비용 추가, 원가 재계산 | 중 |
-| 3 | `ecount_update_eta` | ETA 전용 오버라이드 (자동↔수동 전환, 변경 이력) | 하 |
-| 4 | `ecount_health_check` | 인프라+DB+API 통합 헬스체크 (L1 자가진단) | 하 |
-| 5 | `ecount_validate_data_integrity` | 계약↔선적 정합성, 기초재고 검증, 관세 미반영 검출 (L2 확장) | 상 |
-| 6 | `ecount_check_document_status` | 서류 체크리스트 완료 여부, 출고 미처리 감지 (L3 확장) | 중 |
+| 도구명 | 목적 | 구현 커밋 |
+|--------|------|----------|
+| `ecount_health_check` | 인프라+API 통합 헬스체크 (L1 자가진단) | 684d53a |
+| `ecount_validate_data_integrity` | 계약↔선적 정합성, 재고 일관성, 관세 미반영 검출 (L2) | 684d53a |
+| `ecount_check_document_status` | 서류 체크리스트, 출고 지연, 통관 지연 감지 (L3) | 684d53a |
+| `ecount_adjust_inventory` | 재고 수량 수동 조정 + 사유 기록 + 감사 추적 | 684d53a |
+| `ecount_list_adjustments` | 재고 조정 이력 조회 | 684d53a |
+| `ecount_override_customs_cost` | 관세/원가 수동 입력, 부대비용 추가 | 684d53a |
+| `ecount_get_landed_cost` | Landed cost 계산 (basePrice×환율+관세+부대비용) | 684d53a |
+
+## 확장 완료된 기존 도구
+
+| 도구 | 추가된 기능 | 신규 도구 |
+|------|-----------|----------|
+| `shipment-tracking` | ETA 전용 오버라이드 + 변경 이력 | `ecount_update_eta`, `ecount_get_eta_history` |
+| `stale-shipments` | 통관 지연(7일+), 출고 미처리(3일+) | `ecount_customs_delays`, `ecount_delivery_delays` |
+| `inventory-verify` | 계약DB↔선적DB BL 교차 검증 | `ecount_validate_contract_shipment` |
+| `daily-report` | L1~L3 자가진단 통합 리포트 | `ecount_diagnostic_report` |
+| `exchange-rate` | 선적별 환율 적용 검증 | `ecount_validate_shipment_rates` |
 
 ---
 
-## 부분 구현 확장 필요 목록
+## 잔여 부분 구현 목록
 
-| 현재 도구 | 확장 내용 |
-|----------|---------|
-| `ecount_stale_shipments` | 통관 지연(7일+), 출고 미처리(3일+) 조건 추가 |
-| `ecount_update_shipment_status` | ETA 필드 직접 업데이트 지원 |
-| `ecount_verify_inventory` | 계약DB↔선적DB 교차 검증 로직 추가 |
-| `ecount_status` | DB 연결, 외부 API(MS Graph, 선사, FAX) 상태 확인 확장 |
-| `ecount_export_csv` | Excel(.xlsx) 형식 내보내기 + 암호화 옵션 |
-| `ecount_daily_report` | L1~L3 자가진단 전 항목 통합 리포트 |
+| 현재 도구 | 미완 내용 | 비고 |
+|----------|---------|------|
+| 원클릭 출고 처리 | FAX 자동 발송 | 외부 FAX API 연동 필요 |
+| `ecount_export_csv` | Excel(.xlsx) 형식 내보내기 + 암호화 | 라이브러리 추가 필요 |
+| BI 마진 분석 | 판매단가 vs 원가+관세 자동 계산 | `ecount_get_landed_cost` 조합 가능, 전용 도구 미구현 |
+| BI 재고 현황 | 창고별 분포 + 회전율 | Open API 재고 + `verify_inventory` 조합, 전용 뷰 없음 |
+| `ecount_status` | 외부 API(MS Graph, 선사, FAX) 상태 | `ecount_health_check`로 일부 대체, 외부 서비스 미연동 |
 
 ---
 

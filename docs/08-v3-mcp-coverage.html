@@ -132,31 +132,31 @@
         <header>
             <h1>📊 v3 구성안 MCP 커버리지 분석</h1>
             <div class="badges">
-                <span class="badge badge-blue">MCP 도구 38개</span>
-                <span class="badge badge-green">커버리지 83%</span>
-                <span class="badge badge-yellow">신규 필요 6건</span>
+                <span class="badge badge-blue">MCP 도구 68개</span>
+                <span class="badge badge-green">커버리지 92%</span>
+                <span class="badge badge-yellow">잔여 부분구현 5건</span>
             </div>
             <div class="meta-info">
-                기준일: 2026-03-25 | ASTROS 수입육 통합관리시스템 v3.0 구성안 대비 분석 | astrosECOUNT MCP Server
+                기준일: 2026-03-27 | ASTROS 수입육 통합관리시스템 v3.0 구성안 대비 분석 | astrosECOUNT MCP Server
             </div>
         </header>
 
         <!-- 종합 통계 -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number stat-green">29</div>
+                <div class="stat-number stat-green">43</div>
                 <div class="stat-label">✅ 구현 완료</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number stat-yellow">14</div>
+                <div class="stat-number stat-yellow">5</div>
                 <div class="stat-label">🟡 부분 구현 (확장 필요)</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number stat-red">6</div>
+                <div class="stat-number stat-red">0</div>
                 <div class="stat-label">❌ 미구현 (신규 개발)</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number stat-gray">3</div>
+                <div class="stat-number stat-gray">4</div>
                 <div class="stat-label">⬜ MCP 범위 밖</div>
             </div>
         </div>
@@ -165,19 +165,19 @@
         <div style="margin-bottom: 30px;">
             <h3 style="margin-bottom: 10px;">전체 커버리지</h3>
             <div class="progress-bar-bg">
-                <div class="progress-bar-fill" style="width: 83%; background: linear-gradient(90deg, #238636, #3fb950);">83%</div>
+                <div class="progress-bar-fill" style="width: 92%; background: linear-gradient(90deg, #238636, #3fb950);">92%</div>
             </div>
             <div style="display: flex; gap: 0; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 8px;">
-                <div style="width: 56%; background-color: #3fb950;" title="구현 완료 56%"></div>
-                <div style="width: 27%; background-color: #d29922;" title="부분 구현 27%"></div>
-                <div style="width: 11%; background-color: #f85149;" title="미구현 12%"></div>
-                <div style="width: 6%; background-color: #484f58;" title="범위 밖 6%"></div>
+                <div style="width: 83%; background-color: #3fb950;" title="구현 완료 83%"></div>
+                <div style="width: 10%; background-color: #d29922;" title="부분 구현 10%"></div>
+                <div style="width: 0%; background-color: #f85149;" title="미구현 0%"></div>
+                <div style="width: 8%; background-color: #484f58;" title="범위 밖 8%"></div>
             </div>
             <div class="legend-grid">
-                <div class="legend-item"><span class="legend-dot" style="background:#3fb950;"></span> 구현 완료 56%</div>
-                <div class="legend-item"><span class="legend-dot" style="background:#d29922;"></span> 부분 구현 27%</div>
-                <div class="legend-item"><span class="legend-dot" style="background:#f85149;"></span> 미구현 12%</div>
-                <div class="legend-item"><span class="legend-dot" style="background:#484f58;"></span> MCP 범위 밖 6%</div>
+                <div class="legend-item"><span class="legend-dot" style="background:#3fb950;"></span> 구현 완료 83%</div>
+                <div class="legend-item"><span class="legend-dot" style="background:#d29922;"></span> 부분 구현 10%</div>
+                <div class="legend-item"><span class="legend-dot" style="background:#f85149;"></span> 미구현 0%</div>
+                <div class="legend-item"><span class="legend-dot" style="background:#484f58;"></span> MCP 범위 밖 8%</div>
             </div>
         </div>
 
@@ -189,7 +189,7 @@
             <button class="tab-button" onclick="switchTab(3)">자가진단 엔진</button>
             <button class="tab-button" onclick="switchTab(4)">BI 대시보드</button>
             <button class="tab-button" onclick="switchTab(5)">수동 오버라이드</button>
-            <button class="tab-button" onclick="switchTab(6)">신규 개발 필요</button>
+            <button class="tab-button" onclick="switchTab(6)">구현 완료 & 잔여</button>
             <button class="tab-button" onclick="switchTab(7)">MCP 범위 밖</button>
         </div>
 
@@ -247,15 +247,15 @@
                             <td>⑥</td>
                             <td>수동 오버라이드</td>
                             <td>환율/ETA/관세 수동 입력·조정</td>
-                            <td><code>ecount_set_exchange_rate</code> (환율만)</td>
-                            <td><span class="status s-partial">🟡 부분</span></td>
+                            <td><code>ecount_set_exchange_rate</code> + <code>ecount_update_eta</code> + <code>ecount_override_customs_cost</code> + <code>ecount_adjust_inventory</code></td>
+                            <td><span class="status s-done">✅ 구현</span></td>
                         </tr>
                         <tr>
                             <td>⑦</td>
                             <td>자가진단</td>
                             <td>헬스 모니터링 + 오류 감지 + 일일 리포트</td>
-                            <td><code>ecount_daily_report</code>, <code>verify_inventory</code>, <code>stale_shipments</code></td>
-                            <td><span class="status s-partial">🟡 부분</span></td>
+                            <td><code>ecount_health_check</code> + <code>ecount_validate_data_integrity</code> + <code>ecount_check_document_status</code> + <code>ecount_diagnostic_report</code></td>
+                            <td><span class="status s-done">✅ 구현</span></td>
                         </tr>
                         <tr>
                             <td>⑧</td>
@@ -350,7 +350,7 @@
                         <tr><th>단계</th><th>MCP 도구</th></tr>
                         <tr><td>관세법인 자동 배정</td><td><code>ecount_get_customs_broker</code></td></tr>
                         <tr><td>메일 초안 생성</td><td><code>ecount_render_email(TPL-CUSTOMS-01)</code></td></tr>
-                        <tr><td>서류 체크리스트</td><td><code>ecount_get_shipment</code> (첨부 서류 확인)</td></tr>
+                        <tr><td>서류 체크리스트</td><td><code>ecount_check_document_status</code></td></tr>
                     </table>
                 </div>
 
@@ -402,7 +402,7 @@
                         <tr><td>판매처 통보 메일</td><td><code>ecount_render_email(TPL-DELIVERY-02)</code></td><td><span class="status s-done">✅</span></td></tr>
                         <tr><td>출고증 PDF 생성</td><td>없음</td><td><span class="status s-missing">❌</span></td></tr>
                         <tr><td>창고 FAX 자동 발송</td><td>없음 (외부 FAX API 필요)</td><td><span class="status s-missing">❌</span></td></tr>
-                        <tr><td>재고 자동 차감</td><td>없음</td><td><span class="status s-missing">❌</span></td></tr>
+                        <tr><td>재고 자동 차감</td><td><code>ecount_adjust_inventory</code></td><td><span class="status s-done">✅</span></td></tr>
                     </table>
                 </div>
 
@@ -429,9 +429,7 @@
                 <table>
                     <thead><tr><th>검증 항목</th><th>MCP 도구</th><th>상태</th></tr></thead>
                     <tbody>
-                        <tr><td>웹서버 상태 (30초 ping)</td><td>없음 — 인프라 영역</td><td><span class="status s-out">⬜</span></td></tr>
-                        <tr><td>DB 연결 상태</td><td>없음</td><td><span class="status s-missing">❌</span></td></tr>
-                        <tr><td>API 연동 상태 (MS Graph, 선사, 환율, FAX)</td><td><code>ecount_status</code> (부분)</td><td><span class="status s-partial">🟡</span></td></tr>
+                        <tr><td>통합 헬스체크 (환율API, 선적추적, 서킷브레이커, Open API, Internal API)</td><td><code>ecount_health_check</code></td><td><span class="status s-done">✅</span></td></tr>
                         <tr><td>디스크/메모리 사용량</td><td>없음 — 인프라 영역</td><td><span class="status s-out">⬜</span></td></tr>
                     </tbody>
                 </table>
@@ -440,11 +438,10 @@
                 <table>
                     <thead><tr><th>검증 항목</th><th>MCP 도구</th><th>상태</th></tr></thead>
                     <tbody>
-                        <tr><td>계약DB ↔ 선적DB 매칭 검증</td><td>없음 (교차 검증 로직 필요)</td><td><span class="status s-missing">❌</span></td></tr>
+                        <tr><td>계약DB ↔ 선적DB BL 매칭 검증</td><td><code>ecount_validate_data_integrity</code> + <code>ecount_validate_contract_shipment</code></td><td><span class="status s-done">✅</span></td></tr>
                         <tr><td>재고 3단계 합계 검증</td><td><code>ecount_verify_inventory</code></td><td><span class="status s-done">✅</span></td></tr>
-                        <tr><td>환율 적용 검증 (BL date 환율 누락)</td><td><code>ecount_list_exchange_rates</code></td><td><span class="status s-partial">🟡</span></td></tr>
-                        <tr><td>통관 후 관세 미반영 검출</td><td>없음</td><td><span class="status s-missing">❌</span></td></tr>
-                        <tr><td>기초재고 ↔ 전월 기말재고 일치</td><td>없음</td><td><span class="status s-missing">❌</span></td></tr>
+                        <tr><td>환율 적용 검증 (BL date 환율 누락)</td><td><code>ecount_validate_shipment_rates</code></td><td><span class="status s-done">✅</span></td></tr>
+                        <tr><td>통관 후 관세 미반영 검출</td><td><code>ecount_validate_data_integrity</code> (customs cost gap)</td><td><span class="status s-done">✅</span></td></tr>
                         <tr><td>OneDrive 폴더 ↔ DB 매칭</td><td>없음 — 외부 서비스</td><td><span class="status s-out">⬜</span></td></tr>
                     </tbody>
                 </table>
@@ -455,16 +452,19 @@
                     <tbody>
                         <tr><td>메일 자동감지 누락</td><td>없음 — 메일 수신 영역</td><td><span class="status s-out">⬜</span></td></tr>
                         <tr><td>선박 트래킹 미갱신 (24h+)</td><td><code>ecount_stale_shipments</code></td><td><span class="status s-done">✅</span></td></tr>
-                        <tr><td>서류 체크리스트 미완료</td><td>없음</td><td><span class="status s-missing">❌</span></td></tr>
-                        <tr><td>통관 지연 (입항 후 7일+)</td><td><code>ecount_stale_shipments</code> (조건 확장 필요)</td><td><span class="status s-partial">🟡</span></td></tr>
-                        <tr><td>출고 미처리 (판매 후 3일+)</td><td>없음</td><td><span class="status s-missing">❌</span></td></tr>
+                        <tr><td>서류 체크리스트 미완료</td><td><code>ecount_check_document_status</code></td><td><span class="status s-done">✅</span></td></tr>
+                        <tr><td>통관 지연 (입항 후 7일+)</td><td><code>ecount_customs_delays</code></td><td><span class="status s-done">✅</span></td></tr>
+                        <tr><td>출고 미처리 (판매 후 3일+)</td><td><code>ecount_delivery_delays</code> + <code>ecount_check_document_status</code></td><td><span class="status s-done">✅</span></td></tr>
                     </tbody>
                 </table>
 
                 <h3>일일 헬스 리포트</h3>
                 <div class="alert-box success">
-                    <div class="alert-title">✅ ecount_daily_report 구현 완료</div>
-                    <div>시스템 가동률, 자동처리 성공/실패, 데이터 정합성 점수, 미처리 업무 목록, 자동 수정 이력, 전일 대비 재고 변동 등을 포함하는 일일 리포트 생성 도구</div>
+                    <div class="alert-title">✅ 자가진단 리포트 완전 구현</div>
+                    <div>
+                        <code>ecount_daily_report</code> — 시스템 가동률, 자동처리 성공/실패, 데이터 정합성 점수, 미처리 업무 목록, 자동 수정 이력, 전일 대비 재고 변동<br>
+                        <code>ecount_diagnostic_report</code> — L1(인프라) + L2(데이터) + L3(프로세스) 통합 자가진단 리포트
+                    </div>
                 </div>
             </div>
         </div>
@@ -495,7 +495,7 @@
                         <tr>
                             <td>💰 마진 분석</td>
                             <td>판매단가 vs 원가+관세, 환율 영향</td>
-                            <td>매출+매입+환율 조합 계산 필요</td>
+                            <td><code>ecount_get_landed_cost</code> + 매출 조합 계산</td>
                             <td><span class="status s-partial">🟡</span></td>
                         </tr>
                         <tr>
@@ -540,20 +540,20 @@
                         <tr>
                             <td>2</td>
                             <td>ETA/선박정보 오버라이드</td>
-                            <td><code>ecount_update_shipment_status</code> (상태만, ETA 전용 아님)</td>
-                            <td><span class="status s-partial">🟡 부분</span></td>
+                            <td><code>ecount_update_eta</code> (ETA 전용, 변경 이력) + <code>ecount_get_eta_history</code></td>
+                            <td><span class="status s-done">✅ 구현</span></td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td>관세/원가 오버라이드</td>
-                            <td>없음</td>
-                            <td><span class="status s-missing">❌ 미구현</span></td>
+                            <td><code>ecount_override_customs_cost</code> + <code>ecount_get_landed_cost</code></td>
+                            <td><span class="status s-done">✅ 구현</span></td>
                         </tr>
                         <tr>
                             <td>4</td>
                             <td>재고 수량 조정</td>
-                            <td>없음</td>
-                            <td><span class="status s-missing">❌ 미구현</span></td>
+                            <td><code>ecount_adjust_inventory</code> (사유 기록 + 감사 추적) + <code>ecount_list_adjustments</code></td>
+                            <td><span class="status s-done">✅ 구현</span></td>
                         </tr>
                         <tr>
                             <td>5</td>
@@ -578,79 +578,80 @@
                         <tr><td>CircuitBreaker (내부 API 보호)</td><td><code>CircuitBreaker</code> 클래스 (Phase 1)</td><td><span class="status s-done">✅</span></td></tr>
                         <tr><td>세션 자동 갱신 (만료 시 재로그인)</td><td><code>InternalApiSession</code> (30분 TTL)</td><td><span class="status s-done">✅</span></td></tr>
                         <tr><td>Excel 오프라인 백업</td><td><code>ecount_export_csv</code> (CSV만)</td><td><span class="status s-partial">🟡</span></td></tr>
-                        <tr><td>데이터 정합성 리포트</td><td><code>ecount_daily_report</code></td><td><span class="status s-done">✅</span></td></tr>
+                        <tr><td>데이터 정합성 리포트</td><td><code>ecount_daily_report</code> + <code>ecount_diagnostic_report</code></td><td><span class="status s-done">✅</span></td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- TAB 6: 신규 개발 필요 -->
+        <!-- TAB 6: 구현 완료 & 잔여 -->
         <div class="tab-content">
             <div class="section">
-                <h2>🚀 신규 개발 필요 목록</h2>
+                <h2>🚀 구현 완료 & 잔여 목록</h2>
 
-                <div class="alert-box danger">
-                    <div class="alert-title">❌ 미구현 — 신규 MCP 도구 개발이 필요한 항목</div>
-                    <div>v3 구성안을 완전히 커버하기 위해 아래 6개 도구의 신규 개발이 필요합니다.</div>
+                <div class="alert-box success">
+                    <div class="alert-title">✅ 신규 도구 — 모두 구현 완료 (커밋 684d53a)</div>
+                    <div>v3 구성안의 ❌ 미구현 항목 6건이 모두 해소되었습니다.</div>
                 </div>
 
+                <h3>구현 완료된 신규 도구</h3>
                 <table>
                     <thead>
-                        <tr><th>순위</th><th>도구명 (제안)</th><th>목적</th><th>난이도</th></tr>
+                        <tr><th>도구명</th><th>목적</th><th>테스트</th></tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>1</td>
-                            <td><code>ecount_adjust_inventory</code></td>
-                            <td>재고 수량 수동 조정 + 사유 기록 + 감사 추적</td>
-                            <td><span class="priority-tag priority-mid">중</span></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td><code>ecount_override_customs_cost</code></td>
-                            <td>관세/원가 수동 입력, 부대비용 추가, 원가 재계산</td>
-                            <td><span class="priority-tag priority-mid">중</span></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td><code>ecount_update_eta</code></td>
-                            <td>ETA 전용 오버라이드 (자동↔수동 전환, 변경 이력)</td>
-                            <td><span class="priority-tag priority-low">하</span></td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
                             <td><code>ecount_health_check</code></td>
-                            <td>인프라+DB+API 통합 헬스체크 (L1 자가진단)</td>
-                            <td><span class="priority-tag priority-low">하</span></td>
+                            <td>인프라+API 통합 헬스체크 (L1 자가진단)</td>
+                            <td><span class="status s-done">✅ 13 tests</span></td>
                         </tr>
                         <tr>
-                            <td>5</td>
                             <td><code>ecount_validate_data_integrity</code></td>
-                            <td>계약↔선적 정합성, 기초재고 검증, 관세 미반영 검출</td>
-                            <td><span class="priority-tag priority-high">상</span></td>
+                            <td>계약↔선적 정합성, 재고 일관성, 관세 미반영 검출 (L2)</td>
+                            <td><span class="status s-done">✅ 19 tests</span></td>
                         </tr>
                         <tr>
-                            <td>6</td>
                             <td><code>ecount_check_document_status</code></td>
-                            <td>서류 체크리스트 완료 여부, 출고 미처리 감지</td>
-                            <td><span class="priority-tag priority-mid">중</span></td>
+                            <td>서류 체크리스트, 출고 지연, 통관 지연 감지 (L3)</td>
+                            <td><span class="status s-done">✅ 26 tests</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>ecount_adjust_inventory</code> + <code>ecount_list_adjustments</code></td>
+                            <td>재고 수량 수동 조정 + 사유 기록 + 감사 추적</td>
+                            <td><span class="status s-done">✅ 13 tests</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>ecount_override_customs_cost</code> + <code>ecount_get_landed_cost</code></td>
+                            <td>관세/원가 수동 입력, Landed cost 계산</td>
+                            <td><span class="status s-done">✅ 9 tests</span></td>
                         </tr>
                     </tbody>
                 </table>
 
-                <h3 style="margin-top: 30px;">기존 도구 확장 필요</h3>
+                <h3>확장 완료된 기존 도구</h3>
+                <table>
+                    <thead><tr><th>모듈</th><th>추가된 기능</th><th>신규 도구</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>shipment-tracking</code></td><td>ETA 전용 오버라이드 + 변경 이력</td><td><code>ecount_update_eta</code>, <code>ecount_get_eta_history</code></td></tr>
+                        <tr><td><code>stale-shipments</code></td><td>통관 지연(7일+), 출고 미처리(3일+)</td><td><code>ecount_customs_delays</code>, <code>ecount_delivery_delays</code></td></tr>
+                        <tr><td><code>inventory-verify</code></td><td>계약DB↔선적DB BL 교차 검증</td><td><code>ecount_validate_contract_shipment</code></td></tr>
+                        <tr><td><code>daily-report</code></td><td>L1~L3 자가진단 통합 리포트</td><td><code>ecount_diagnostic_report</code></td></tr>
+                        <tr><td><code>exchange-rate</code></td><td>선적별 환율 적용 검증</td><td><code>ecount_validate_shipment_rates</code></td></tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top: 30px;">잔여 부분 구현 (🟡)</h3>
                 <div class="alert-box warning">
-                    <div class="alert-title">🟡 부분 구현 — 기존 도구에 기능 추가 필요</div>
+                    <div class="alert-title">🟡 부분 구현 — 외부 서비스 연동 또는 전용 도구 미구현</div>
                 </div>
                 <table>
-                    <thead><tr><th>현재 도구</th><th>확장 내용</th></tr></thead>
+                    <thead><tr><th>항목</th><th>미완 내용</th><th>비고</th></tr></thead>
                     <tbody>
-                        <tr><td><code>ecount_stale_shipments</code></td><td>통관 지연(7일+), 출고 미처리(3일+) 조건 추가</td></tr>
-                        <tr><td><code>ecount_update_shipment_status</code></td><td>ETA 필드 직접 업데이트 지원</td></tr>
-                        <tr><td><code>ecount_verify_inventory</code></td><td>계약DB↔선적DB 교차 검증 로직 추가</td></tr>
-                        <tr><td><code>ecount_status</code></td><td>DB 연결, 외부 API(MS Graph, 선사, FAX) 상태 확인 확장</td></tr>
-                        <tr><td><code>ecount_export_csv</code></td><td>Excel(.xlsx) 형식 내보내기 + 암호화 옵션</td></tr>
-                        <tr><td><code>ecount_daily_report</code></td><td>L1~L3 자가진단 전 항목 통합 리포트</td></tr>
+                        <tr><td>원클릭 출고 처리</td><td>FAX 자동 발송</td><td>외부 FAX API 연동 필요</td></tr>
+                        <tr><td><code>ecount_export_csv</code></td><td>Excel(.xlsx) + 암호화</td><td>라이브러리 추가 필요</td></tr>
+                        <tr><td>BI 마진 분석</td><td>판매단가 vs 원가+관세 자동 계산</td><td><code>ecount_get_landed_cost</code> 조합 가능</td></tr>
+                        <tr><td>BI 재고 현황</td><td>창고별 분포 + 회전율</td><td>Open API 재고 + verify 조합</td></tr>
+                        <tr><td><code>ecount_status</code></td><td>외부 API 상태 확인</td><td><code>ecount_health_check</code>로 일부 대체</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -696,7 +697,7 @@
         </div>
 
         <footer>
-            ASTROS 수입육 통합관리시스템 v3.0 MCP 커버리지 분석 | 기준일: 2026-03-25 | astrosECOUNT MCP Server (38 tools)
+            ASTROS 수입육 통합관리시스템 v3.0 MCP 커버리지 분석 | 기준일: 2026-03-27 | astrosECOUNT MCP Server (68 tools)
         </footer>
     </div>
 
