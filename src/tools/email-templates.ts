@@ -247,7 +247,7 @@ export function registerEmailTemplateTools(server: McpServer): void {
     "이메일 템플릿에 변수를 치환하여 완성된 제목과 본문을 반환합니다. variables 필드의 변수명을 data에 전달하세요.",
     {
       id: z.string().describe("템플릿 ID (예: TPL-SHIP-01)"),
-      data: z.record(z.string()).describe("치환할 변수 값 (예: {BL_NUMBER: 'MAEU123', PRODUCT_NAME: '돈육'})"),
+      data: z.record(z.string(), z.string()).describe("치환할 변수 값 (예: {BL_NUMBER: 'MAEU123', PRODUCT_NAME: '돈육'})"),
     },
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {
