@@ -24,6 +24,11 @@ import { registerInventoryVerifyTools } from "./inventory-verify.js";
 import { registerStaleShipmentTools } from "./stale-shipments.js";
 import { registerCsvExportTools } from "./csv-export.js";
 import { registerDailyReportTools } from "./daily-report.js";
+import { registerHealthCheckTools } from "./health-check.js";
+import { registerDataIntegrityTools } from "./data-integrity.js";
+import { registerDocumentStatusTools } from "./document-status.js";
+import { registerAdjustInventoryTools } from "./adjust-inventory.js";
+import { registerCustomsCostTools } from "./customs-cost.js";
 
 export function registerAllTools(server: McpServer, client: EcountClient, config: EcountConfig): void {
   registerConnectionTools(server, client, config);
@@ -50,6 +55,12 @@ export function registerAllTools(server: McpServer, client: EcountClient, config
   registerStaleShipmentTools(server);
   registerCsvExportTools(server);
   registerDailyReportTools(server);
+  // Category B+ tools (v3 coverage gap)
+  registerHealthCheckTools(server);
+  registerDataIntegrityTools(server);
+  registerDocumentStatusTools(server);
+  registerAdjustInventoryTools(server);
+  registerCustomsCostTools(server);
   // Category B tools (EcountClient dependency - internal API)
   registerInternalApiTools(server, client);
 }

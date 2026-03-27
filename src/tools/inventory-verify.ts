@@ -23,6 +23,28 @@ export interface VerificationResult {
   isConsistent: boolean;
 }
 
+export interface ContractEntry {
+  contractId: string;
+  blNumber?: string;
+  product: string;
+  quantity: number;
+}
+
+export interface ShipmentEntry {
+  shipmentId: string;
+  blNumber: string;
+  product: string;
+  quantity: number;
+  status: string;
+}
+
+export interface CrossValidationResult {
+  unmatchedContracts: { contractId: string; product: string; reason: string }[];
+  unmatchedShipments: { shipmentId: string; blNumber: string; reason: string }[];
+  quantityMismatches: { blNumber: string; contractQty: number; shipmentQty: number; diff: number }[];
+  isConsistent: boolean;
+}
+
 const PRIOR_STAGES = ["미착", "미통관"];
 
 export function verifyInventory(stages: InventoryStage[]): VerificationResult {
@@ -82,6 +104,77 @@ export function verifyInventory(stages: InventoryStage[]): VerificationResult {
   };
 }
 
+export function validateContractShipmentCross(
+  contracts: ContractEntry[],
+  shipments: ShipmentEntry[]
+): CrossValidationResult {
+  const unmatchedContracts: CrossValidationResult["unmatchedContracts"] = [];
+  const unmatchedShipments: CrossValidationResult["unmatchedShipments"] = [];
+  const quantityMismatches: CrossValidationResult["quantityMismatches"] = [];
+
+  // Build a map of shipments by blNumber
+  const shipmentByBl = new Map<string, ShipmentEntry>();
+  for (const shipment of shipments) {
+    shipmentByBl.set(shipment.blNumber, shipment);
+  }
+
+  // Track which BL numbers were matched by a contract
+  const matchedBlNumbers = new Set<string>();
+
+  for (const contract of contracts) {
+    if (!contract.blNumber) {
+      unmatchedContracts.push({
+        contractId: contract.contractId,
+        product: contract.product,
+        reason: "BL번호 미지정",
+      });
+      continue;
+    }
+
+    const shipment = shipmentByBl.get(contract.blNumber);
+    if (!shipment) {
+      unmatchedContracts.push({
+        contractId: contract.contractId,
+        product: contract.product,
+        reason: "선적 데이터 없음",
+      });
+      continue;
+    }
+
+    matchedBlNumbers.add(contract.blNumber);
+
+    if (contract.quantity !== shipment.quantity) {
+      quantityMismatches.push({
+        blNumber: contract.blNumber,
+        contractQty: contract.quantity,
+        shipmentQty: shipment.quantity,
+        diff: Math.abs(contract.quantity - shipment.quantity),
+      });
+    }
+  }
+
+  // Shipments whose BL was not referenced by any contract
+  for (const shipment of shipments) {
+    if (!matchedBlNumbers.has(shipment.blNumber)) {
+      unmatchedShipments.push({
+        shipmentId: shipment.shipmentId,
+        blNumber: shipment.blNumber,
+        reason: "계약 데이터 없음",
+      });
+    }
+  }
+
+  return {
+    unmatchedContracts,
+    unmatchedShipments,
+    quantityMismatches,
+    isConsistent:
+      unmatchedContracts.length === 0 &&
+      unmatchedShipments.length === 0 &&
+      quantityMismatches.length === 0,
+  };
+}
+
 export function registerInventoryVerifyTools(server: McpServer): void {
   server.tool(
     "ecount_verify_inventory",
@@ -103,6 +196,45 @@ export function registerInventoryVerifyTools(server: McpServer): void {
       try {
         const stages = params.stages as InventoryStage[];
         const result = verifyInventory(stages);
+        return formatResponse(result);
+      } catch (error) {
+        return handleToolError(error);
+      }
+    }
+  );
+
+  server.tool(
+    "ecount_validate_contract_shipment",
+    "계약 데이터와 선적(BL) 데이터를 교차 검증하여 미매칭 및 수량 불일치를 탐지합니다.",
+    {
+      contracts: z
+        .array(
+          z.object({
+            contractId: z.string().describe("계약 ID"),
+            blNumber: z.string().optional().describe("BL 번호"),
+            product: z.string().describe("품목명"),
+            quantity: z.number().describe("계약 수량"),
+          })
+        )
+        .describe("교차 검증할 계약 데이터 목록"),
+      shipments: z
+        .array(
+          z.object({
+            shipmentId: z.string().describe("선적 ID"),
+            blNumber: z.string().describe("BL 번호"),
+            product: z.string().describe("품목명"),
+            quantity: z.number().describe("선적 수량"),
+            status: z.string().describe("선적 상태"),
+          })
+        )
+        .describe("교차 검증할 선적 데이터 목록"),
+    },
+    { readOnlyHint: true },
+    async (params: Record<string, unknown>) => {
+      try {
+        const contracts = params.contracts as ContractEntry[];
+        const shipments = params.shipments as ShipmentEntry[];
+        const result = validateContractShipmentCross(contracts, shipments);
         return formatResponse(result);
       } catch (error) {
         return handleToolError(error);

@@ -19,7 +19,15 @@ export interface Shipment {
   updatedAt: string;
 }
 
+export interface EtaChange {
+  previousEta?: string;
+  newEta: string;
+  reason?: string;
+  changedAt: string;
+}
+
 const SHIPMENTS: Map<string, Shipment> = new Map();
+const ETA_HISTORY: Map<string, EtaChange[]> = new Map();
 let idCounter = 1;
 
 function nowIso(): string {
@@ -74,6 +82,31 @@ export function getShipmentByBL(blNumber: string): Shipment | null {
     if (shipment.blNumber === blNumber) return shipment;
   }
   return null;
+}
+
+export function updateShipmentEta(id: string, eta: string, reason?: string): Shipment | null {
+  const shipment = SHIPMENTS.get(id);
+  if (!shipment) return null;
+  const change: EtaChange = {
+    previousEta: shipment.eta,
+    newEta: eta,
+    reason,
+    changedAt: nowIso(),
+  };
+  const history = ETA_HISTORY.get(id) ?? [];
+  history.push(change);
+  ETA_HISTORY.set(id, history);
+  const updated: Shipment = {
+    ...shipment,
+    eta,
+    updatedAt: nowIso(),
+  };
+  SHIPMENTS.set(id, updated);
+  return updated;
+}
+
+export function getEtaHistory(id: string): EtaChange[] {
+  return ETA_HISTORY.get(id) ?? [];
 }
 
 export function registerShipmentTrackingTools(server: McpServer): void {
@@ -185,6 +218,49 @@ export function registerShipmentTrackingTools(server: McpServer): void {
           return formatResponse({ success: false, message: `선적 ID '${params.id}'를 찾을 수 없습니다.` });
         }
         return formatResponse({ success: true, shipment: result });
+      } catch (error) {
+        return handleToolError(error);
+      }
+    }
+  );
+
+  server.tool(
+    "ecount_update_eta",
+    "선적의 ETA(도착 예정일)를 업데이트하고 변경 이력을 기록합니다.",
+    {
+      id: z.string().describe("선적 ID"),
+      eta: z.string().describe("새로운 ETA (YYYY-MM-DD)"),
+      reason: z.string().optional().describe("ETA 변경 사유"),
+    },
+    { readOnlyHint: false, destructiveHint: false },
+    async (params: Record<string, unknown>) => {
+      try {
+        const result = updateShipmentEta(
+          params.id as string,
+          params.eta as string,
+          params.reason as string | undefined
+        );
+        if (!result) {
+          return formatResponse({ success: false, message: `선적 ID '${params.id}'를 찾을 수 없습니다.` });
+        }
+        return formatResponse({ success: true, shipment: result });
+      } catch (error) {
+        return handleToolError(error);
+      }
+    }
+  );
+
+  server.tool(
+    "ecount_get_eta_history",
+    "특정 선적의 ETA 변경 이력을 조회합니다.",
+    {
+      id: z.string().describe("선적 ID"),
+    },
+    { readOnlyHint: true },
+    async (params: Record<string, unknown>) => {
+      try {
+        const history = getEtaHistory(params.id as string);
+        return formatResponse({ count: history.length, history });
       } catch (error) {
         return handleToolError(error);
       }

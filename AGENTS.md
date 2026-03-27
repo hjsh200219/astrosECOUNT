@@ -15,32 +15,40 @@ Wraps ECOUNT ERP Open API + Internal Web API for LLM access via MCP protocol.
 
 ## Documentation Map
 
+### Root Files
+
 | File | Purpose |
 |------|---------|
 | `agent.md` / `CLAUDE.md` | Core invariants, commands, quick reference (~100 lines) |
-| `ARCHITECTURE.md` | Domain map, layers, dependency graph, data flow |
-| `docs/ARCHITECTURE.md` | Detailed architecture (domain map, tech stack, data flow) |
-| `docs/DESIGN.md` | Design system: coding patterns, naming conventions |
-| `docs/FRONTEND.md` | N/A -- this is a backend MCP server (no frontend) |
-| `docs/PRODUCT_SENSE.md` | Product principles, user personas, domain context |
-| `docs/QUALITY_SCORE.md` | Quality grades per domain, test coverage analysis |
-| `docs/QUALITY.md` | Legacy quality report (kept for reference) |
-| `docs/SECURITY.md` | Authentication, secrets, session security rules |
-| `docs/RELIABILITY.md` | Session reliability, circuit breaker, error contract |
-| `docs/PLANS.md` | Plans index linking to exec-plans/ |
+| `ARCHITECTURE.md` | Domain map, layers, dependency graph, data flow, tech stack |
 
-## Domain Knowledge
+### Harness Docs (`docs/`)
 
 | File | Purpose |
 |------|---------|
+| `docs/DESIGN.md` | Coding patterns, naming conventions, error hierarchy |
+| `docs/FRONTEND.md` | N/A -- backend MCP server (no frontend) |
+| `docs/PRODUCT_SENSE.md` | Product principles, user personas, domain context |
+| `docs/QUALITY_SCORE.md` | Quality grades per domain, test coverage, improvement paths |
+| `docs/SECURITY.md` | Authentication, secrets management, threat model |
+| `docs/RELIABILITY.md` | Session reliability, circuit breaker, error contract |
+| `docs/PLANS.md` | Plans index linking to exec-plans/ |
+
+### Domain Knowledge (`docs/`)
+
+| File | Purpose |
+|------|---------|
+| `docs/README.md` | Documentation index (full map) |
+| `docs/00-setup-operations.md` | Environment setup, authentication, session management |
 | `docs/01-data-catalog.md` | Data catalog (products, inventory, orders, accounting) |
 | `docs/02-entity-relationship.md` | ERD, entity relationships, code systems |
 | `docs/03-business-workflow.md` | End-to-end: purchase -> logistics -> inventory -> sales -> accounting |
 | `docs/04-tool-reference.md` | MCP tool reference + internal API endpoints |
 | `docs/05-api-coverage-gap.md` | API coverage gap analysis (~80% coverage) |
-| `docs/07-internal-api-reverse-engineering.md` | Internal Web API reverse engineering |
+| `docs/07-internal-api-reverse-engineering.md` | Internal Web API reverse engineering (__$KeyPack) |
+| `docs/08-v3-mcp-coverage.md` | V3 system MCP implementation coverage |
 
-## Architecture Decisions
+### Architecture Decisions (`docs/design-docs/`)
 
 | File | Purpose |
 |------|---------|
@@ -48,21 +56,16 @@ Wraps ECOUNT ERP Open API + Internal Web API for LLM access via MCP protocol.
 | `docs/design-docs/layer-rules.md` | Import directions, forbidden patterns |
 | `docs/design-docs/core-beliefs.md` | Agent-first operating principles |
 
-## Execution Plans
+### Execution & Specs
 
 | Directory | Purpose |
 |-----------|---------|
 | `docs/exec-plans/active/` | In-progress execution plans |
 | `docs/exec-plans/completed/` | Completed execution plans |
 | `docs/exec-plans/tech-debt-tracker.md` | Known technical debt items |
-
-## Product Specs
-
-| Directory | Purpose |
-|-----------|---------|
-| `docs/product-specs/index.md` | Product specifications index |
-| `docs/references/` | External references |
-| `docs/generated/db-schema.md` | Generated schema documentation |
+| `docs/product-specs/` | Product specifications and feature requirements |
+| `docs/references/` | External references (LLM docs, design system refs) |
+| `docs/generated/db-schema.md` | ERP entity map (no local DB) |
 
 ## Agent Operating Rules
 

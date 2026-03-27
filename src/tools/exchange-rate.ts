@@ -52,6 +52,53 @@ export function calculateKrw(
   };
 }
 
+export interface ShipmentRateCheck {
+  blNumber: string;
+  blDate: string;      // YYYY-MM-DD
+  currency: string;
+  hasRate: boolean;
+  rate?: number;
+  message: string;
+}
+
+export interface RateValidationResult {
+  checks: ShipmentRateCheck[];
+  missingCount: number;
+  coveredCount: number;
+  coverageRate: number;  // 0-1
+}
+
+export function validateShipmentRates(
+  shipments: { blNumber: string; blDate: string; currency: string }[],
+): RateValidationResult {
+  const checks: ShipmentRateCheck[] = shipments.map((s) => {
+    const entry = getExchangeRate(s.currency);
+    if (entry) {
+      return {
+        blNumber: s.blNumber,
+        blDate: s.blDate,
+        currency: s.currency.toUpperCase(),
+        hasRate: true,
+        rate: entry.rate,
+        message: "환율 적용 가능",
+      };
+    }
+    return {
+      blNumber: s.blNumber,
+      blDate: s.blDate,
+      currency: s.currency.toUpperCase(),
+      hasRate: false,
+      message: `환율 미등록 — ${s.currency.toUpperCase()} 환율을 설정해주세요`,
+    };
+  });
+
+  const coveredCount = checks.filter((c) => c.hasRate).length;
+  const missingCount = checks.length - coveredCount;
+  const coverageRate = checks.length === 0 ? 0 : coveredCount / checks.length;
+
+  return { checks, missingCount, coveredCount, coverageRate };
+}
+
 export function registerExchangeRateTools(server: McpServer): void {
   server.tool(
     "ecount_get_exchange_rate",
@@ -131,6 +178,31 @@ export function registerExchangeRateTools(server: McpServer): void {
           amount: params.amount,
           ...result,
         });
+      } catch (error) {
+        return handleToolError(error);
+      }
+    }
+  );
+
+  server.tool(
+    "ecount_validate_shipment_rates",
+    "BL 선적 목록에 대해 통화별 환율 등록 여부를 일괄 검증합니다.",
+    {
+      shipments: z.array(
+        z.object({
+          blNumber: z.string().describe("BL 번호"),
+          blDate: z.string().describe("BL 날짜 (YYYY-MM-DD)"),
+          currency: z.string().describe("통화 코드 (예: USD, BRL, EUR)"),
+        }),
+      ).describe("검증할 선적 목록"),
+    },
+    { readOnlyHint: true },
+    async (params: Record<string, unknown>) => {
+      try {
+        const result = validateShipmentRates(
+          params.shipments as { blNumber: string; blDate: string; currency: string }[],
+        );
+        return formatResponse(result);
       } catch (error) {
         return handleToolError(error);
       }

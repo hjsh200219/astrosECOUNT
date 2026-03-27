@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { findStaleShipments, type StaleShipment } from "../../src/tools/stale-shipments.js";
+import { findStaleShipments, findCustomsDelays, findDeliveryDelays, type StaleShipment, type DelayedShipment } from "../../src/tools/stale-shipments.js";
 import type { Shipment } from "../../src/tools/shipment-tracking.js";
 
 function makeShipment(overrides: Partial<Shipment> & { updatedAt: string }): Shipment {
@@ -112,5 +112,95 @@ describe("registerStaleShipmentTools", () => {
     const { registerStaleShipmentTools } = await import("../../src/tools/stale-shipments.js");
     const server = new McpServer({ name: "test", version: "0.1" });
     expect(() => registerStaleShipmentTools(server)).not.toThrow();
+  });
+});
+
+describe("findCustomsDelays", () => {
+  it("should find shipments with status 'arrived' for more than maxDays (default 7)", () => {
+    const shipments: Shipment[] = [
+      makeShipment({ id: "SHP-CUST-1", status: "arrived", updatedAt: daysAgo(10) }),
+      makeShipment({ id: "SHP-CUST-2", status: "arrived", updatedAt: daysAgo(3) }),
+      makeShipment({ id: "SHP-CUST-3", status: "in_transit", updatedAt: daysAgo(10) }),
+    ];
+    const result = findCustomsDelays(shipments);
+    expect(result).toHaveLength(1);
+    expect(result[0].shipment.id).toBe("SHP-CUST-1");
+    expect(result[0].delayType).toBe("customs");
+    expect(result[0].daysDelayed).toBeGreaterThanOrEqual(10);
+  });
+
+  it("should respect custom maxDays parameter", () => {
+    const shipments: Shipment[] = [
+      makeShipment({ id: "SHP-CUST-4", status: "arrived", updatedAt: daysAgo(5) }),
+      makeShipment({ id: "SHP-CUST-5", status: "arrived", updatedAt: daysAgo(10) }),
+    ];
+    const result = findCustomsDelays(shipments, 3);
+    expect(result).toHaveLength(2);
+  });
+
+  it("should return empty array for empty input", () => {
+    expect(findCustomsDelays([])).toEqual([]);
+  });
+
+  it("should exclude shipments that progressed past 'arrived' status", () => {
+    const shipments: Shipment[] = [
+      makeShipment({ id: "SHP-CUST-6", status: "customs", updatedAt: daysAgo(10) }),
+      makeShipment({ id: "SHP-CUST-7", status: "cleared", updatedAt: daysAgo(10) }),
+      makeShipment({ id: "SHP-CUST-8", status: "delivered", updatedAt: daysAgo(10) }),
+    ];
+    const result = findCustomsDelays(shipments);
+    expect(result).toHaveLength(0);
+  });
+
+  it("should include a recommendation in each result", () => {
+    const shipments: Shipment[] = [
+      makeShipment({ id: "SHP-CUST-REC", status: "arrived", updatedAt: daysAgo(10) }),
+    ];
+    const result = findCustomsDelays(shipments);
+    expect(result[0].recommendation).toBeTruthy();
+  });
+});
+
+describe("findDeliveryDelays", () => {
+  it("should find shipments with status 'cleared' for more than maxDays (default 3)", () => {
+    const shipments: Shipment[] = [
+      makeShipment({ id: "SHP-DEL-1", status: "cleared", updatedAt: daysAgo(5) }),
+      makeShipment({ id: "SHP-DEL-2", status: "cleared", updatedAt: daysAgo(1) }),
+      makeShipment({ id: "SHP-DEL-3", status: "in_transit", updatedAt: daysAgo(5) }),
+    ];
+    const result = findDeliveryDelays(shipments);
+    expect(result).toHaveLength(1);
+    expect(result[0].shipment.id).toBe("SHP-DEL-1");
+    expect(result[0].delayType).toBe("delivery");
+    expect(result[0].daysDelayed).toBeGreaterThanOrEqual(5);
+  });
+
+  it("should respect custom maxDays parameter", () => {
+    const shipments: Shipment[] = [
+      makeShipment({ id: "SHP-DEL-4", status: "cleared", updatedAt: daysAgo(2) }),
+      makeShipment({ id: "SHP-DEL-5", status: "cleared", updatedAt: daysAgo(6) }),
+    ];
+    const result = findDeliveryDelays(shipments, 1);
+    expect(result).toHaveLength(2);
+  });
+
+  it("should return empty array for empty input", () => {
+    expect(findDeliveryDelays([])).toEqual([]);
+  });
+
+  it("should exclude shipments that progressed past 'cleared' status (delivered)", () => {
+    const shipments: Shipment[] = [
+      makeShipment({ id: "SHP-DEL-6", status: "delivered", updatedAt: daysAgo(10) }),
+    ];
+    const result = findDeliveryDelays(shipments);
+    expect(result).toHaveLength(0);
+  });
+
+  it("should include a recommendation in each result", () => {
+    const shipments: Shipment[] = [
+      makeShipment({ id: "SHP-DEL-REC", status: "cleared", updatedAt: daysAgo(5) }),
+    ];
+    const result = findDeliveryDelays(shipments);
+    expect(result[0].recommendation).toBeTruthy();
   });
 });

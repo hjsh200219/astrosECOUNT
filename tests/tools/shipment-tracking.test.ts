@@ -5,7 +5,10 @@ import {
   listShipments,
   updateShipmentStatus,
   getShipmentByBL,
+  updateShipmentEta,
+  getEtaHistory,
   type Shipment,
+  type EtaChange,
 } from "../../src/tools/shipment-tracking.js";
 
 // Each test that adds shipments uses unique BL numbers to avoid cross-test pollution
@@ -106,5 +109,96 @@ describe("registerShipmentTrackingTools", () => {
     const { registerShipmentTrackingTools } = await import("../../src/tools/shipment-tracking.js");
     const server = new McpServer({ name: "test", version: "0.1" });
     expect(() => registerShipmentTrackingTools(server)).not.toThrow();
+  });
+});
+
+describe("updateShipmentEta", () => {
+  it("should update eta field and updatedAt", () => {
+    const added = addShipment({
+      blNumber: "BL-ETA-001",
+      carrier: "Maersk",
+      product: "돈육",
+      origin: "Santos",
+      destination: "Busan",
+      status: "in_transit",
+    });
+    const updated = updateShipmentEta(added.id, "2026-04-15");
+    expect(updated).not.toBeNull();
+    expect(updated!.eta).toBe("2026-04-15");
+    expect(updated!.updatedAt).toMatch(/^\d{4}-\d{2}-\d{2}/);
+    // Verify the stored shipment also reflects the change
+    const fetched = getShipment(added.id);
+    expect(fetched!.eta).toBe("2026-04-15");
+  });
+
+  it("should return null for non-existent shipment", () => {
+    const result = updateShipmentEta("nonexistent-id", "2026-04-15");
+    expect(result).toBeNull();
+  });
+
+  it("should store reason in eta history", () => {
+    const added = addShipment({
+      blNumber: "BL-ETA-002",
+      carrier: "MSC",
+      product: "소고기",
+      origin: "Santos",
+      destination: "Busan",
+      status: "in_transit",
+      eta: "2026-04-10",
+    });
+    updateShipmentEta(added.id, "2026-04-20", "항구 혼잡");
+    const history = getEtaHistory(added.id);
+    expect(history).toHaveLength(1);
+    expect(history[0].reason).toBe("항구 혼잡");
+    expect(history[0].newEta).toBe("2026-04-20");
+    expect(history[0].previousEta).toBe("2026-04-10");
+  });
+
+  it("should record changedAt timestamp in history", () => {
+    const added = addShipment({
+      blNumber: "BL-ETA-003",
+      carrier: "Evergreen",
+      product: "닭고기",
+      origin: "Bangkok",
+      destination: "Incheon",
+      status: "departed",
+    });
+    updateShipmentEta(added.id, "2026-05-01");
+    const history = getEtaHistory(added.id);
+    expect(history[0].changedAt).toMatch(/^\d{4}-\d{2}-\d{2}/);
+  });
+});
+
+describe("getEtaHistory", () => {
+  it("should return all ETA changes for a shipment", () => {
+    const added = addShipment({
+      blNumber: "BL-ETAHIST-001",
+      carrier: "COSCO",
+      product: "돈육",
+      origin: "Santos",
+      destination: "Busan",
+      status: "in_transit",
+    });
+    updateShipmentEta(added.id, "2026-04-10");
+    updateShipmentEta(added.id, "2026-04-15", "악천후");
+    updateShipmentEta(added.id, "2026-04-18", "항구 혼잡");
+    const history = getEtaHistory(added.id);
+    expect(history).toHaveLength(3);
+  });
+
+  it("should return empty array for shipment with no eta changes", () => {
+    const added = addShipment({
+      blNumber: "BL-ETAHIST-002",
+      carrier: "Hapag",
+      product: "소고기",
+      origin: "Santos",
+      destination: "Busan",
+      status: "booked",
+    });
+    expect(getEtaHistory(added.id)).toEqual([]);
+  });
+
+  it("should return empty array for non-existent shipment", () => {
+    expect(getEtaHistory("nonexistent-id")).toEqual([]);
   });
 });

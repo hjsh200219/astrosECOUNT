@@ -10,6 +10,13 @@ export interface StaleShipment {
   recommendation: string;
 }
 
+export interface DelayedShipment {
+  shipment: Shipment;
+  daysDelayed: number;
+  delayType: "customs" | "delivery";
+  recommendation: string;
+}
+
 function getRecommendation(status: Shipment["status"]): string {
   switch (status) {
     case "in_transit":
@@ -49,6 +56,36 @@ export function listStaleShipments(staleDays: number = 7): StaleShipment[] {
   return findStaleShipments(shipments, staleDays);
 }
 
+function daysSince(isoDate: string): number {
+  return Math.floor((Date.now() - new Date(isoDate).getTime()) / (1000 * 60 * 60 * 24));
+}
+
+export function findCustomsDelays(shipments: Shipment[], maxDays: number = 7): DelayedShipment[] {
+  return shipments
+    .filter((s) => s.status === "arrived")
+    .map((s) => ({ shipment: s, daysDelayed: daysSince(s.updatedAt) }))
+    .filter(({ daysDelayed }) => daysDelayed > maxDays)
+    .map(({ shipment, daysDelayed }) => ({
+      shipment,
+      daysDelayed,
+      delayType: "customs" as const,
+      recommendation: `통관 지연 ${daysDelayed}일 — 관세사 확인 필요`,
+    }));
+}
+
+export function findDeliveryDelays(shipments: Shipment[], maxDays: number = 3): DelayedShipment[] {
+  return shipments
+    .filter((s) => s.status === "cleared")
+    .map((s) => ({ shipment: s, daysDelayed: daysSince(s.updatedAt) }))
+    .filter(({ daysDelayed }) => daysDelayed > maxDays)
+    .map(({ shipment, daysDelayed }) => ({
+      shipment,
+      daysDelayed,
+      delayType: "delivery" as const,
+      recommendation: `배송 지연 ${daysDelayed}일 — 배송사 확인 필요`,
+    }));
+}
+
 export function registerStaleShipmentTools(server: McpServer): void {
   server.tool(
     "ecount_stale_shipments",
@@ -62,6 +99,44 @@ export function registerStaleShipmentTools(server: McpServer): void {
         const days = (params.days as number) ?? 7;
         const results = listStaleShipments(days);
         return formatResponse({ count: results.length, staleShipments: results });
+      } catch (error) {
+        return handleToolError(error);
+      }
+    }
+  );
+
+  server.tool(
+    "ecount_customs_delays",
+    "입항 후 통관이 지연되고 있는 선적 건을 식별합니다. (status=arrived, N일 초과)",
+    {
+      maxDays: z.number().default(7).describe("통관 지연 기준 일수 (기본 7일)"),
+    },
+    { readOnlyHint: true },
+    async (params: Record<string, unknown>) => {
+      try {
+        const maxDays = (params.maxDays as number) ?? 7;
+        const shipments = listShipments();
+        const results = findCustomsDelays(shipments, maxDays);
+        return formatResponse({ count: results.length, delayedShipments: results });
+      } catch (error) {
+        return handleToolError(error);
+      }
+    }
+  );
+
+  server.tool(
+    "ecount_delivery_delays",
+    "통관 완료 후 배송이 지연되고 있는 선적 건을 식별합니다. (status=cleared, N일 초과)",
+    {
+      maxDays: z.number().default(3).describe("배송 지연 기준 일수 (기본 3일)"),
+    },
+    { readOnlyHint: true },
+    async (params: Record<string, unknown>) => {
+      try {
+        const maxDays = (params.maxDays as number) ?? 3;
+        const shipments = listShipments();
+        const results = findDeliveryDelays(shipments, maxDays);
+        return formatResponse({ count: results.length, delayedShipments: results });
       } catch (error) {
         return handleToolError(error);
       }

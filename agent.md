@@ -50,7 +50,7 @@ npm run inspector    # MCP Inspector debugging
 | Document | Contents |
 |----------|----------|
 | [AGENTS.md](AGENTS.md) | Agent entry point, full docs/ map |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Domain map, layers, dependency graph |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Domain map, layers, dependency graph, tech stack |
 | [docs/DESIGN.md](docs/DESIGN.md) | Coding patterns, naming, error hierarchy |
 | [docs/SECURITY.md](docs/SECURITY.md) | Auth, secrets, session security |
 | [docs/RELIABILITY.md](docs/RELIABILITY.md) | Session reliability, circuit breaker, error contract |
@@ -68,7 +68,7 @@ npm run inspector    # MCP Inspector debugging
 | [docs/03-business-workflow.md](docs/03-business-workflow.md) | End-to-end workflow: purchase -> logistics -> inventory -> sales -> accounting |
 | [docs/04-tool-reference.md](docs/04-tool-reference.md) | MCP tool reference + internal API endpoints |
 | [docs/05-api-coverage-gap.md](docs/05-api-coverage-gap.md) | API coverage gap analysis (~80% coverage) |
-| [docs/07-internal-api-reverse-engineering.md](docs/07-internal-api-reverse-engineering.md) | Internal Web API reverse engineering |
+| [docs/07-internal-api-reverse-engineering.md](docs/07-internal-api-reverse-engineering.md) | Internal Web API reverse engineering (__$KeyPack protocol) |
 
 ## Architecture Decisions
 
