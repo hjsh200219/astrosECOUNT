@@ -14,7 +14,7 @@ describe("Server Integration", () => {
   });
 
   describe("createServer", () => {
-    it("should create server and register all 68 tools with valid config", async () => {
+    it("should create server and register all 81 tools with valid config", async () => {
       process.env.ECOUNT_COM_CODE = "TESTCO";
       process.env.ECOUNT_USER_ID = "testuser";
       process.env.ECOUNT_API_CERT_KEY = "testkey123";
@@ -60,7 +60,9 @@ describe("Server Integration", () => {
       // + 2 inventory-verify + 3 stale-shipments + 1 csv-export + 2 daily-report
       // + 1 health-check + 1 data-integrity + 1 document-status
       // + 2 adjust-inventory + 2 customs-cost = 68
-      expect(toolSpy).toHaveBeenCalledTimes(68);
+      // + 3 receivables + 3 payables + 1 weight-settlement
+      // + 2 inventory-lifecycle + 3 financial-statements + 1 margin-analysis = 81
+      expect(toolSpy).toHaveBeenCalledTimes(81);
     });
 
     it("should verify all 8 tool categories are registered", async () => {

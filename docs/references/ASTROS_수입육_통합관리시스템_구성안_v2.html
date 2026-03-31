@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASTROS 수입육 통합관리시스템 구성안 v2.0</title>
+<style>
+:root{--bg:#0d1017;--card:#151922;--card2:#1b2231;--accent:#4f8cff;--accent2:#38d9a9;--accent3:#ff6b6b;--accent4:#ffd43b;--accent5:#da77f2;--accent6:#ff922b;--text:#e4e6eb;--dim:#7b8194;--border:#252d3d;--success:#38d9a9;--warn:#ffd43b;--danger:#ff6b6b;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;line-height:1.65;font-size:14px;}
+
+/* Header */
+.hdr{background:linear-gradient(135deg,#131926,#1f2940);padding:28px 36px;border-bottom:2px solid var(--accent);position:sticky;top:0;z-index:100;backdrop-filter:blur(8px);}
+.hdr h1{font-size:22px;font-weight:700;} .hdr h1 em{color:var(--accent);font-style:normal;}
+.hdr .meta{color:var(--dim);font-size:12px;margin-top:4px;}
+.badge{display:inline-block;font-size:11px;padding:2px 10px;border-radius:12px;vertical-align:middle;margin-left:8px;font-weight:600;}
+.badge-v{background:var(--accent);color:#fff;} .badge-new{background:var(--danger);color:#fff;}
+
+/* Tabs */
+.tabs{display:flex;gap:0;background:var(--card);border-bottom:1px solid var(--border);padding:0 20px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.tabs button{background:none;border:none;color:var(--dim);font-size:13px;padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.2s;font-weight:500;}
+.tabs button:hover{color:var(--text);background:rgba(79,140,255,.05);}
+.tabs button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:700;}
+
+/* Panel */
+.pnl{display:none;padding:28px 36px;max-width:1440px;margin:0 auto;}
+.pnl.on{display:block;}
+.pnl h2{font-size:20px;margin-bottom:6px;} .pnl h2 i{margin-right:6px;}
+.pnl .sub{color:var(--dim);font-size:13px;margin-bottom:22px;}
+.pnl h3{font-size:15px;color:var(--accent);margin:26px 0 10px;font-weight:700;}
+
+/* Grid */
+.g{display:grid;gap:14px;margin-bottom:20px;}
+.g2{grid-template-columns:repeat(auto-fill,minmax(320px,1fr));}
+.g3{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));}
+.g4{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));}
+
+/* Card */
+.c{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;transition:.2s;}
+.c:hover{border-color:var(--accent);transform:translateY(-1px);}
+.c .ct{font-size:14px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:7px;}
+.c .ct .n{background:var(--accent);color:#fff;min-width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.c p,.c li{font-size:12.5px;color:var(--dim);} .c ul{padding-left:16px;} .c li{margin-bottom:3px;}
+
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;}
+th{background:var(--card2);color:var(--accent);text-align:left;padding:9px 12px;border:1px solid var(--border);font-weight:600;white-space:nowrap;}
+td{padding:9px 12px;border:1px solid var(--border);vertical-align:top;}
+tr:hover td{background:rgba(79,140,255,.03);}
+
+/* Tags */
+.t{display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:7px;margin:1px 2px;font-weight:600;}
+.tb{background:rgba(79,140,255,.14);color:var(--accent);}
+.tg{background:rgba(56,217,169,.14);color:var(--success);}
+.tr{background:rgba(255,107,107,.14);color:var(--danger);}
+.ty{background:rgba(255,212,59,.14);color:var(--warn);}
+.tp{background:rgba(218,119,242,.14);color:var(--accent5);}
+.to{background:rgba(255,146,43,.14);color:var(--accent6);}
+
+/* Alert */
+.al{padding:14px 18px;border-radius:9px;margin:14px 0;font-size:12.5px;}
+.al-i{background:rgba(79,140,255,.07);border:1px solid rgba(79,140,255,.22);}
+.al-w{background:rgba(255,212,59,.07);border:1px solid rgba(255,212,59,.22);}
+.al-d{background:rgba(255,107,107,.07);border:1px solid rgba(255,107,107,.22);}
+.al-s{background:rgba(56,217,169,.07);border:1px solid rgba(56,217,169,.22);}
+.al b{display:block;margin-bottom:4px;font-size:13px;}
+
+/* Stat */
+.st{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.st .v{font-size:26px;font-weight:700;color:var(--accent);} .st .l{font-size:11px;color:var(--dim);margin-top:3px;}
+
+/* Flow */
+.fw{overflow-x:auto;padding:16px 0;} .fl{display:flex;align-items:center;gap:0;min-width:max-content;}
+.fs{background:var(--card);border:2px solid var(--border);border-radius:10px;padding:14px 16px;min-width:145px;text-align:center;cursor:default;transition:.2s;}
+.fs:hover{transform:scale(1.03);} .fs .sn{font-size:10px;font-weight:700;} .fs .st2{font-size:13px;font-weight:600;margin:5px 0 3px;} .fs .sd{font-size:10.5px;color:var(--dim);}
+.fs[data-s="a"]{border-color:var(--success);} .fs[data-s="a"] .sn{color:var(--success);}
+.fs[data-s="s"]{border-color:var(--warn);} .fs[data-s="s"] .sn{color:var(--warn);}
+.fs[data-s="m"]{border-color:var(--danger);} .fs[data-s="m"] .sn{color:var(--danger);}
+.fa{font-size:18px;color:var(--accent);padding:0 5px;flex-shrink:0;}
+
+/* Legend */
+.lg{display:flex;gap:16px;margin:12px 0 20px;flex-wrap:wrap;font-size:11.5px;color:var(--dim);}
+.lg span{display:flex;align-items:center;gap:5px;}
+.lg i{width:10px;height:10px;border-radius:50%;display:inline-block;font-style:normal;}
+.lg .da{background:var(--success);} .lg .ds{background:var(--warn);} .lg .dm{background:var(--danger);}
+
+/* Arch */
+.ay{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin:10px 0;}
+.ay .at{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;}
+.ab{display:flex;gap:10px;flex-wrap:wrap;} .ax{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:10px 14px;flex:1;min-width:130px;}
+.ax .xt{font-size:12.5px;font-weight:600;margin-bottom:3px;} .ax .xd{font-size:11px;color:var(--dim);}
+.ac{text-align:center;color:var(--accent);font-size:16px;padding:3px 0;}
+
+/* Collapse */
+.ch{cursor:pointer;padding:11px 14px;background:var(--card);border:1px solid var(--border);border-radius:7px;margin:7px 0;font-size:13.5px;font-weight:600;display:flex;justify-content:space-between;align-items:center;transition:.2s;}
+.ch:hover{border-color:var(--accent);} .ch .ar{transition:.3s;} .ch.o .ar{transform:rotate(180deg);}
+.cb{display:none;padding:14px;background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 7px 7px;margin-top:-8px;font-size:12.5px;}
+.cb.o{display:block;}
+
+/* Timeline */
+.tl{position:relative;padding-left:26px;margin:14px 0;}
+.tl::before{content:'';position:absolute;left:7px;top:3px;bottom:3px;width:2px;background:var(--border);}
+.ti{position:relative;margin-bottom:16px;} .ti::before{content:'';position:absolute;left:-22px;top:3px;width:10px;height:10px;border-radius:50%;border:2px solid var(--accent);background:var(--bg);}
+.ti.ok::before{background:var(--success);border-color:var(--success);} .ti.usr::before{background:var(--warn);border-color:var(--warn);}
+.ti .tt{font-weight:600;font-size:13px;} .ti .td{color:var(--dim);font-size:12px;margin-top:2px;}
+
+/* Formula box */
+.fm{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin:10px 0;font-family:'Consolas','D2Coding',monospace;font-size:12.5px;line-height:1.8;overflow-x:auto;}
+.fm .var{color:var(--accent);font-weight:600;} .fm .op{color:var(--accent6);} .fm .note{color:var(--dim);font-style:italic;}
+
+/* Responsive */
+@media(max-width:768px){.pnl{padding:16px 14px;}.hdr{padding:16px 14px;}.g2,.g3{grid-template-columns:1fr;}}
+@media print{.tabs,.hdr{position:static;}.pnl{display:block!important;page-break-inside:avoid;}body{background:#fff;color:#222;}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1><em>ASTROS</em> 수입육 통합관리시스템 구성안 <span class="badge badge-v">v2.0</span> <span class="badge badge-new">이카운트 대체</span></h1>
+  <div class="meta">작성일: 2026-03-24 | 이카운트 의존성 완전 제거 · 자체 ERP 기능 내장 · 3단계 재고관리 · 회계마감 지원 | Adriano Park (이사님) 요구사항 11건 전수 반영</div>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="on" onclick="go('p1')">개요 & 변경점</button>
+  <button onclick="go('p2')">업무 흐름도</button>
+  <button onclick="go('p3')">아키텍처</button>
+  <button onclick="go('p4')">모듈 상세</button>
+  <button onclick="go('p5')">자동화 시나리오</button>
+  <button onclick="go('p6')">재고 & 회계</button>
+  <button onclick="go('p7')">환율 & 관세</button>
+  <button onclick="go('p8')">출고 & FAX</button>
+  <button onclick="go('p9')">장애대응 & 백업</button>
+  <button onclick="go('p10')">로드맵</button>
+</div>
+
+<!-- ============================================ -->
+<!-- P1: 개요 -->
+<!-- ============================================ -->
+<div class="pnl on" id="p1">
+<h2>📋 개요 & v1 → v2 주요 변경점</h2>
+<p class="sub">이사님 피드백 11건을 전수 반영하여 전면 개편한 v2.0입니다. 이카운트 의존성을 완전히 제거하고 자체 ERP 기능을 내장했습니다.</p>
+
+<div class="g g4">
+  <div class="st"><div class="v">11</div><div class="l">반영 요구사항</div></div>
+  <div class="st"><div class="v">0</div><div class="l">이카운트 의존</div></div>
+  <div class="st"><div class="v">3</div><div class="l">재고 분류 단계</div></div>
+  <div class="st"><div class="v">7</div><div class="l">핵심 모듈</div></div>
+</div>
+
+<h3>v1 → v2 핵심 변경 사항</h3>
+<table>
+<tr><th>#</th><th>항목</th><th>v1 (이전)</th><th>v2 (변경)</th><th>상태</th></tr>
+<tr><td>①</td><td>ERP 시스템</td><td>이카운트 연동</td><td><strong>이카운트 완전 제거.</strong> 발주/입고/매출/재고 모든 ERP 기능을 자체 시스템에 내장.</td><td><span class="t tr">대대적 변경</span></td></tr>
+<tr><td>②</td><td>계약서 처리</td><td>반자동 (담당자 확인 필수)</td><td><strong>완전 자동:</strong> 메일 수신 → PDF 파싱 → DB 등록 → 폴더 저장 all-in-one. 이상 시에만 담당자 알림.</td><td><span class="t tr">강화</span></td></tr>
+<tr><td>③</td><td>선적서류 처리</td><td>반자동 (담당자 확인)</td><td><strong>자동 매칭:</strong> 수신 → BL 추출 → 계약건 자동매칭 → 선적정보 입력 → 폴더 저장 자동.</td><td><span class="t tr">강화</span></td></tr>
+<tr><td>④</td><td>메일 초안</td><td>일부 자동</td><td><strong>모든 반자동 단계에 메일 초안 자동생성.</strong> 담당자는 확인+클릭만.</td><td><span class="t to">신규</span></td></tr>
+<tr><td>⑤</td><td>재고 분류</td><td>단일 재고</td><td><strong>3단계:</strong> 미착재고 / 도착재고 / 상품재고. 각각 다른 평가 기준 적용.</td><td><span class="t tr">대대적 변경</span></td></tr>
+<tr><td>⑥</td><td>환율 적용</td><td>없음</td><td><strong>BL date 기준 서울외국환중개 매매기준율</strong> 자동 조회 및 원화 환산.</td><td><span class="t to">신규</span></td></tr>
+<tr><td>⑦</td><td>관세 반영</td><td>없음</td><td><strong>수입신고필증 PDF 파싱 → 관세 자동 추출 → 제품 원가에 자동 반영.</strong></td><td><span class="t to">신규</span></td></tr>
+<tr><td>⑧</td><td>출고 방식</td><td>출고지시서 생성</td><td><strong>재고 대시보드에서 원클릭 판매/출고.</strong> 수량·단가·판매일 입력 → 출고증 자동생성.</td><td><span class="t tr">강화</span></td></tr>
+<tr><td>⑨</td><td>창고 FAX</td><td>이메일만</td><td><strong>출고증 FAX 자동 발송</strong> (인터넷FAX 서비스 연동). 원클릭.</td><td><span class="t to">신규</span></td></tr>
+<tr><td>⑩</td><td>회계 마감</td><td>없음</td><td><strong>월별 기초/기말 재고 금액 자동 산출.</strong> 3단계 재고별 환율 적용.</td><td><span class="t to">신규</span></td></tr>
+<tr><td>⑪</td><td>기말재고 계산</td><td>없음</td><td><strong>해당월 판매분 자동 차감</strong>하여 기말재고 산출.</td><td><span class="t to">신규</span></td></tr>
+</table>
+
+<div class="al al-s">
+<b>✅ 설계 원칙 (v2)</b>
+<strong>1) 자체 완결형:</strong> 이카운트 없이 발주→입고→재고→매출→회계마감까지 올인원.<br>
+<strong>2) 최대 자동화:</strong> 사람이 꼭 판단해야 하는 것만 반자동, 나머지는 완전 자동.<br>
+<strong>3) 반자동 = 메일 초안 포함:</strong> 담당자 확인이 필요한 모든 단계에 메일 초안이 자동 생성됨.<br>
+<strong>4) 회계 연동:</strong> 3단계 재고관리 + BL환율 + 관세 반영으로 회계마감 직결 데이터 제공.<br>
+<strong>5) 장애 안전장치:</strong> Excel 자동백업 + 오프라인 운영 매뉴얼 유지.
+</div>
+</div>
+
+<!-- ============================================ -->
+<!-- P2: 업무 흐름도 -->
+<!-- ============================================ -->
+<div class="pnl" id="p2">
+<h2>🔄 업무 흐름도 (End-to-End)</h2>
+<p class="sub">계약부터 회계마감까지 전체 프로세스. 이카운트 없이 자체 시스템으로 완결.</p>
+
+<div class="lg">
+  <span><i class="da"></i> 완전 자동</span>
+  <span><i class="ds"></i> 반자동 (초안 자동 → 확인만)</span>
+  <span><i class="dm"></i> 수동 (의사결정)</span>
+</div>
+
+<div class="fw"><div class="fl">
+  <div class="fs" data-s="a"><div class="sn">STEP 1</div><div class="st2">계약서 수신</div><div class="sd">메일 자동 감지<br>PDF 자동 파싱</div></div>
+  <div class="fa">→</div>
+  <div class="fs" data-s="a"><div class="sn">STEP 2</div><div class="st2">계약정보 등록</div><div class="sd">DB 자동 입력<br>폴더 자동 생성</div></div>
+  <div class="fa">→</div>
+  <div class="fs" data-s="a"><div class="sn">STEP 3</div><div class="st2">선적서류 수신</div><div class="sd">메일 자동 감지<br>BL 자동 추출</div></div>
+  <div class="fa">→</div>
+  <div class="fs" data-s="a"><div class="sn">STEP 4</div><div class="st2">선적정보 입력</div><div class="sd">계약건 자동 매칭<br>ETD/ETA 자동</div></div>
+  <div class="fa">→</div>
+  <div class="fs" data-s="a"><div class="sn">STEP 5</div><div class="st2">선박 트래킹</div><div class="sd">BL 기반 실시간<br>ETA 자동 업데이트</div></div>
+  <div class="fa">→</div>
+  <div class="fs" data-s="s"><div class="sn">STEP 6</div><div class="st2">서류 알림</div><div class="sd">ETA-10일 원본<br>메일 초안 자동</div></div>
+  <div class="fa">→</div>
+  <div class="fs" data-s="s"><div class="sn">STEP 7</div><div class="st2">입항/통관</div><div class="sd">관세법인 자동배정<br>필증 자동 파싱</div></div>
+  <div class="fa">→</div>
+  <div class="fs" data-s="a"><div class="sn">STEP 8</div><div class="st2">재고 등록</div><div class="sd">3단계 재고<br>환율 자동 적용</div></div>
+  <div class="fa">→</div>
+  <div class="fs" data-s="s"><div class="sn">STEP 9</div><div class="st2">판매/출고</div><div class="sd">원클릭 출고<br>FAX 자동 발송</div></div>
+  <div class="fa">→</div>
+  <div class="fs" data-s="a"><div class="sn">STEP 10</div><div class="st2">회계 마감</div><div class="sd">기초/기말 재고<br>월 자동 산출</div></div>
+</div></div>
+
+<h3>재고 상태 전환 흐름 (3단계)</h3>
+<div class="fw"><div class="fl">
+  <div class="fs" style="border-color:var(--accent5);min-width:180px;">
+    <div class="sn" style="color:var(--accent5);">미착재고</div>
+    <div class="st2">In-Transit</div>
+    <div class="sd">선적 완료 ~ 입항 전<br>금액: USD × BL환율</div>
+  </div>
+  <div class="fa" style="font-size:14px;">입항 →</div>
+  <div class="fs" style="border-color:var(--accent6);min-width:180px;">
+    <div class="sn" style="color:var(--accent6);">도착재고</div>
+    <div class="st2">Arrived (미통관)</div>
+    <div class="sd">입항 ~ 통관 전<br>금액: USD × BL환율</div>
+  </div>
+  <div class="fa" style="font-size:14px;">통관 →</div>
+  <div class="fs" style="border-color:var(--success);min-width:180px;">
+    <div class="sn" style="color:var(--success);">상품재고</div>
+    <div class="st2">Cleared Stock</div>
+    <div class="sd">통관 완료 (판매 가능)<br>금액: 원가 + 관세 반영</div>
+  </div>
+  <div class="fa" style="font-size:14px;">출고 →</div>
+  <div class="fs" style="border-color:var(--dim);min-width:180px;">
+    <div class="sn" style="color:var(--dim);">판매완료</div>
+    <div class="st2">Sold</div>
+    <div class="sd">출고 처리 완료<br>판매원장 반영</div>
+  </div>
+</div></div>
+
+<h3>상세 프로세스 매핑</h3>
+<table>
+<tr><th>단계</th><th>트리거</th><th>자동화 내용</th><th>담당자 역할</th><th>요구사항 #</th></tr>
+<tr>
+  <td><span class="t tp">1. 계약서 수신</span></td>
+  <td>브라질 생산업체 메일 도착</td>
+  <td>① 메일 자동 감지 (Aurora/Vibra 발신 + contract 키워드)<br>② PDF 첨부 자동 다운로드<br>③ Claude AI로 계약서 파싱 (계약번호, 수량, 단가, Incoterm, 일정)<br>④ DB 자동 등록<br>⑤ OneDrive 폴더 자동 생성 및 PDF 저장</td>
+  <td>이상 감지 시에만 알림 확인.<br>정상이면 <strong>무개입</strong>.</td>
+  <td><span class="t to">①②</span></td>
+</tr>
+<tr>
+  <td><span class="t tb">2. 선적서류 수신</span></td>
+  <td>생산업체/포워더 메일 도착</td>
+  <td>① 메일 자동 감지 (BL, shipping doc 키워드)<br>② BL번호 자동 추출 (COSCO/ONE/HMM/MSC/PIL 패턴)<br>③ 기존 계약건 자동 매칭<br>④ 선적정보(ETD, ETA, 컨테이너, 선사) DB 입력<br>⑤ OneDrive 계약폴더 하위에 자동 저장<br>⑥ 삼현INT 전달 메일 초안 자동 생성</td>
+  <td>삼현INT 전달 메일 <strong>확인 후 클릭 발송</strong></td>
+  <td><span class="t to">③⑤</span></td>
+</tr>
+<tr>
+  <td><span class="t tg">3. 선박 트래킹</span></td>
+  <td>BL 등록 시 자동 시작</td>
+  <td>① BL번호 기반 선사 API/크롤링으로 ETD/ETA 실시간 조회<br>② ETA 변경 시 즉시 알림<br>③ 미착재고 DB에 실시간 ETA 반영</td>
+  <td><strong>무개입</strong> (자동)</td>
+  <td><span class="t to">④</span></td>
+</tr>
+<tr>
+  <td><span class="t ty">4. 원본서류 알림</span></td>
+  <td>ETA - 10일 & 원본 미수취</td>
+  <td>① 자동 체크 (매일 AM 9:00)<br>② 생산업체향 서류 요청 메일 초안 <strong>포르투갈어로 자동 작성</strong><br>③ 담당자에게 "확인 후 발송" 알림</td>
+  <td>메일 초안 확인 → <strong>클릭 발송</strong></td>
+  <td><span class="t to">⑤</span></td>
+</tr>
+<tr>
+  <td><span class="t tp">5. 입항/통관</span></td>
+  <td>선박 입항 확인</td>
+  <td>① 재고상태 미착→도착 자동 전환<br>② 관세법인 자동 배정 (전지벌크→원스탑, 기타→정운)<br>③ 검역/통관 서류 체크리스트 생성<br>④ <strong>수입신고필증 메일 수신 시 자동 파싱 → 관세금액 추출</strong><br>⑤ 관세를 제품 원가에 자동 반영<br>⑥ 재고상태 도착→상품 자동 전환</td>
+  <td>통관 진행 모니터링.<br>필증 파싱 결과 확인.</td>
+  <td><span class="t to">⑥⑦</span></td>
+</tr>
+<tr>
+  <td><span class="t tg">6. 재고 관리</span></td>
+  <td>각 단계 전환 시 자동</td>
+  <td>① 미착/도착/상품 3단계 실시간 현황<br>② 미착·도착: BL date 기준 매매기준율로 원화 환산<br>③ 상품: 원가 + 관세 반영 금액<br>④ 월 기초/기말 재고 금액 자동 산출</td>
+  <td>대시보드 조회</td>
+  <td><span class="t to">⑥⑦⑩⑪</span></td>
+</tr>
+<tr>
+  <td><span class="t tr">7. 판매/출고</span></td>
+  <td>담당자가 재고 대시보드에서 선택</td>
+  <td>① 상품재고에서 제품 선택<br>② 수량, 판매일, 판매단가 입력<br>③ 출고증 자동 생성 (PDF)<br>④ <strong>창고 FAX 자동 발송 (원클릭)</strong><br>⑤ 재고 자동 차감, 판매원장 반영<br>⑥ 기말재고에서 판매분 자동 제외</td>
+  <td>제품 선택 → 정보 입력 → <strong>원클릭 출고</strong></td>
+  <td><span class="t to">⑧⑨⑪</span></td>
+</tr>
+<tr>
+  <td><span class="t tb">8. 회계 마감</span></td>
+  <td>월말 자동 / 수동 트리거</td>
+  <td>① 미착재고 기말: BL환율 × USD잔량<br>② 도착재고 기말: BL환율 × USD잔량<br>③ 상품재고 기말: (원가+관세) × 잔량 - 당월 판매분<br>④ 기초재고 = 전월 기말재고<br>⑤ 월별 재고 보고서 자동 생성</td>
+  <td>보고서 확인, 감사 자료로 활용</td>
+  <td><span class="t to">⑩⑪</span></td>
+</tr>
+</table>
+</div>
+
+<!-- ============================================ -->
+<!-- P3: 아키텍처 -->
+<!-- ============================================ -->
+<div class="pnl" id="p3">
+<h2>🏗️ 시스템 아키텍처</h2>
+<p class="sub">이카운트를 대체하는 자체 ERP 기능 내장. 클라우드 기반 + 로컬 Excel 백업 하이브리드.</p>
+
+<div class="al al-d">
+<b>⚠️ 핵심 변경: 이카운트 완전 제거</b>
+v1에서 이카운트와 연동하던 발주/입고/매출/재고 기능을 모두 자체 시스템에 내장합니다. 별도 ERP 없이 이 시스템 하나로 수입육 업무 전체를 커버합니다.
+</div>
+
+<div class="ay">
+  <div class="at">🖥️ 프론트엔드 (UI)</div>
+  <div class="ab">
+    <div class="ax"><div class="xt">메인 대시보드</div><div class="xd">계약/선적/재고/판매 전체 현황. 3단계 재고 실시간 표시. 다크테마.</div></div>
+    <div class="ax"><div class="xt">재고 대시보드</div><div class="xd">미착/도착/상품 탭. <strong>제품 선택 → 판매입력 → 원클릭 출고</strong> UI.</div></div>
+    <div class="ax"><div class="xt">알림/승인 센터</div><div class="xd">메일 초안 확인·발송. FAX 발송. 이상 알림 처리.</div></div>
+    <div class="ax"><div class="xt">회계 보고서</div><div class="xd">월별 기초/기말 재고. 환율 적용 내역. 판매 분석.</div></div>
+  </div>
+</div>
+
+<div class="ac">⬇️ REST API + WebSocket (실시간) ⬇️</div>
+
+<div class="ay">
+  <div class="at">⚙️ 백엔드 (비즈니스 로직 + 자체 ERP)</div>
+  <div class="ab">
+    <div class="ax"><div class="xt">계약 엔진</div><div class="xd">계약 CRUD, PDF 파싱, 자동 등록, PO 관리.</div></div>
+    <div class="ax"><div class="xt">선적/물류 엔진</div><div class="xd">BL 매칭, 서류 체크, 선박 트래킹, ETA 관리.</div></div>
+    <div class="ax"><div class="xt">재고 엔진</div><div class="xd">3단계 재고 상태관리, 입고/출고, 재고 평가.</div></div>
+    <div class="ax"><div class="xt">판매/출고 엔진</div><div class="xd">판매 등록, 출고증 생성, 판매원장, FAX 발송.</div></div>
+    <div class="ax"><div class="xt">환율/관세 엔진</div><div class="xd">매매기준율 조회, 필증 파싱, 관세 원가반영.</div></div>
+    <div class="ax"><div class="xt">회계 엔진</div><div class="xd">기초/기말 재고 산출, 월말 마감, 보고서 생성.</div></div>
+    <div class="ax"><div class="xt">AI 모듈 (Claude)</div><div class="xd">PDF 파싱, 메일 분류/초안, 이상 탐지.</div></div>
+    <div class="ax"><div class="xt">자동화 스케줄러</div><div class="xd">트래킹, 알림, 환율조회, 백업 cron 작업.</div></div>
+  </div>
+</div>
+
+<div class="ac">⬇️ ORM / Query ⬇️</div>
+
+<div class="ay">
+  <div class="at">💾 데이터 계층</div>
+  <div class="ab">
+    <div class="ax"><div class="xt">주 DB (PostgreSQL)</div><div class="xd">계약, 선적, 재고(3단계), 판매, 회계 모든 데이터. ACID 보장.</div></div>
+    <div class="ax"><div class="xt">OneDrive 스토리지</div><div class="xd">계약서, 선적서류, 필증 등 파일. 기존 폴더구조 유지.</div></div>
+    <div class="ax" style="border-color:var(--warn);"><div class="xt">🔒 Excel 백업 DB</div><div class="xd">매일 새벽 자동 백업. 시스템 장애 시 오프라인 업무 가능.</div></div>
+  </div>
+</div>
+
+<div class="ac">⬇️ 외부 연동 API ⬇️</div>
+
+<div class="ay">
+  <div class="at">🔗 외부 시스템 연동</div>
+  <div class="ab">
+    <div class="ax"><div class="xt">Outlook (MS Graph)</div><div class="xd">메일 수신 모니터링, 첨부파일 추출, 메일 발송.</div></div>
+    <div class="ax"><div class="xt">선사 트래킹</div><div class="xd">COSCO/ONE/HMM/Maersk/MSC/PIL. BL 기반 ETD/ETA.</div></div>
+    <div class="ax"><div class="xt">서울외국환중개</div><div class="xd">매매기준율 API. BL date 기준 환율 자동 조회.</div></div>
+    <div class="ax"><div class="xt">인터넷 FAX</div><div class="xd">출고증 FAX 자동 발송. 일죽/삼진2/동일냉장 번호 등록.</div></div>
+    <div class="ax"><div class="xt">관세청 UNI-PASS</div><div class="xd">통관 진행상태 조회 (선택적).</div></div>
+    <div class="ax"><div class="xt">OneDrive API</div><div class="xd">파일 자동 업로드, 폴더 생성, 문서 관리.</div></div>
+  </div>
+</div>
+
+<h3>자체 ERP 모듈 (이카운트 대체)</h3>
+<table>
+<tr><th>기존 이카운트 기능</th><th>자체 시스템 대체 방안</th><th>개선점</th></tr>
+<tr><td>발주 입력</td><td>계약 등록 시 발주 자동 생성. 발주번호 자체 채번 (AST-PO-YYMMDD-NNN).</td><td>수동입력 → 자동입력</td></tr>
+<tr><td>입고 처리</td><td>통관 완료 시 입고 자동 등록. 창고 배정 규칙 기반.</td><td>별도 입력 불필요</td></tr>
+<tr><td>재고 관리</td><td>3단계 재고 실시간 관리 + 환율/관세 반영 원화 평가.</td><td>단일재고 → 3단계 분류</td></tr>
+<tr><td>매출 등록</td><td>출고 처리 시 매출 자동 등록. 판매원장 실시간 반영.</td><td>이중입력 제거</td></tr>
+<tr><td>재고 평가</td><td>BL환율 기반 원화 평가 + 관세 반영. 월별 자동 마감.</td><td>수동계산 → 자동산출</td></tr>
+</table>
+</div>
+
+<!-- ============================================ -->
+<!-- P4: 모듈 상세 -->
+<!-- ============================================ -->
+<div class="pnl" id="p4">
+<h2>📦 시스템 모듈 상세 (7개)</h2>
+<p class="sub">각 모듈의 기능, 데이터 모델, 자동화 수준을 정의합니다.</p>
+
+<div class="ch" onclick="tog(this)"><span>📄 M1: 계약 관리 (Contract)</span><span class="ar">▼</span></div>
+<div class="cb">
+<table>
+<tr><th>기능</th><th>설명</th><th>수준</th></tr>
+<tr><td>메일 자동 감지 & 파싱</td><td>Aurora/Vibra 발신 메일에서 "contract" 키워드 감지 → 첨부 PDF 자동 다운로드 → Claude AI가 계약번호, 거래처, 수량(MT), 단가(USD/MT), Incoterm, ETD, 제품정보 자동 추출 → <strong>DB 자동 등록</strong>.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>이상 감지 알림</td><td>파싱 신뢰도가 90% 미만이거나, 기존 계약과 중복 의심 시에만 담당자에게 알림. 정상이면 무개입.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>OneDrive 폴더 자동생성</td><td>계약 등록 시 기존 구조대로 폴더 자동 생성: <code>/{계약번호} {품목}/</code>, 하위에 <code>구매계약서류/</code>, <code>선적서류/</code> 등.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>발주 자동 생성</td><td>계약 등록 → 자체 발주번호(AST-PO-YYMMDD-NNN) 자동 채번 및 발주 데이터 생성. <strong>이카운트 발주 입력 대체.</strong></td><td><span class="t tg">자동</span></td></tr>
+<tr><td>판매처 통보 메일 초안</td><td>디케이통상, CJ 등 판매처에 계약정보 전달 메일 자동 생성. 담당자 확인 후 발송.</td><td><span class="t ty">반자동</span></td></tr>
+</table>
+<div class="al al-i"><b>📌 데이터 모델</b>
+contract_id(AST-YY-NNN-XX), po_number(자체채번), supplier(Aurora/Vibra), product_category(돈육/계육), product_name(전지/닭발 등), quantity_mt, unit_price_usd, total_usd, incoterm, etd_planned, status(계약/선적중/입항/통관/완료), buyer(CJ/디케이 등), contract_pdf_path, created_at, updated_at
+</div>
+</div>
+
+<div class="ch" onclick="tog(this)"><span>🚢 M2: 선적/물류 관리 (Shipping)</span><span class="ar">▼</span></div>
+<div class="cb">
+<table>
+<tr><th>기능</th><th>설명</th><th>수준</th></tr>
+<tr><td>선적서류 메일 자동 감지</td><td>"BL", "shipping documents", "선적서류" 키워드 포함 메일 자동 감지. 첨부파일 자동 다운로드.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>BL 자동 추출 & 매칭</td><td>BL번호 패턴 인식(COSU/ONEY/HDMU/MEDU/SSZ 등) → 기존 계약건 자동 매칭 → 선적정보 DB 입력.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>OneDrive 자동 저장</td><td>매칭된 계약 폴더 하위에 <code>{계약번호}{알파벳}_{BL번호}/원장서류/</code> 형태로 자동 저장.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>선박 실시간 트래킹</td><td>BL 등록 즉시 선사 API/크롤링으로 ETD, ETA 자동 조회. 매 6시간 업데이트. ETA 변경 시 즉시 알림.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>BL date 기준 환율 조회</td><td>BL date 확정 시 <strong>서울외국환중개 매매기준율</strong> 자동 조회 → 미착재고 원화 환산에 사용.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>삼현INT 전달 메일 초안</td><td>현행 메일 포맷 그대로 자동 생성. 담당자 확인+클릭 발송.</td><td><span class="t ty">반자동</span></td></tr>
+</table>
+<div class="al al-i"><b>📌 데이터 모델</b>
+shipment_id, contract_id(FK), bl_number, bl_date, container_no, vessel_name, carrier(COSCO/ONE/HMM 등), etd, eta, eta_actual, port_of_loading, port_of_discharge, bl_exchange_rate(BL일 매매기준율), docs_received(BL/Invoice/PL/Health Cert 체크), original_docs_received(Y/N), status(선적/운항중/입항/통관중/완료)
+</div>
+</div>
+
+<div class="ch" onclick="tog(this)"><span>⏰ M3: 알림/워크플로우 (Alert)</span><span class="ar">▼</span></div>
+<div class="cb">
+<table>
+<tr><th>알림 유형</th><th>트리거</th><th>자동 액션</th><th>담당자 액션</th></tr>
+<tr><td>🔴 원본서류 미수취</td><td>ETA-10일 & 미수취</td><td>생산업체향 <strong>포르투갈어 요청 메일 초안 자동생성</strong></td><td>확인 → 클릭 발송</td></tr>
+<tr><td>🟡 ETA 변경</td><td>트래킹에서 변경 감지</td><td>관련 담당자·관세법인 통보 <strong>메일 초안 자동</strong></td><td>확인 → 클릭 발송</td></tr>
+<tr><td>🟡 입항 D-3</td><td>ETA-3일</td><td>통관 준비 체크리스트 + 관세법인 사전 통보 <strong>메일 초안</strong></td><td>체크리스트 확인</td></tr>
+<tr><td>🔴 통관서류 미비</td><td>입항 & 필수서류 미완</td><td>긴급 워크플로우 + <strong>메일 초안</strong></td><td>즉시 대응</td></tr>
+<tr><td>🟢 통관 완료</td><td>필증 수신</td><td>재고 상태 자동 전환(도착→상품) + 관세 반영</td><td>확인</td></tr>
+<tr><td>🟡 재고 부족</td><td>안전재고 미만</td><td>이사님에게 발주 검토 <strong>알림</strong></td><td>발주 판단</td></tr>
+<tr><td>🔵 월말 마감</td><td>매월 말일</td><td>기초/기말 재고 보고서 <strong>자동 생성</strong></td><td>확인·승인</td></tr>
+</table>
+<div class="al al-s"><b>✅ 핵심 원칙: 모든 반자동 단계에 메일 초안 자동 생성</b>
+담당자가 "확인 후 진행"해야 하는 모든 업무에 대해, 시스템이 메일 초안을 미리 작성해둡니다. 담당자는 내용을 확인하고 "발송" 버튼만 클릭하면 됩니다. 한국어/영어/포르투갈어 자동 선택.</div>
+</div>
+
+<div class="ch" onclick="tog(this)"><span>🏛️ M4: 통관 관리 (Customs)</span><span class="ar">▼</span></div>
+<div class="cb">
+<table>
+<tr><th>기능</th><th>설명</th><th>수준</th></tr>
+<tr><td>관세법인 자동배정</td><td>전지(벌크)→원스탑, 기타→정운. OBL: 머스크/PIL→선사, 기타→삼현.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>수입신고필증 자동 파싱</td><td>메일로 필증 PDF 수신 시 자동 감지 → Claude AI가 <strong>관세 금액, 과세가격, 세율, 수입신고번호</strong> 자동 추출.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>관세 → 원가 반영</td><td>추출된 관세 금액을 해당 컨테이너/제품의 <strong>원가에 자동 가산</strong>. 상품재고 평가 금액에 반영.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>재고 상태 전환</td><td>통관 완료 시 <strong>도착재고 → 상품재고</strong> 자동 전환. 원가 = USD×BL환율 + 관세.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>통관서류 관리</td><td>필증, 검역증, 확인증 등 OneDrive에 자동 저장. 판매처 전달용 서류 세트 자동 준비.</td><td><span class="t ty">반자동</span></td></tr>
+</table>
+</div>
+
+<div class="ch" onclick="tog(this)"><span>📦 M5: 재고 관리 (Inventory) — 3단계</span><span class="ar">▼</span></div>
+<div class="cb">
+<p style="margin-bottom:12px;">자세한 재고관리 및 회계 마감 로직은 <strong>"재고 & 회계" 탭</strong>에서 별도로 상세 설명합니다.</p>
+<table>
+<tr><th>재고 유형</th><th>정의</th><th>금액 산출</th><th>진입 조건</th><th>퇴출 조건</th></tr>
+<tr><td><span class="t tp">미착재고</span></td><td>선적 완료 ~ 입항 전 (해상 운송중)</td><td>USD 금액 × <strong>BL date 매매기준율</strong></td><td>BL 발행 (선적 완료)</td><td>입항 확인</td></tr>
+<tr><td><span class="t to">도착재고</span></td><td>입항 ~ 통관 완료 전 (보세 상태)</td><td>USD 금액 × <strong>BL date 매매기준율</strong></td><td>입항</td><td>통관 완료</td></tr>
+<tr><td><span class="t tg">상품재고</span></td><td>통관 완료 (판매 가능 상태)</td><td>(USD 금액 × BL환율) + <strong>관세</strong></td><td>통관 완료</td><td>출고 (판매)</td></tr>
+</table>
+</div>
+
+<div class="ch" onclick="tog(this)"><span>💰 M6: 판매/출고 관리 (Sales) — 원클릭 출고</span><span class="ar">▼</span></div>
+<div class="cb">
+<p style="margin-bottom:12px;">자세한 출고 및 FAX 프로세스는 <strong>"출고 & FAX" 탭</strong>에서 별도로 상세 설명합니다.</p>
+<table>
+<tr><th>기능</th><th>설명</th><th>수준</th></tr>
+<tr><td>재고 대시보드 직접 선택</td><td>상품재고 탭에서 제품을 필터·선택. 바로 판매/출고 입력 패널 오픈.</td><td><span class="t ty">반자동</span></td></tr>
+<tr><td>판매 정보 입력</td><td>수량, 판매일, 판매단가(원/kg), 판매처 입력. 자동으로 총 판매금액 계산.</td><td><span class="t ty">반자동</span></td></tr>
+<tr><td>출고증 자동 생성</td><td>입력 정보 기반 출고증 PDF 자동 생성. 양식에 창고명, 제품, 수량, 배송처 등 포함.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>창고 FAX 원클릭 발송</td><td>인터넷FAX 서비스 연동. 배정된 창고 FAX번호로 출고증 <strong>원클릭 자동 발송</strong>.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>재고 차감 & 원장 반영</td><td>출고 확인 시 상품재고 자동 차감. 판매원장(CJ/디케이 등) 자동 반영.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>기말재고 판매분 제외</td><td>해당 월 판매된 제품 금액을 기말재고에서 자동 제외. 회계 마감 데이터에 반영.</td><td><span class="t tg">자동</span></td></tr>
+</table>
+</div>
+
+<div class="ch" onclick="tog(this)"><span>📊 M7: 회계/보고 (Accounting)</span><span class="ar">▼</span></div>
+<div class="cb">
+<p style="margin-bottom:12px;">자세한 회계 마감 로직과 산출식은 <strong>"재고 & 회계" 탭</strong>에서 상세 설명합니다.</p>
+<table>
+<tr><th>기능</th><th>설명</th><th>수준</th></tr>
+<tr><td>월별 기초/기말 재고 자동 산출</td><td>3단계 재고별 금액 자동 집계. 기초재고 = 전월 기말재고.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>환율 적용 내역</td><td>컨테이너별 BL환율 적용 내역 투명하게 추적.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>관세 반영 내역</td><td>필증별 관세 금액 → 제품 원가 가산 내역.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>판매 분석</td><td>판매처별, 제품별, 기간별 매출/마진 분석.</td><td><span class="t tg">자동</span></td></tr>
+<tr><td>월말 보고서</td><td>기초/기말 재고, 당월 입고, 당월 판매, 재고 증감 보고서 PDF/Excel 자동 생성.</td><td><span class="t tg">자동</span></td></tr>
+</table>
+</div>
+</div>
+
+<!-- ============================================ -->
+<!-- P5: 자동화 시나리오 -->
+<!-- ============================================ -->
+<div class="pnl" id="p5">
+<h2>🤖 핵심 자동화 시나리오 (v2 업데이트)</h2>
+<p class="sub">v2에서 강화된 자동화 시나리오. 담당자 개입을 최소화했습니다.</p>
+
+<h3>시나리오 A: 계약서 수신 → 완전 자동 등록</h3>
+<div class="tl">
+  <div class="ti ok"><div class="tt">메일 자동 감지</div><div class="td">Aurora/Vibra 발신 + "contract" 키워드 포함 메일 도착 → 시스템 자동 인식</div></div>
+  <div class="ti ok"><div class="tt">PDF 다운로드 & AI 파싱</div><div class="td">contract_XXXXX_AST stamps.pdf 다운로드 → Claude AI가 계약번호, 수량, 단가, Incoterm, 선적일정, 제품정보 추출</div></div>
+  <div class="ti ok"><div class="tt">DB 자동 등록</div><div class="td">추출 데이터 → 계약 DB 자동 등록 + 발주번호(AST-PO-YYMMDD-NNN) 자동 채번</div></div>
+  <div class="ti ok"><div class="tt">폴더 자동 생성 & 파일 저장</div><div class="td">OneDrive에 {계약번호 + 품목}/ 폴더 생성 → 계약서 PDF 자동 저장</div></div>
+  <div class="ti ok"><div class="tt">판매처 통보 메일 초안 생성</div><div class="td">디케이통상 등 판매처에 계약정보 전달 메일 초안 자동 작성 (한국어)</div></div>
+  <div class="ti usr"><div class="tt">👤 이상 시에만 담당자 확인</div><div class="td">파싱 신뢰도 90% 미만 또는 중복 의심 시에만 알림. 정상이면 <strong>담당자 완전 무개입</strong>.</div></div>
+</div>
+
+<h3>시나리오 B: 선적서류 수신 → 자동 처리</h3>
+<div class="tl">
+  <div class="ti ok"><div class="tt">메일 자동 감지</div><div class="td">"BL", "shipping documents" 등 키워드 포함 메일 자동 감지</div></div>
+  <div class="ti ok"><div class="tt">BL번호 추출 & 계약 매칭</div><div class="td">COSU/ONEY/HDMU/MEDU/SSZ 패턴으로 BL번호 추출 → 기존 계약건 자동 매칭</div></div>
+  <div class="ti ok"><div class="tt">선적정보 DB 자동 입력</div><div class="td">BL번호, BL date, 컨테이너번호, 선사명, ETD, ETA 자동 등록</div></div>
+  <div class="ti ok"><div class="tt">BL date 환율 자동 조회</div><div class="td">서울외국환중개 매매기준율 조회 → 미착재고 원화 환산 기준 저장</div></div>
+  <div class="ti ok"><div class="tt">미착재고 자동 등록</div><div class="td">선적 완료 → 미착재고로 자동 등록 (금액: USD × BL환율)</div></div>
+  <div class="ti ok"><div class="tt">OneDrive 자동 저장</div><div class="td">{계약번호}{알파벳}_{BL번호}/원장서류/ 폴더에 서류 자동 저장</div></div>
+  <div class="ti ok"><div class="tt">삼현INT 전달 메일 초안</div><div class="td">"수신: 김민수 과장님/삼현INT 참조: {관세법인}" 형식으로 자동 생성</div></div>
+  <div class="ti usr"><div class="tt">👤 담당자: 메일 확인 → 클릭 발송</div><div class="td">오주연/최민지 담당자가 내용 확인 후 "발송" 클릭</div></div>
+</div>
+
+<h3>시나리오 C: 통관 완료 → 관세 반영</h3>
+<div class="tl">
+  <div class="ti ok"><div class="tt">수입신고필증 메일 자동 감지</div><div class="td">관세법인(원스탑/정운)에서 "수입신고필증", "필증" 키워드 포함 메일 도착</div></div>
+  <div class="ti ok"><div class="tt">필증 PDF 자동 파싱</div><div class="td">Claude AI가 수입신고번호, 과세가격, 관세율, 관세금액(원), 부가세 등 추출</div></div>
+  <div class="ti ok"><div class="tt">관세 → 제품 원가 자동 반영</div><div class="td">관세 금액을 해당 컨테이너 제품 원가에 가산. 제품당 관세 단가 = 총관세 ÷ 총수량.</div></div>
+  <div class="ti ok"><div class="tt">재고 상태 전환</div><div class="td">도착재고 → 상품재고 자동 전환. 상품원가 = (USD × BL환율) + 관세.</div></div>
+  <div class="ti ok"><div class="tt">OneDrive 저장 & 서류 준비</div><div class="td">필증 PDF를 통관서류/ 폴더에 저장. 판매처 전달용 서류 세트 자동 정리.</div></div>
+</div>
+
+<h3>시나리오 D: 원클릭 출고</h3>
+<div class="tl">
+  <div class="ti usr"><div class="tt">👤 재고 대시보드에서 제품 선택</div><div class="td">상품재고 탭 → 제품 필터 → 출고 대상 클릭 선택</div></div>
+  <div class="ti usr"><div class="tt">👤 판매 정보 입력</div><div class="td">수량(kg/MT), 판매일, 판매단가(원/kg), 판매처 입력. 총액 자동 계산.</div></div>
+  <div class="ti ok"><div class="tt">"출고" 버튼 클릭 → 자동 처리 시작</div><div class="td">① 출고증 PDF 자동 생성 ② 창고 FAX 자동 발송 ③ 재고 차감 ④ 판매원장 반영 ⑤ 기말재고 갱신</div></div>
+</div>
+</div>
+
+<!-- ============================================ -->
+<!-- P6: 재고 & 회계 -->
+<!-- ============================================ -->
+<div class="pnl" id="p6">
+<h2>📊 3단계 재고관리 & 회계 마감</h2>
+<p class="sub">미착재고 / 도착재고 / 상품재고의 정의, 금액 산출 로직, 월별 회계 마감 프로세스입니다.</p>
+
+<h3>재고 3단계 정의</h3>
+<div class="g g3">
+  <div class="c" style="border-left:3px solid var(--accent5);">
+    <div class="ct" style="color:var(--accent5);">🚢 미착재고 (In-Transit)</div>
+    <ul>
+      <li><strong>정의:</strong> 선적 완료(BL 발행) ~ 입항 전. 해상 운송 중인 물량.</li>
+      <li><strong>진입:</strong> BL 발행 시 자동 등록</li>
+      <li><strong>퇴출:</strong> 입항 확인 시 → 도착재고로 전환</li>
+      <li><strong>금액:</strong> USD 금액 × BL date 매매기준율</li>
+      <li><strong>특징:</strong> 물리적으로 아직 한국에 없음. 소유권만 이전된 상태.</li>
+    </ul>
+  </div>
+  <div class="c" style="border-left:3px solid var(--accent6);">
+    <div class="ct" style="color:var(--accent6);">⚓ 도착재고 (Arrived/미통관)</div>
+    <ul>
+      <li><strong>정의:</strong> 입항 완료 ~ 통관 완료 전. 보세 구역에 있는 물량.</li>
+      <li><strong>진입:</strong> 입항 확인 시 (미착→도착 자동전환)</li>
+      <li><strong>퇴출:</strong> 통관 완료 시 → 상품재고로 전환</li>
+      <li><strong>금액:</strong> USD 금액 × BL date 매매기준율 (미착과 동일)</li>
+      <li><strong>특징:</strong> 물리적으로 한국에 있으나 통관 전이라 판매 불가.</li>
+    </ul>
+  </div>
+  <div class="c" style="border-left:3px solid var(--success);">
+    <div class="ct" style="color:var(--success);">✅ 상품재고 (Cleared Stock)</div>
+    <ul>
+      <li><strong>정의:</strong> 통관 완료. 창고에 보관 중. 판매 가능한 물량.</li>
+      <li><strong>진입:</strong> 통관 완료 시 (도착→상품 자동전환)</li>
+      <li><strong>퇴출:</strong> 출고(판매) 시 → 판매완료</li>
+      <li><strong>금액:</strong> (USD 금액 × BL환율) + <strong>관세</strong></li>
+      <li><strong>특징:</strong> 관세가 원가에 포함됨. 이 금액 기준으로 마진 계산.</li>
+    </ul>
+  </div>
+</div>
+
+<h3>금액 산출 공식</h3>
+
+<div class="fm">
+<span class="note">── 미착재고 / 도착재고 원화 금액 ──</span><br>
+<span class="var">원화금액</span> <span class="op">=</span> <span class="var">USD_계약금액</span> <span class="op">×</span> <span class="var">BL_date_매매기준율</span><br><br>
+<span class="note">── 상품재고 원화 금액 (통관 후) ──</span><br>
+<span class="var">상품원가</span> <span class="op">=</span> (<span class="var">USD_계약금액</span> <span class="op">×</span> <span class="var">BL_date_매매기준율</span>) <span class="op">+</span> <span class="var">관세</span><br>
+<span class="var">제품당_원가</span> <span class="op">=</span> <span class="var">상품원가</span> <span class="op">÷</span> <span class="var">총수량(kg)</span><br><br>
+<span class="note">── 매매기준율 조회 ──</span><br>
+<span class="var">BL_date_매매기준율</span> <span class="op">=</span> 서울외국환중개 <span class="var">USD/KRW</span> 매매기준율 @ <span class="var">BL_date</span><br>
+<span class="note">※ BL date가 영업일이 아닌 경우, 직전 영업일 환율 적용</span><br><br>
+<span class="note">── 관세 산출 (수입신고필증에서 추출) ──</span><br>
+<span class="var">관세</span> <span class="op">=</span> 수입신고필증 상 <span class="var">관세금액</span> (AI 파싱으로 자동 추출)<br>
+<span class="var">제품당_관세</span> <span class="op">=</span> <span class="var">관세</span> <span class="op">÷</span> <span class="var">총수량(kg)</span>
+</div>
+
+<h3>월별 회계 마감 (기초/기말 재고)</h3>
+
+<div class="fm">
+<span class="note">══════════ 월별 기초재고 ══════════</span><br>
+<span class="var">기초재고(당월)</span> <span class="op">=</span> <span class="var">기말재고(전월)</span><br><br>
+
+<span class="note">══════════ 월별 기말재고 ══════════</span><br><br>
+
+<span class="note">① 미착재고 기말</span><br>
+<span class="var">미착재고_기말</span> <span class="op">=</span> Σ (해당월 말일 기준 "미착" 상태인 각 건의 <span class="var">USD금액</span> <span class="op">×</span> <span class="var">BL환율</span>)<br><br>
+
+<span class="note">② 도착재고 기말</span><br>
+<span class="var">도착재고_기말</span> <span class="op">=</span> Σ (해당월 말일 기준 "도착" 상태인 각 건의 <span class="var">USD금액</span> <span class="op">×</span> <span class="var">BL환율</span>)<br><br>
+
+<span class="note">③ 상품재고 기말</span><br>
+<span class="var">상품재고_기말</span> <span class="op">=</span> <span class="var">상품재고_기초</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="op">+</span> <span class="var">당월_통관완료_입고금액</span> <span class="note">(원가+관세)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="op">−</span> <span class="var">당월_판매금액(원가기준)</span> <span class="note">★ 해당월 판매분 제외</span><br><br>
+
+<span class="note">④ 총 기말재고</span><br>
+<span class="var">총_기말재고</span> <span class="op">=</span> <span class="var">미착재고_기말</span> <span class="op">+</span> <span class="var">도착재고_기말</span> <span class="op">+</span> <span class="var">상품재고_기말</span>
+</div>
+
+<h3>월말 마감 프로세스</h3>
+<table>
+<tr><th>순서</th><th>작업</th><th>자동화</th><th>상세</th></tr>
+<tr><td>1</td><td>재고 스냅샷 생성</td><td><span class="t tg">자동</span></td><td>매월 말일 23:59 기준, 3단계 재고의 상태별 수량 및 금액 스냅샷 자동 저장.</td></tr>
+<tr><td>2</td><td>환율 확정</td><td><span class="t tg">자동</span></td><td>각 컨테이너별 BL date 환율이 이미 저장되어 있으므로, 해당 환율 그대로 적용.</td></tr>
+<tr><td>3</td><td>당월 판매분 집계</td><td><span class="t tg">자동</span></td><td>해당 월에 판매(출고) 처리된 건의 원가 기준 금액 합계 산출.</td></tr>
+<tr><td>4</td><td>기말재고 산출</td><td><span class="t tg">자동</span></td><td>위 공식에 따라 3단계별 기말재고 자동 계산.</td></tr>
+<tr><td>5</td><td>기초재고 세팅</td><td><span class="t tg">자동</span></td><td>산출된 기말재고를 다음 달 기초재고로 자동 이월.</td></tr>
+<tr><td>6</td><td>보고서 생성</td><td><span class="t tg">자동</span></td><td>월별 재고 보고서 (PDF + Excel) 자동 생성. OneDrive에 자동 저장.</td></tr>
+<tr><td>7</td><td>담당자 확인</td><td><span class="t ty">반자동</span></td><td>이사님 또는 담당자가 보고서 확인 후 "마감 승인". 수정 필요 시 조정 가능.</td></tr>
+</table>
+
+<div class="al al-w">
+<b>⚠️ 회계 마감 시 주의사항</b>
+• <strong>미착·도착재고</strong>는 BL환율이 고정되어 있으므로 환율 변동에 따른 재평가 불필요. (외화 기준가는 변하지 않음, 이미 확정된 BL환율 사용)<br>
+• <strong>상품재고</strong>의 판매분 제외는 <strong>원가 기준</strong>으로 차감 (판매단가가 아닌 취득원가).<br>
+• 월 중에 미착→도착→상품으로 전환된 건은 각 상태별 체류 기간에 맞춰 분류됨.<br>
+• 첫 달(시스템 도입월)의 기초재고는 수동 입력 필요.
+</div>
+</div>
+
+<!-- ============================================ -->
+<!-- P7: 환율 & 관세 -->
+<!-- ============================================ -->
+<div class="pnl" id="p7">
+<h2>💱 환율 적용 & 관세 반영 상세</h2>
+<p class="sub">BL date 기준 매매기준율 자동 조회 및 수입신고필증 파싱을 통한 관세 원가 반영 로직입니다.</p>
+
+<h3>환율 조회 프로세스</h3>
+<div class="tl">
+  <div class="ti ok"><div class="tt">BL date 확정</div><div class="td">선적서류 수신 → BL date 자동 추출 (예: 2026-03-15)</div></div>
+  <div class="ti ok"><div class="tt">매매기준율 API 조회</div><div class="td">서울외국환중개 매매기준율 API로 BL date의 USD/KRW 환율 조회.<br>예: 2026-03-15 → 1,345.50원/USD</div></div>
+  <div class="ti ok"><div class="tt">영업일 보정</div><div class="td">BL date가 주말/공휴일인 경우, 직전 영업일의 환율 자동 적용.</div></div>
+  <div class="ti ok"><div class="tt">원화 금액 산출</div><div class="td">USD 45,000 × 1,345.50 = 60,547,500원 → DB 저장</div></div>
+  <div class="ti ok"><div class="tt">재고 평가에 반영</div><div class="td">해당 컨테이너의 미착/도착 재고 원화 금액에 자동 반영.</div></div>
+</div>
+
+<h3>환율 데이터 소스</h3>
+<table>
+<tr><th>소스</th><th>API/방식</th><th>특징</th><th>우선순위</th></tr>
+<tr><td>서울외국환중개</td><td>Open API (koreaexim.go.kr)</td><td>한국은행 공시 기준. 가장 공식적.</td><td>1순위 (기본)</td></tr>
+<tr><td>한국은행 경제통계시스템</td><td>ECOS Open API</td><td>과거 데이터 풍부. 백업 소스.</td><td>2순위 (백업)</td></tr>
+<tr><td>수동 입력</td><td>시스템 UI</td><td>API 장애 시 담당자가 직접 입력.</td><td>3순위 (비상)</td></tr>
+</table>
+
+<h3>수입신고필증 파싱 → 관세 반영</h3>
+<div class="tl">
+  <div class="ti ok"><div class="tt">필증 메일 자동 감지</div><div class="td">원스탑/정운관세법인 발신 메일에서 "수입신고필증", "필증" 키워드 + PDF 첨부 자동 감지</div></div>
+  <div class="ti ok"><div class="tt">Claude AI 자동 파싱</div><div class="td">PDF에서 추출하는 핵심 필드:<br>
+    • <strong>수입신고번호</strong><br>
+    • <strong>과세가격 (CIF 원화)</strong><br>
+    • <strong>관세율 (%)</strong><br>
+    • <strong>관세금액 (원)</strong><br>
+    • <strong>부가세 (원)</strong><br>
+    • 신고일자, 신고인</div></div>
+  <div class="ti ok"><div class="tt">BL/컨테이너 매칭</div><div class="td">필증의 BL번호/수입자 정보로 기존 선적 데이터와 자동 매칭</div></div>
+  <div class="ti ok"><div class="tt">관세 → 원가 가산</div><div class="td">상품원가 = (USD × BL환율) + 관세. 컨테이너 전체 관세를 수량으로 배분하여 제품당 관세단가 산출.</div></div>
+  <div class="ti ok"><div class="tt">재고 상태 전환</div><div class="td">도착재고 → 상품재고 자동 전환. 이제 판매 가능 상태.</div></div>
+</div>
+
+<h3>원가 구조 예시</h3>
+<div class="fm">
+<span class="note">── 예시: 비브라 닭발 35g up, 1 컨테이너 ──</span><br><br>
+<span class="var">계약금액</span> <span class="op">=</span> USD 42,000 (28MT × USD 1,500/MT)<br>
+<span class="var">BL date</span> <span class="op">=</span> 2026-03-15<br>
+<span class="var">BL 매매기준율</span> <span class="op">=</span> 1,345.50 원/USD<br><br>
+<span class="note">미착/도착 재고 원화:</span><br>
+<span class="var">원화금액</span> <span class="op">=</span> 42,000 <span class="op">×</span> 1,345.50 <span class="op">=</span> <strong>56,511,000원</strong><br><br>
+<span class="note">통관 후 (상품재고):</span><br>
+<span class="var">관세</span> <span class="op">=</span> 수입신고필증 상 관세금액: <strong>1,130,220원</strong> (관세율 2%)<br>
+<span class="var">상품원가</span> <span class="op">=</span> 56,511,000 <span class="op">+</span> 1,130,220 <span class="op">=</span> <strong>57,641,220원</strong><br>
+<span class="var">제품당 원가</span> <span class="op">=</span> 57,641,220 <span class="op">÷</span> 28,000kg <span class="op">=</span> <strong>2,059원/kg</strong>
+</div>
+</div>
+
+<!-- ============================================ -->
+<!-- P8: 출고 & FAX -->
+<!-- ============================================ -->
+<div class="pnl" id="p8">
+<h2>📤 출고 프로세스 & 창고 FAX 자동 발송</h2>
+<p class="sub">재고 대시보드에서 선택 → 정보 입력 → 원클릭으로 출고증 생성 + FAX 발송까지 완료.</p>
+
+<h3>원클릭 출고 UI 흐름</h3>
+<table>
+<tr><th>단계</th><th>화면</th><th>사용자 액션</th><th>시스템 처리</th></tr>
+<tr>
+  <td>1</td>
+  <td>재고 대시보드<br>(상품재고 탭)</td>
+  <td>제품 필터 (품목/창고/생산업체) → 출고할 제품 행 클릭</td>
+  <td>선택된 제품의 상세 정보 표시 (잔량, 원가, 창고, 입고일 등)</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>판매/출고 입력 패널<br>(슬라이드 오픈)</td>
+  <td><strong>입력 항목:</strong><br>
+    • 판매처 (드롭다운: CJ, 디케이통상 등)<br>
+    • 출고 수량 (kg)<br>
+    • 판매단가 (원/kg)<br>
+    • 판매일 (달력 선택)<br>
+    • 배송지 (선택사항)</td>
+  <td>총 판매금액 자동 계산<br>마진 자동 산출 (판매금액 - 원가)<br>출고 가능 수량 초과 시 경고</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>출고 확인 화면</td>
+  <td><strong>"출고 실행" 버튼 클릭</strong> (원클릭)</td>
+  <td>① 출고증 PDF 자동 생성<br>② 창고 FAX 자동 발송<br>③ 재고 자동 차감<br>④ 판매원장 반영<br>⑤ 기말재고 갱신</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>완료 확인</td>
+  <td>결과 확인</td>
+  <td>출고 완료 알림 + FAX 발송 확인 + 재고 현황 업데이트</td>
+</tr>
+</table>
+
+<h3>창고 FAX 자동 발송 시스템</h3>
+<div class="g g2">
+  <div class="c">
+    <div class="ct">📠 인터넷 FAX 서비스 연동</div>
+    <ul>
+      <li><strong>서비스:</strong> 비즈팩스(BizFAX), 모두팩스, 또는 Twilio Programmable Fax</li>
+      <li><strong>방식:</strong> API로 PDF 파일 + 수신 FAX번호 전달 → 자동 발송</li>
+      <li><strong>비용:</strong> 건당 약 30~50원 수준</li>
+      <li><strong>시간:</strong> 발송 후 30초~2분 내 완료 확인</li>
+    </ul>
+  </div>
+  <div class="c">
+    <div class="ct">📋 창고별 FAX번호 (사전 등록)</div>
+    <ul>
+      <li><strong>일죽냉장:</strong> 031-XXX-XXXX (CJ 전지벌크)</li>
+      <li><strong>삼진2냉장:</strong> 031-XXX-XXXX (기타 돈육/계육)</li>
+      <li><strong>동일냉장:</strong> 031-XXX-XXXX (닭발 등)</li>
+      <li>→ 제품+창고 매칭 규칙으로 수신 번호 자동 선택</li>
+    </ul>
+  </div>
+</div>
+
+<h3>출고증 자동 생성 양식</h3>
+<div class="al al-i">
+<b>📄 출고증 포함 항목</b><br>
+• 출고번호 (AST-DO-YYMMDD-NNN 자동채번)<br>
+• 출고일자, 발행일자<br>
+• 출고의뢰인: (주)아스트로스<br>
+• 수신: {창고명}<br>
+• 제품명, 원산지(브라질), 브랜드(Aurora/Vibra)<br>
+• 출고수량 (kg/박스), 컨테이너번호<br>
+• 배송처(판매처명), 배송주소<br>
+• 특이사항/비고<br>
+• 담당자 서명란
+</div>
+
+<h3>출고 후 자동 처리</h3>
+<div class="g g3">
+  <div class="c">
+    <div class="ct" style="color:var(--success);">✅ 재고 차감</div>
+    <p>상품재고에서 출고 수량 자동 차감. 잔량 실시간 업데이트.</p>
+  </div>
+  <div class="c">
+    <div class="ct" style="color:var(--success);">✅ 판매원장 반영</div>
+    <p>CJ판매원장, 디케이통상 원장 등 판매처별 원장에 자동 기록.</p>
+  </div>
+  <div class="c">
+    <div class="ct" style="color:var(--success);">✅ 기말재고 갱신</div>
+    <p>당월 판매분(원가 기준)을 기말재고에서 자동 제외. 회계 데이터 실시간 반영.</p>
+  </div>
+</div>
+</div>
+
+<!-- ============================================ -->
+<!-- P9: 장애대응 -->
+<!-- ============================================ -->
+<div class="pnl" id="p9">
+<h2>🛡️ 장애 대응 & 백업 전략</h2>
+<p class="sub">"시스템이 죽어도 업무는 살아야 한다" — 다중 안전장치 설계.</p>
+
+<div class="al al-d">
+<b>⚠️ 핵심 원칙</b>
+이카운트를 제거하고 자체 시스템에 올인하는 만큼, 백업 체계가 더욱 중요합니다. 시스템 장애 시 Excel 백업만으로도 모든 업무를 이어갈 수 있도록 설계합니다.
+</div>
+
+<h3>1. 자동 백업 체계</h3>
+<div class="g g3">
+  <div class="c">
+    <div class="ct" style="color:var(--success);">🔄 일일 Excel 백업</div>
+    <ul>
+      <li>매일 새벽 3시 자동 실행</li>
+      <li>시트 구성: 계약관리, 선적관리, 미착재고, 도착재고, 상품재고, 판매원장, 환율이력</li>
+      <li>OneDrive: <code>/수입육 PJT/00. 업무관리/01. 마스터파일/자동백업/</code></li>
+      <li>파일명: <code>시스템백업_YYMMDD.xlsx</code></li>
+      <li>최근 30일분 보관, 월말분 영구보관</li>
+    </ul>
+  </div>
+  <div class="c">
+    <div class="ct" style="color:var(--success);">💾 DB 자동 백업</div>
+    <ul>
+      <li>매일 새벽 2시: 전체 DB 덤프</li>
+      <li>매 6시간: 증분 백업</li>
+      <li>별도 스토리지에 암호화 보관</li>
+      <li>월 1회 복원 테스트 자동 검증</li>
+    </ul>
+  </div>
+  <div class="c">
+    <div class="ct" style="color:var(--success);">📁 OneDrive 이중보관</div>
+    <ul>
+      <li>기존 폴더구조 100% 유지</li>
+      <li>시스템 생성 모든 문서 OneDrive 동시 저장</li>
+      <li>OneDrive 자체 버전 관리 활용</li>
+    </ul>
+  </div>
+</div>
+
+<h3>2. 장애 유형별 대응</h3>
+<table>
+<tr><th>장애 유형</th><th>감지</th><th>자동 대응</th><th>수동 전환</th></tr>
+<tr><td>웹 서버 다운</td><td>Health check 매 1분</td><td>자동 재시작 3회 시도 + 카톡 알림</td><td>Excel 백업 파일로 업무 진행</td></tr>
+<tr><td>DB 연결 실패</td><td>커넥션 풀 모니터링</td><td>자동 재연결 + 캐시 모드</td><td>Excel 백업 활용. 복구 후 동기화</td></tr>
+<tr><td>선사 API 장애</td><td>응답 코드/타임아웃</td><td>마지막 성공 데이터 유지</td><td>선사 웹사이트 수동 확인</td></tr>
+<tr><td>환율 API 장애</td><td>조회 실패 감지</td><td>한국은행 ECOS 백업소스 자동 전환</td><td>시스템에 환율 수동 입력</td></tr>
+<tr><td>메일 연동(MS Graph) 장애</td><td>API 실패 카운트</td><td>재시도 큐 + 알림</td><td>Outlook에서 직접 메일 처리</td></tr>
+<tr><td>FAX 서비스 장애</td><td>발송 실패 감지</td><td>대체 FAX 서비스 시도 + 이메일 전환</td><td>창고에 이메일 또는 직접 FAX</td></tr>
+<tr><td>Claude AI 장애</td><td>API 응답 실패</td><td>AI 기능 비활성화 → 수동입력 모드</td><td>계약서/필증 수동 입력. 템플릿 메일.</td></tr>
+</table>
+
+<h3>3. 비상 운영 매뉴얼</h3>
+<div class="al al-w">
+<b>📋 시스템 완전 중단 시 비상 프로토콜</b>
+<ol style="padding-left:18px;margin-top:8px;">
+  <li><strong>즉시:</strong> 카카오톡 그룹에 "시스템 장애" 자동 통보</li>
+  <li><strong>5분 이내:</strong> OneDrive에서 최신 Excel 백업 파일 열기</li>
+  <li><strong>업무 진행:</strong> Excel에 수동 기록하며 업무 진행 (시트 구조가 시스템과 동일)</li>
+  <li><strong>메일:</strong> Outlook에서 직접 발송 (템플릿 폴더 활용)</li>
+  <li><strong>선박 트래킹:</strong> 선사 웹사이트 직접 조회</li>
+  <li><strong>출고:</strong> Excel에서 출고증 양식 출력 → 수동 FAX</li>
+  <li><strong>복구 후:</strong> Excel 기록분 CSV → 시스템 일괄 업로드 (중복 체크 포함)</li>
+</ol>
+</div>
+</div>
+
+<!-- ============================================ -->
+<!-- P10: 로드맵 -->
+<!-- ============================================ -->
+<div class="pnl" id="p10">
+<h2>🗓️ 개발 로드맵</h2>
+<p class="sub">MVP 우선 접근. 이카운트 없이 처음부터 자체 시스템으로 구축합니다.</p>
+
+<h3>Phase 1: 핵심 MVP (6~8주)</h3>
+<div class="c" style="border-left:3px solid var(--accent);margin-bottom:20px;">
+  <div class="ct">🎯 "기본 업무가 돌아가는 시스템"</div>
+  <ul>
+    <li>계약 등록 (수동+자동 파싱) & DB 관리 <span class="t to">①②</span></li>
+    <li>선적정보 등록 & BL 매칭 <span class="t to">③</span></li>
+    <li>BL 기반 선박 트래킹 (주요 선사 3~4개) <span class="t to">④</span></li>
+    <li><strong>3단계 재고관리 (미착/도착/상품)</strong> <span class="t to">⑥</span></li>
+    <li>BL date 매매기준율 자동 조회 & 원화 환산 <span class="t to">⑦</span></li>
+    <li>기본 알림 (ETA-10일, 입항 D-3) <span class="t to">⑤</span></li>
+    <li>자체 발주번호 채번 (이카운트 대체)</li>
+    <li><strong>Excel 일일 자동 백업</strong></li>
+  </ul>
+</div>
+
+<h3>Phase 2: 자동화 & 통관 (5~7주)</h3>
+<div class="c" style="border-left:3px solid var(--accent2);margin-bottom:20px;">
+  <div class="ct">🎯 "메일 자동처리 + 관세 반영"</div>
+  <ul>
+    <li>Outlook 메일 자동 감지 (계약서/선적서류/필증) <span class="t to">①②③</span></li>
+    <li>Claude AI 계약서 PDF 완전 자동 파싱 <span class="t to">①</span></li>
+    <li><strong>수입신고필증 자동 파싱 → 관세 원가 반영</strong> <span class="t to">⑦</span></li>
+    <li>OneDrive 폴더 자동 생성 & 파일 자동 저장 <span class="t to">②</span></li>
+    <li>모든 반자동 단계 메일 초안 자동생성 <span class="t to">⑤</span></li>
+    <li>포르투갈어 원본서류 요청 메일 <span class="t to">⑤</span></li>
+  </ul>
+</div>
+
+<h3>Phase 3: 판매/출고 & 회계 (5~7주)</h3>
+<div class="c" style="border-left:3px solid var(--accent5);margin-bottom:20px;">
+  <div class="ct">🎯 "원클릭 출고 + 회계 마감"</div>
+  <ul>
+    <li><strong>재고 대시보드에서 원클릭 판매/출고</strong> <span class="t to">⑧</span></li>
+    <li><strong>창고 FAX 자동 발송</strong> (인터넷FAX 연동) <span class="t to">⑨</span></li>
+    <li>판매원장 자동 반영 (CJ/디케이통상 등)</li>
+    <li><strong>월별 기초/기말 재고 자동 산출</strong> <span class="t to">⑩</span></li>
+    <li><strong>기말재고에서 당월 판매분 자동 제외</strong> <span class="t to">⑪</span></li>
+    <li>월말 마감 보고서 자동 생성</li>
+    <li>판매 분석 대시보드</li>
+  </ul>
+</div>
+
+<h3>Phase 4: 고도화 & 확장 (지속)</h3>
+<div class="c" style="border-left:3px solid var(--accent4);margin-bottom:20px;">
+  <div class="ct">🎯 "데이터 기반 의사결정"</div>
+  <ul>
+    <li>수익성 분석 (계약별·제품별·거래처별 마진)</li>
+    <li>시장가격 모니터링 & 발주 타이밍 제안</li>
+    <li>창고 최적화 (보관비용·회전율 분석)</li>
+    <li>FASA, JAGUA 등 신규 공급업체 대응</li>
+    <li>모바일 PWA (Galaxy 최적화)</li>
+    <li>다른 농축산물 카테고리 확장</li>
+  </ul>
+</div>
+
+<h3>예상 비용 (자체 ERP 포함)</h3>
+<table>
+<tr><th>항목</th><th>월 비용 (추정)</th><th>비고</th></tr>
+<tr><td>Supabase (DB + Auth + Storage + Realtime)</td><td>$25~50</td><td>Pro Plan. 자체 ERP DB로 충분.</td></tr>
+<tr><td>Vercel (프론트엔드)</td><td>$20</td><td>Pro Plan.</td></tr>
+<tr><td>Railway (백엔드 + 스케줄러)</td><td>$25~50</td><td>자동화 엔진 포함.</td></tr>
+<tr><td>Claude API</td><td>$30~60</td><td>계약서 + 필증 파싱 + 메일 초안.</td></tr>
+<tr><td>환율 API</td><td>$0</td><td>한국수출입은행 Open API 무료.</td></tr>
+<tr><td>인터넷 FAX 서비스</td><td>$10~20</td><td>건당 과금. 월 출고 횟수 기준.</td></tr>
+<tr><td>선사 트래킹</td><td>$0~100</td><td>무료 API 우선. 필요 시 유료.</td></tr>
+<tr style="background:rgba(79,140,255,.05);"><td style="font-weight:700;">월 총 예상</td><td style="font-weight:700;color:var(--accent);">약 $110~300</td><td>한화 약 15~42만원/월<br><strong>이카운트 비용 절감분 상쇄</strong></td></tr>
+</table>
+
+<div class="al al-s" style="margin-top:20px;">
+<b>✅ 이카운트 대비 장점</b>
+• <strong>맞춤형:</strong> 수입육 업무에 100% 최적화. 불필요한 기능 없음.<br>
+• <strong>자동화:</strong> 이카운트에서 수동 입력하던 발주/입고/매출이 모두 자동화.<br>
+• <strong>3단계 재고:</strong> 이카운트에서 지원하지 않는 미착/도착/상품 분리 관리.<br>
+• <strong>환율/관세:</strong> BL환율 자동 적용, 관세 원가 반영 — 이카운트에선 수동 계산.<br>
+• <strong>통합:</strong> 메일, 서류, 재고, 판매, 회계가 하나의 시스템에서 원스톱 처리.
+</div>
+
+<div class="al al-i">
+<b>💡 개발 방식 추천 (v2)</b><br>
+이카운트를 완전 대체하는 만큼, 핵심 인프라(DB 설계, API, 인증)는 <strong>전문 개발자의 도움</strong>을 받고, 업무 로직과 UI는 이사님이 Claude AI와 함께 점진적으로 구축하는 <strong>하이브리드 방식</strong>을 추천합니다.<br><br>
+특히 3단계 재고관리와 회계 마감 로직은 데이터 정합성이 매우 중요하므로, 초기 DB 설계를 탄탄하게 가져가는 것이 핵심입니다.
+</div>
+</div>
+
+<script>
+function go(id){
+  document.querySelectorAll('.pnl').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  event.target.classList.add('on');
+}
+function tog(el){
+  el.classList.toggle('o');
+  const b=el.nextElementSibling;
+  b.classList.toggle('o');
+}
+</script>
+
+</body>
+</html>

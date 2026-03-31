@@ -29,6 +29,12 @@ import { registerDataIntegrityTools } from "./data-integrity.js";
 import { registerDocumentStatusTools } from "./document-status.js";
 import { registerAdjustInventoryTools } from "./adjust-inventory.js";
 import { registerCustomsCostTools } from "./customs-cost.js";
+import { registerReceivablesTools } from "./receivables.js";
+import { registerPayablesTools } from "./payables.js";
+import { registerWeightSettlementTools } from "./weight-settlement.js";
+import { registerInventoryLifecycleTools } from "./inventory-lifecycle.js";
+import { registerFinancialStatementsTools } from "./financial-statements.js";
+import { registerMarginAnalysisTools } from "./margin-analysis.js";
 
 export function registerAllTools(server: McpServer, client: EcountClient, config: EcountConfig): void {
   registerConnectionTools(server, client, config);
@@ -61,6 +67,14 @@ export function registerAllTools(server: McpServer, client: EcountClient, config
   registerDocumentStatusTools(server);
   registerAdjustInventoryTools(server);
   registerCustomsCostTools(server);
+  // Category B+ tools (v5 feature expansion — leaf layer)
+  registerReceivablesTools(server);
+  registerPayablesTools(server);
+  registerWeightSettlementTools(server);
+  registerInventoryLifecycleTools(server);
+  // Category B+ tools (v5 feature expansion — aggregation layer)
+  registerFinancialStatementsTools(server);
+  registerMarginAnalysisTools(server);
   // Category B tools (EcountClient dependency - internal API)
   registerInternalApiTools(server, client);
 }

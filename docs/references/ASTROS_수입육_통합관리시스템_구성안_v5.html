@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASTROS 수입육 통합관리시스템 구성안 v5.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0d1017;
+            color: #c9d1d9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            margin-bottom: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #1c2128 0%, #0d1017 100%);
+            border: 1px solid #30363d;
+            border-radius: 6px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #58a6ff;
+        }
+
+        .badges {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background-color: #1f6feb;
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .badge.highlight {
+            background-color: #238636;
+        }
+
+        .badge.warning {
+            background-color: #d29922;
+        }
+
+        .meta-info {
+            font-size: 0.9em;
+            color: #8b949e;
+            margin-top: 15px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #30363d;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            background-color: transparent;
+            border: none;
+            color: #8b949e;
+            cursor: pointer;
+            font-size: 0.95em;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            color: #c9d1d9;
+            background-color: #161b22;
+        }
+
+        .tab-button.active {
+            color: #58a6ff;
+            border-bottom-color: #58a6ff;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            color: #58a6ff;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #30363d;
+        }
+
+        h3 {
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: #79c0ff;
+        }
+
+        .description {
+            color: #8b949e;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            line-height: 1.8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: #0d1017;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #58a6ff;
+            border-bottom: 2px solid #30363d;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #30363d;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: #0d1017;
+        }
+
+        .status-new {
+            color: #58a6ff;
+            font-weight: 600;
+        }
+
+        .status-expand {
+            color: #238636;
+            font-weight: 600;
+        }
+
+        .collapsible {
+            background-color: #161b22;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .collapsible:hover {
+            background-color: #1c2128;
+            border-color: #444c56;
+        }
+
+        .collapsible.active {
+            background-color: #1c2128;
+            border-color: #58a6ff;
+        }
+
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            font-size: 1.2em;
+            color: #58a6ff;
+        }
+
+        .collapsible.active .collapsible-icon {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            display: none;
+            padding: 15px;
+            background-color: #0d1017;
+            border: 1px solid #30363d;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+        }
+
+        .collapsible.active + .collapsible-content {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: #161b22;
+            padding: 20px;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #58a6ff;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #8b949e;
+            font-size: 0.9em;
+        }
+
+        .alert-box {
+            background-color: #161b22;
+            border-left: 4px solid #d29922;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .alert-box.warning {
+            border-left-color: #d29922;
+        }
+
+        .alert-box.danger {
+            border-left-color: #f85149;
+        }
+
+        .alert-box.success {
+            border-left-color: #238636;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: #c9d1d9;
+            margin-bottom: 5px;
+        }
+
+        .code-block {
+            background-color: #0d1017;
+            padding: 15px;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #79c0ff;
+        }
+
+        .workflow-step {
+            background-color: #161b22;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #58a6ff;
+            border-radius: 4px;
+        }
+
+        .workflow-step-title {
+            font-weight: 600;
+            color: #58a6ff;
+            margin-bottom: 8px;
+        }
+
+        .workflow-step-content {
+            color: #c9d1d9;
+            margin-left: 10px;
+        }
+
+        .pipeline-visual {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .pipeline-stage {
+            flex: 1;
+            min-width: 150px;
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .pipeline-stage-title {
+            font-weight: 600;
+            color: #58a6ff;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .pipeline-item {
+            background-color: #0d1017;
+            padding: 8px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: #8b949e;
+        }
+
+        .price-table {
+            background-color: #161b22;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .price-item:last-child {
+            border-bottom: none;
+        }
+
+        .price-label {
+            color: #c9d1d9;
+        }
+
+        .price-value {
+            color: #58a6ff;
+            font-weight: 600;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            padding: 20px;
+            background-color: #161b22;
+            border-left: 3px solid #58a6ff;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .timeline-item-title {
+            font-weight: 600;
+            color: #58a6ff;
+            margin-bottom: 8px;
+        }
+
+        .timeline-item-duration {
+            color: #8b949e;
+            font-size: 0.9em;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .matrix-cell {
+            background-color: #161b22;
+            padding: 15px;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .matrix-cell-title {
+            font-weight: 600;
+            color: #79c0ff;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .matrix-cell-items {
+            font-size: 0.85em;
+            color: #c9d1d9;
+            line-height: 1.8;
+        }
+
+        .process-flow {
+            background-color: #161b22;
+            padding: 20px;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .process-step-number {
+            background-color: #58a6ff;
+            color: #0d1017;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .process-step-info {
+            flex: 1;
+        }
+
+        .process-step-title {
+            font-weight: 600;
+            color: #79c0ff;
+            margin-bottom: 5px;
+        }
+
+        .process-step-desc {
+            color: #8b949e;
+            font-size: 0.9em;
+        }
+
+        .approval-diagram {
+            background-color: #161b22;
+            padding: 20px;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .approval-step {
+            display: inline-block;
+            background-color: #0d1017;
+            padding: 10px 20px;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            margin: 0 10px 10px 0;
+            color: #79c0ff;
+        }
+
+        .approval-arrow {
+            display: inline-block;
+            margin: 0 5px;
+            color: #58a6ff;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .tab-button {
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pipeline-visual {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🥩 ASTROS 수입육 통합관리시스템 구성안</h1>
+            <div class="badges">
+                <span class="badge">v5.0</span>
+                <span class="badge highlight">2026.03.26</span>
+                <span class="badge warning">이사님 수정 5건 반영</span>
+                <span class="badge">전자결재 재설계</span>
+                <span class="badge">Next.js + FastAPI + PostgreSQL</span>
+            </div>
+            <div class="meta-info">
+                <strong>업데이트:</strong> 전자결재 시스템 재설계(시스템 자동기안 vs 담당자 기안 분리), 수금관리 위치 개선, 비규격제품 정산 시점 명확화, 손익계산서 기간선택 기능, 기초데이터 거래처/품목/창고 정보 조정<br>
+                <strong>핵심 변경:</strong> 전자결재 완전 재구성, 수금관리 실시간 모니터링, 재고정산 프로세스 명확화, 유연한 회계 분석
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab(0)">개요 & 변경점</button>
+            <button class="tab-button" onclick="switchTab(1)">업무 흐름도</button>
+            <button class="tab-button" onclick="switchTab(2)">전자결재 시스템</button>
+            <button class="tab-button" onclick="switchTab(3)">사용자 권한 관리</button>
+            <button class="tab-button" onclick="switchTab(4)">재고관리 (5단계)</button>
+            <button class="tab-button" onclick="switchTab(5)">회계 & 자금관리</button>
+            <button class="tab-button" onclick="switchTab(6)">메일 분석 & 자동화</button>
+            <button class="tab-button" onclick="switchTab(7)">비주얼 모니터링</button>
+            <button class="tab-button" onclick="switchTab(8)">원클릭 처리</button>
+            <button class="tab-button" onclick="switchTab(9)">메일 템플릿</button>
+            <button class="tab-button" onclick="switchTab(10)">자가진단 엔진</button>
+            <button class="tab-button" onclick="switchTab(11)">BI 대시보드</button>
+            <button class="tab-button" onclick="switchTab(12)">기초 데이터 관리</button>
+            <button class="tab-button" onclick="switchTab(13)">로드맵</button>
+        </div>
+
+        <!-- TAB 1: 개요 & 변경점 -->
+        <div id="tab-1" class="tab-content active">
+            <div class="section">
+                <h2>📋 v4→v5 핵심 변경점</h2>
+                <p class="description">이사님 수정사항 5건 + 전자결재 시스템 완전 재설계로 업무 프로세스 고도화</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">이사님 수정사항</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">9</div>
+                        <div class="stat-label">신규 결재 유형</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">재고 단계</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">14</div>
+                        <div class="stat-label">통합 탭 구성</div>
+                    </div>
+                </div>
+
+                <h3>주요 변경사항</h3>
+
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span>1. 전자결재 시스템 완전 재설계 (가장 중요!)</span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p><strong>기안자를 두 종류로 구분:</strong></p>
+                    <p style="margin-top: 10px;"><strong>A. 기안자가 "프로그램(시스템)"인 경우</strong> - 시스템이 자동으로 전자결재 생성</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>계약(발주) 기안: 계약 등록 시 시스템 자동 기안</li>
+                        <li>구매(선적) 입력: 선적서류 수신 시 BL 일자 기준 서울외국환중개은행 매매기준율로 "실중량 × 단가 × 환율"을 자동 계산하여 전자결재 올림</li>
+                        <li>관세 기안: 관세 납부 시 시스템 자동 기안</li>
+                        <li>결재 흐름: 시스템(자동기안) → 담당자(확인) → 팀장(결재)</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>B. 기안자가 "담당자"인 경우</strong> - 담당자가 직접 기안</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>통관</li>
+                        <li>판매</li>
+                        <li>출고</li>
+                        <li>부대비 (적하보험 포함)</li>
+                        <li>외화지급결의서 (TT & PU)</li>
+                        <li>신용장개설품의서 (LC)</li>
+                        <li>결재 흐름: 담당자(기안) → 팀장(결재) 가 기본</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>전결 규칙:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>외화지급결의서 + 신용장개설품의서 = 대표이사 전결 (담당자→팀장→대표)</li>
+                        <li>그 외 모든 결재 = 팀장 전결 (시스템/담당자→담당자/팀장)</li>
+                    </ul>
+                </div>
+
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span>2. 수금관리 위치 변경</span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p><strong>변경 내용:</strong> 업무 흐름도(TAB 2)에서 "수금관리"를 별도 단계로 빼지 않음</p>
+                    <p style="margin-top: 10px;"><strong>새로운 구조:</strong> 판매 확정 → [수금관리 실시간] → 출고</p>
+                    <p style="margin-top: 10px;">수금 상태(미수금/부분수금/수금완료)가 판매-출고 프로세스 내에서 실시간 모니터링되는 방식으로 변경</p>
+                </div>
+
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span>3. 비규격제품 중량차이 처리 시점 명확화</span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p><strong>기존:</strong> 가중량과 실중량 차이 발생시 잡이익/잡손실로 처리</p>
+                    <p style="margin-top: 10px;"><strong>변경:</strong> 해당 계약의 판매가 모두 완료된 이후에만 잡이익/잡손실 정산 진행</p>
+                    <p style="margin-top: 10px;">이를 통해 중량차이에 대한 최종 정산을 정확하게 관리할 수 있음</p>
+                </div>
+
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span>4. 손익계산서 기간 선택 기능</span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p><strong>기존:</strong> 월별 고정</p>
+                    <p style="margin-top: 10px;"><strong>변경:</strong> 기간을 자유롭게 선택하면 자동 산출</p>
+                    <p style="margin-top: 10px;"><strong>기능:</strong> 시작일~종료일 선택 → 해당 기간 매출/매출원가/판관비/영업이익 등 자동 계산</p>
+                </div>
+
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span>5. 기초데이터 관리(TAB 12) 수정</span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p><strong>거래처 관리 변경:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>"결제조건"과 "적하보험" 항목을 거래처 관리 테이블에서 삭제</li>
+                        <li>이 두 항목은 거래처가 아니라 계약관리에서 진행 (계약별로 결제조건/보험 다를 수 있음)</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>품목 관리 변경:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>"기본 판매단가" 항목 삭제</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>창고 관리 변경:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>"용량" (최대 수용량) 항목 삭제</li>
+                        <li>"연락처" 항목을 유선번호 + FAX번호 두 필드로 분리</li>
+                        <li>출고증은 FAX 번호로 보내는 것이 디폴트 (이 점 명시)</li>
+                    </ul>
+                </div>
+
+                <div class="alert-box success">
+                    <div class="alert-title">✓ 전자결재 시스템 완전 재설계</div>
+                    <p>시스템 자동 기안(계약/선적/관세) 3종 + 담당자 기안(통관/판매/출고/부대비/외화지급/신용장) 6종으로 재구성. 담당자→팀장→(대표 선택) 3단계 결재 구조. 미지급금/미착재고 자동 회계 인식.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: 업무 흐름도 -->
+        <div id="tab-2" class="tab-content">
+            <div class="section">
+                <h2>🔄 End-to-End 업무 흐름도</h2>
+                <p class="description">전체 프로세스 흐름과 전자결재 포인트 (✓ 표시)</p>
+
+                <h3>메인 업무 흐름 (14단계)</h3>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="process-step-number">1</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">계약서 수신</div>
+                            <div class="process-step-desc">거래처로부터 계약서 수신</div>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">2</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">계약정보 등록 ✓</div>
+                            <div class="process-step-desc">시스템 자동 기안 → 담당자(확인) → 팀장(결재) | Payment Term(TT/LC/PU) 선택 | 미지급금 인식</div>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">3</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">선적서류 수신</div>
+                            <div class="process-step-desc">선적 완료 → BL, Invoice, Packing List 수신</div>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">4</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">선적정보 입력 ✓</div>
+                            <div class="process-step-desc">시스템 자동 기안(실중량 × 단가 × BL환율) → 담당자(확인) → 팀장(결재) | 미착재고 전환 | 창고 지정(수정 가능)</div>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">5</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">선박 트래킹</div>
+                            <div class="process-step-desc">예상 입항일 모니터링</div>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">6</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">서류 알림</div>
+                            <div class="process-step-desc">입항 일주일 전부터 자동 알림 발송</div>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">7</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">입항</div>
+                            <div class="process-step-desc">도착재고 상태 변경</div>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">8</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">입고</div>
+                            <div class="process-step-desc">창고 입고, 창고 확정</div>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">9</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">검역</div>
+                            <div class="process-step-desc">보건증 확인</div>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">10</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">통관 ✓</div>
+                            <div class="process-step-desc">담당자(기안) → 팀장(결재) | 상품재고 전환 | 회계 인식 | 수입신고확인증 이력번호 저장</div>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">11</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">판매 ✓</div>
+                            <div class="process-step-desc">담당자(기안) → 팀장(결재) | 규격/비규격 제품 구분 처리</div>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">12</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">수금 관리</div>
+                            <div class="process-step-desc">[실시간 모니터링] 미수금/부분수금/수금완료 상태 관리 (판매와 출고 사이에서)</div>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">13</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">출고 ✓</div>
+                            <div class="process-step-desc">담당자(기안) → 팀장(결재) | FAX 발송 완료 알림 | 미트와치 자동 LIST UP</div>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">14</div>
+                        <div class="process-step-info">
+                            <div class="process-step-title">회계 마감 ✓</div>
+                            <div class="process-step-desc">월별 마감, 부대비/금융비/관세 정산, 손익계산서 생성</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>전자결재 포인트 상세 (9가지)</h3>
+                <table>
+                    <tr>
+                        <th>단계</th>
+                        <th>결재 유형</th>
+                        <th>기안자</th>
+                        <th>결재 경로</th>
+                        <th>주요 내용</th>
+                    </tr>
+                    <tr>
+                        <td>계약</td>
+                        <td>계약 승인</td>
+                        <td>시스템 자동</td>
+                        <td>확인 → 팀장</td>
+                        <td>계약정보 등록 | Payment Term 선택 | 미지급금 인식</td>
+                    </tr>
+                    <tr>
+                        <td>선적</td>
+                        <td>선적정보 확인</td>
+                        <td>시스템 자동</td>
+                        <td>확인 → 팀장</td>
+                        <td>실중량 × 단가 × BL환율 자동 계산 | 미착재고 전환 | 창고 지정</td>
+                    </tr>
+                    <tr>
+                        <td>관세</td>
+                        <td>관세 납부</td>
+                        <td>시스템 자동</td>
+                        <td>확인 → 팀장</td>
+                        <td>월별 관세 납부기한 관리 | 자동 기안</td>
+                    </tr>
+                    <tr>
+                        <td>통관</td>
+                        <td>통관 완료</td>
+                        <td>담당자 기안</td>
+                        <td>담당자 → 팀장</td>
+                        <td>상품재고 전환 | 회계 인식 | 이력번호 저장</td>
+                    </tr>
+                    <tr>
+                        <td>판매</td>
+                        <td>판매 결재</td>
+                        <td>담당자 기안</td>
+                        <td>담당자 → 팀장</td>
+                        <td>규격제품: 박스수×단가 | 비규격: 가중량 거래명세서</td>
+                    </tr>
+                    <tr>
+                        <td>출고</td>
+                        <td>출고 결재</td>
+                        <td>담당자 기안</td>
+                        <td>담당자 → 팀장</td>
+                        <td>FAX 발송 → 창고 송부 → 발송 완료 알림</td>
+                    </tr>
+                    <tr>
+                        <td>부대비</td>
+                        <td>부대비/보험 지급</td>
+                        <td>담당자 기안</td>
+                        <td>담당자 → 팀장</td>
+                        <td>적하보험, 창고비, 운송비 등록</td>
+                    </tr>
+                    <tr>
+                        <td>지급</td>
+                        <td>외화지급결의서</td>
+                        <td>담당자 기안</td>
+                        <td>담당자 → 팀장 → 대표</td>
+                        <td>TT 외화지급 관리 (대표 전결)</td>
+                    </tr>
+                    <tr>
+                        <td>신용장</td>
+                        <td>신용장 개설 품의</td>
+                        <td>담당자 기안</td>
+                        <td>담당자 → 팀장 → 대표</td>
+                        <td>LC 한도 관리 및 개설 (대표 전결)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 3: 전자결재 시스템 -->
+        <div id="tab-3" class="tab-content">
+            <div class="section">
+                <h2>⚡ 전자결재 시스템</h2>
+                <p class="description">시스템 자동기안(3종) + 담당자 기안(6종) 총 9가지 결재 유형</p>
+
+                <h3>결재 유형 & 권한 체계</h3>
+
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span>A. 시스템 자동 기안 (3종)</span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p><strong>정의:</strong> 시스템이 자동으로 전자결재를 생성하고, 담당자가 확인한 후 팀장이 결재하는 방식</p>
+                    <table>
+                        <tr>
+                            <th>결재 유형</th>
+                            <th>결재 경로</th>
+                            <th>설명</th>
+                        </tr>
+                        <tr>
+                            <td>계약(발주) 기안</td>
+                            <td>시스템 자동 → 담당자 확인 → 팀장 결재</td>
+                            <td>계약 등록 시 시스템이 자동으로 결재 문서 생성</td>
+                        </tr>
+                        <tr>
+                            <td>구매(선적) 입력</td>
+                            <td>시스템 자동 → 담당자 확인 → 팀장 결재</td>
+                            <td>선적서류 수신 시 BL 일자 기준 서울외국환중개은행 매매기준율로 "실중량 × 단가 × 환율"을 자동 계산하여 결재 올림</td>
+                        </tr>
+                        <tr>
+                            <td>관세 기안</td>
+                            <td>시스템 자동 → 담당자 확인 → 팀장 결재</td>
+                            <td>관세 납부 시 시스템이 자동으로 결재 문서 생성</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span>B. 담당자 기안 (6종)</span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p><strong>정의:</strong> 담당자가 직접 기안하여 팀장(또는 대표)이 결재하는 방식</p>
+                    <table>
+                        <tr>
+                            <th>결재 유형</th>
+                            <th>결재 경로</th>
+                            <th>설명</th>
+                            <th>전결 규칙</th>
+                        </tr>
+                        <tr>
+                            <td>통관</td>
+                            <td>담당자 → 팀장</td>
+                            <td>상품재고 전환, 회계 인식</td>
+                            <td>팀장 전결</td>
+                        </tr>
+                        <tr>
+                            <td>판매</td>
+                            <td>담당자 → 팀장</td>
+                            <td>규격/비규격 제품 구분 처리, 거래명세서 자동 생성</td>
+                            <td>팀장 전결</td>
+                        </tr>
+                        <tr>
+                            <td>출고</td>
+                            <td>담당자 → 팀장</td>
+                            <td>FAX 발송, 미트와치 자동 LIST UP</td>
+                            <td>팀장 전결</td>
+                        </tr>
+                        <tr>
+                            <td>부대비 (적하보험 포함)</td>
+                            <td>담당자 → 팀장</td>
+                            <td>창고비, 운송비, 적하보험 등록</td>
+                            <td>팀장 전결</td>
+                        </tr>
+                        <tr>
+                            <td>외화지급결의서 (TT & PU)</td>
+                            <td>담당자 → 팀장 → 대표</td>
+                            <td>TT 외화지급, PU 등록</td>
+                            <td>대표 전결 ★</td>
+                        </tr>
+                        <tr>
+                            <td>신용장개설품의서 (LC)</td>
+                            <td>담당자 → 팀장 → 대표</td>
+                            <td>신용장 개설 한도 관리 및 개설</td>
+                            <td>대표 전결 ★</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="alert-box warning">
+                    <div class="alert-title">전결 규칙 정리</div>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>팀장 전결:</strong> 계약 / 선적 / 관세 / 통관 / 판매 / 출고 / 부대비</li>
+                        <li><strong>대표 전결:</strong> 외화지급결의서 / 신용장개설품의서</li>
+                    </ul>
+                </div>
+
+                <h3>인원 & 권한</h3>
+                <table>
+                    <tr>
+                        <th>역할</th>
+                        <th>이름</th>
+                        <th>권한</th>
+                        <th>결재 단계</th>
+                    </tr>
+                    <tr>
+                        <td>담당자</td>
+                        <td>오주연, 최민지</td>
+                        <td>거래처 정보 입력, 계약 생성, 판매/출고 등록, 기안</td>
+                        <td>1차</td>
+                    </tr>
+                    <tr>
+                        <td>팀장</td>
+                        <td>이이수</td>
+                        <td>모든 문서 1차 결재, 거부/반려 가능</td>
+                        <td>2차</td>
+                    </tr>
+                    <tr>
+                        <td>대표</td>
+                        <td>신창호</td>
+                        <td>최종 결재, 외화지급/신용장 전결</td>
+                        <td>3차</td>
+                    </tr>
+                    <tr>
+                        <td>이사 (수신참조)</td>
+                        <td>박종진</td>
+                        <td>모니터링 및 조회만 가능</td>
+                        <td>수신참조</td>
+                    </tr>
+                    <tr>
+                        <td>기타 (수신참조)</td>
+                        <td>이세롬</td>
+                        <td>모니터링 및 조회만 가능</td>
+                        <td>수신참조</td>
+                    </tr>
+                </table>
+
+                <h3>기안번호 체계</h3>
+                <div class="code-block">
+형식: YYYY/MM/DD-N
+예: 2026/03/26-001, 2026/03/26-002
+N = 일일 순번 (자동 증가)
+                </div>
+
+                <h3>결재 양식</h3>
+                <div class="alert-box">
+                    <div class="alert-title">결재 문서 구조</div>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>기안번호:</strong> 자동 생성 (YYYY/MM/DD-N)</li>
+                        <li><strong>결재일시:</strong> 각 단계별 자동 기록</li>
+                        <li><strong>첨부파일:</strong> PDF, Excel, 이미지 등</li>
+                        <li><strong>메모:</strong> 각 결재자 의견 기록</li>
+                        <li><strong>상태:</strong> 진행중/승인/반려/재검토</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: 사용자 권한 관리 -->
+        <div id="tab-4" class="tab-content">
+            <div class="section">
+                <h2>👥 사용자 권한 관리</h2>
+                <p class="description">역할별 권한 매트릭스 및 권한 제어 규칙</p>
+
+                <h3>권한 매트릭스 (기능별)</h3>
+                <table>
+                    <tr>
+                        <th>기능</th>
+                        <th>담당자</th>
+                        <th>팀장</th>
+                        <th>대표</th>
+                        <th>조회권</th>
+                    </tr>
+                    <tr>
+                        <td>계약서 등록</td>
+                        <td>○</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>○</td>
+                    </tr>
+                    <tr>
+                        <td>계약 승인/반려</td>
+                        <td>-</td>
+                        <td>○</td>
+                        <td>-</td>
+                        <td>○</td>
+                    </tr>
+                    <tr>
+                        <td>선적 정보 입력</td>
+                        <td>○</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>○</td>
+                    </tr>
+                    <tr>
+                        <td>창고 지정 (수정 가능)</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>-</td>
+                        <td>○</td>
+                    </tr>
+                    <tr>
+                        <td>판매 등록</td>
+                        <td>○</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>○</td>
+                    </tr>
+                    <tr>
+                        <td>판매 승인</td>
+                        <td>-</td>
+                        <td>○</td>
+                        <td>-</td>
+                        <td>○</td>
+                    </tr>
+                    <tr>
+                        <td>출고 등록</td>
+                        <td>○</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>○</td>
+                    </tr>
+                    <tr>
+                        <td>출고 승인</td>
+                        <td>-</td>
+                        <td>○</td>
+                        <td>-</td>
+                        <td>○</td>
+                    </tr>
+                    <tr>
+                        <td>부대비/관세 등록</td>
+                        <td>○</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>○</td>
+                    </tr>
+                    <tr>
+                        <td>부대비/관세 결재</td>
+                        <td>-</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>○</td>
+                    </tr>
+                    <tr>
+                        <td>외화지급/신용장 관리</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>○</td>
+                        <td>○</td>
+                    </tr>
+                    <tr>
+                        <td>월별 마감</td>
+                        <td>-</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>○</td>
+                    </tr>
+                    <tr>
+                        <td>기초데이터 관리</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>○</td>
+                        <td>○</td>
+                    </tr>
+                </table>
+
+                <h3>권한 제어 규칙</h3>
+                <div class="alert-box success">
+                    <div class="alert-title">기본 원칙</div>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>분리:</strong> 기안/승인/조회 권한 분리</li>
+                        <li><strong>최소권한:</strong> 필요한 범위 내에서만 권한 부여</li>
+                        <li><strong>감시:</strong> 모든 행위 기록 및 감시 로그</li>
+                        <li><strong>선택적 위임:</strong> 팀장 부재시 대표가 위임 가능</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: 재고관리 (5단계) -->
+        <div id="tab-5" class="tab-content">
+            <div class="section">
+                <h2>📦 재고관리 체계 (5단계)</h2>
+                <p class="description">계약→미착→도착→상품→판매완료 전체 재고 라이프사이클</p>
+
+                <h3>5단계 재고 상태</h3>
+
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span style="color: #58a6ff;"><strong>① 계약(발주)재고</strong></span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p><strong>정의:</strong> 계약 완료 선적 전 상태</p>
+                    <p style="margin-top: 10px;"><strong>특징:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>USD 금액 기준</li>
+                        <li>창고 미지정</li>
+                        <li>계약 정보만 존재</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><strong>다음 단계 전환 조건:</strong> 선적 완료 시 미착재고로 전환</p>
+                </div>
+
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span style="color: #79c0ff;"><strong>② 미착재고</strong></span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p><strong>정의:</strong> 선적 완료 도착 전 상태</p>
+                    <p style="margin-top: 10px;"><strong>특징:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>BL 일자 기준 환율 적용 (KRW 전환)</li>
+                        <li>창고 지정 가능 (수정 가능)</li>
+                        <li>선박 트래킹 시작</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><strong>다음 단계 전환 조건:</strong> 도착 시 도착재고로 전환</p>
+                </div>
+
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span style="color: #79c0ff;"><strong>③ 도착재고</strong></span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p><strong>정의:</strong> 도착 완료 통관 전 상태</p>
+                    <p style="margin-top: 10px;"><strong>특징:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>창고 확정</li>
+                        <li>검역 / 관세 처리 중</li>
+                        <li>미회계 인식</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><strong>다음 단계 전환 조건:</strong> 통관 완료 시 상품재고로 전환</p>
+                </div>
+
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span style="color: #238636;"><strong>④ 상품재고</strong></span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p><strong>정의:</strong> 통관 완료 판매 전 상태</p>
+                    <p style="margin-top: 10px;"><strong>특징:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>회계 인식 (상품재고 계정)</li>
+                        <li>판매 가능한 상품</li>
+                        <li>재고단가 확정</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><strong>다음 단계 전환 조건:</strong> 판매 시 판매완료로 전환</p>
+                </div>
+
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span style="color: #238636;"><strong>⑤ 판매완료</strong></span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p><strong>정의:</strong> 판매 완료 상태</p>
+                    <p style="margin-top: 10px;"><strong>특징:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>출고 완료</li>
+                        <li>매출원가 인식</li>
+                        <li>비규격제품 정산 준비</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><strong>비규격제품 중량차이 처리 (V5 변경):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>해당 계약의 모든 판매가 완료된 이후에만 잡이익/잡손실 정산 진행</li>
+                        <li>가중량과 실중량 차이를 최종 정산</li>
+                    </ul>
+                </div>
+
+                <h3>재고 상태 전환 흐름도</h3>
+                <div class="pipeline-visual">
+                    <div class="pipeline-stage">
+                        <div class="pipeline-stage-title">계약재고</div>
+                        <div class="pipeline-item">계약 등록</div>
+                        <div class="pipeline-item">USD</div>
+                    </div>
+                    <div class="pipeline-stage">
+                        <div class="pipeline-stage-title">→</div>
+                        <div class="pipeline-item">선적</div>
+                    </div>
+                    <div class="pipeline-stage">
+                        <div class="pipeline-stage-title">미착재고</div>
+                        <div class="pipeline-item">BL 수신</div>
+                        <div class="pipeline-item">KRW 전환</div>
+                    </div>
+                    <div class="pipeline-stage">
+                        <div class="pipeline-stage-title">→</div>
+                        <div class="pipeline-item">도착</div>
+                    </div>
+                    <div class="pipeline-stage">
+                        <div class="pipeline-stage-title">도착재고</div>
+                        <div class="pipeline-item">입항</div>
+                        <div class="pipeline-item">검역</div>
+                    </div>
+                    <div class="pipeline-stage">
+                        <div class="pipeline-stage-title">→</div>
+                        <div class="pipeline-item">통관</div>
+                    </div>
+                    <div class="pipeline-stage">
+                        <div class="pipeline-stage-title">상품재고</div>
+                        <div class="pipeline-item">판매 가능</div>
+                        <div class="pipeline-item">원가 확정</div>
+                    </div>
+                    <div class="pipeline-stage">
+                        <div class="pipeline-stage-title">→</div>
+                        <div class="pipeline-item">판매</div>
+                    </div>
+                    <div class="pipeline-stage">
+                        <div class="pipeline-stage-title">판매완료</div>
+                        <div class="pipeline-item">출고</div>
+                        <div class="pipeline-item">정산</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: 회계 & 자금관리 -->
+        <div id="tab-6" class="tab-content">
+            <div class="section">
+                <h2>💰 회계 & 자금관리</h2>
+                <p class="description">자동 회계 인식, 현금흐름 관리, 손익분석</p>
+
+                <h3>자동 회계 인식</h3>
+                <table>
+                    <tr>
+                        <th>단계</th>
+                        <th>거래유형</th>
+                        <th>자동 인식 항목</th>
+                        <th>설명</th>
+                    </tr>
+                    <tr>
+                        <td>계약</td>
+                        <td>미지급금</td>
+                        <td>미지급금 계정 / 매입채무</td>
+                        <td>계약금액 USD 기준으로 미지급금 인식</td>
+                    </tr>
+                    <tr>
+                        <td>선적</td>
+                        <td>미착재고</td>
+                        <td>미착재고 계정 / 수입운임보험료</td>
+                        <td>BL 환율 적용하여 KRW 기준 미착재고 인식</td>
+                    </tr>
+                    <tr>
+                        <td>통관</td>
+                        <td>상품재고</td>
+                        <td>상품재고 계정 / 관세 / 부대비</td>
+                        <td>통관 완료 시 상품재고로 전환, 관세/부대비 계상</td>
+                    </tr>
+                    <tr>
+                        <td>판매</td>
+                        <td>매출</td>
+                        <td>매출 / 외상채권</td>
+                        <td>판매금액 인식, 회수 여부에 따라 미수금 또는 수금 처리</td>
+                    </tr>
+                    <tr>
+                        <td>출고</td>
+                        <td>매출원가</td>
+                        <td>매출원가 / 상품재고 감소</td>
+                        <td>출고 완료 시 매출원가 인식</td>
+                    </tr>
+                </table>
+
+                <h3>손익계산서 (기간 선택 기능 - V5 신규)</h3>
+                <div class="alert-box success">
+                    <div class="alert-title">기간 선택 기능</div>
+                    <p style="margin-top: 10px;"><strong>변경사항:</strong> 기존 월별 고정 방식에서 자유로운 기간 선택으로 개선</p>
+                    <p style="margin-top: 10px;"><strong>기능:</strong> 시작일~종료일 선택 → 해당 기간 손익계산서 자동 생성</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>매출:</strong> 해당 기간 판매액 합계</li>
+                        <li><strong>매출원가:</strong> 판매 상품의 원가 합계</li>
+                        <li><strong>판관비:</strong> 창고비 + 운송비 + 보험료 등</li>
+                        <li><strong>금융비:</strong> 관세 + LC 수수료 등</li>
+                        <li><strong>영업이익:</strong> 매출 - 매출원가 - 판관비 - 금융비</li>
+                        <li><strong>기타이익:</strong> 잡이익 / 잡손실</li>
+                        <li><strong>순이익:</strong> 최종 이익</li>
+                    </ul>
+                </div>
+
+                <h3>현금흐름 관리</h3>
+                <div class="price-table">
+                    <div class="price-item">
+                        <div class="price-label">선금 수금</div>
+                        <div class="price-value">즉시 현금</div>
+                    </div>
+                    <div class="price-item">
+                        <div class="price-label">기한내 수금</div>
+                        <div class="price-value">출고 후 30일 등</div>
+                    </div>
+                    <div class="price-item">
+                        <div class="price-label">연체금</div>
+                        <div class="price-value">기한 경과 미수금</div>
+                    </div>
+                    <div class="price-item">
+                        <div class="price-label">미지급금</div>
+                        <div class="price-value">계약 후 미지급액</div>
+                    </div>
+                    <div class="price-item">
+                        <div class="price-label">현금흐름 격차</div>
+                        <div class="price-value">자동 계산 및 보고</div>
+                    </div>
+                </div>
+
+                <h3>월별 회계 마감</h3>
+                <div class="workflow-step">
+                    <div class="workflow-step-title">1단계: 수불부 자동 생성</div>
+                    <div class="workflow-step-content">기초 미착품, 입고, 기말 미착품, 상품재고, 매출원가 자동 계산</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="workflow-step-title">2단계: 부대비 정산</div>
+                    <div class="workflow-step-content">창고비, 운송비, 보험료 월말 일괄 정산</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="workflow-step-title">3단계: 금융비 정산</div>
+                    <div class="workflow-step-content">관세, LC 수수료, TT 수수료 등 정산</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="workflow-step-title">4단계: 손익계산서 생성</div>
+                    <div class="workflow-step-content">자동 생성 또는 기간 선택으로 사용자 정의 가능</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 7: 메일 분석 & 자동화 -->
+        <div id="tab-7" class="tab-content">
+            <div class="section">
+                <h2>✉️ 메일 분석 & 자동화</h2>
+                <p class="description">거래처 이메일 자동 분석 및 처리 규칙</p>
+
+                <h3>메일 분석 엔진</h3>
+                <div class="alert-box">
+                    <div class="alert-title">자동 분류 규칙</div>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>계약서:</strong> 첨부파일 "계약" 키워드 + PDF</li>
+                        <li><strong>선적서류:</strong> "선적", "BL", "Invoice" 포함 + 다중 첨부파일</li>
+                        <li><strong>TT/LC:</strong> 은행명 + "송금", "신용장" + PDF</li>
+                        <li><strong>상태 알림:</strong> 선박명 + "입항", "지연" 키워드</li>
+                    </ul>
+                </div>
+
+                <h3>자동화 트리거</h3>
+                <table>
+                    <tr>
+                        <th>이메일 유형</th>
+                        <th>감지 키워드</th>
+                        <th>자동 처리</th>
+                    </tr>
+                    <tr>
+                        <td>계약서 수신</td>
+                        <td>"계약", "Order" + PDF</td>
+                        <td>거래처 확인 → 승인 대기</td>
+                    </tr>
+                    <tr>
+                        <td>선적 완료</td>
+                        <td>"선적", "shipment" + BL</td>
+                        <td>BL 정보 추출 → 선적정보 입력 결재</td>
+                    </tr>
+                    <tr>
+                        <td>도착 예정</td>
+                        <td>"입항", "arrival" + 날짜</td>
+                        <td>도착 일정 등록 → 7일 전 알림</td>
+                    </tr>
+                    <tr>
+                        <td>TT/LC 송금</td>
+                        <td>은행명 + "송금완료" + 금액</td>
+                        <td>외화지급결의서 자동 생성</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 8: 비주얼 모니터링 -->
+        <div id="tab-8" class="tab-content">
+            <div class="section">
+                <h2>📊 비주얼 모니터링</h2>
+                <p class="description">대시보드 및 실시간 모니터링</p>
+
+                <h3>핵심 모니터링 항목</h3>
+                <div class="matrix-grid">
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-title">진행 중 계약</div>
+                        <div class="matrix-cell-items">
+                            <strong>개수:</strong> N건<br>
+                            <strong>금액:</strong> USD $M<br>
+                            <strong>예상 입항:</strong> D일
+                        </div>
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-title">미착재고</div>
+                        <div class="matrix-cell-items">
+                            <strong>수량:</strong> N톤<br>
+                            <strong>금액:</strong> KRW M원<br>
+                            <strong>선박 위치:</strong> 실시간
+                        </div>
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-title">상품재고</div>
+                        <div class="matrix-cell-items">
+                            <strong>창고별:</strong> 재고 현황<br>
+                            <strong>부위코드:</strong> 재고량<br>
+                            <strong>판매 예정:</strong> 계획
+                        </div>
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-title">미수금 현황</div>
+                        <div class="matrix-cell-items">
+                            <strong>미수금:</strong> N건<br>
+                            <strong>금액:</strong> KRW M원<br>
+                            <strong>연체:</strong> D일 경과
+                        </div>
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-title">미지급금 현황</div>
+                        <div class="matrix-cell-items">
+                            <strong>미지급:</strong> N건<br>
+                            <strong>금액:</strong> USD $M<br>
+                            <strong>결제 예정:</strong> D일
+                        </div>
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-cell-title">결재 현황</div>
+                        <div class="matrix-cell-items">
+                            <strong>진행 중:</strong> N건<br>
+                            <strong>승인 대기:</strong> N건<br>
+                            <strong>완료:</strong> N건
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 9: 원클릭 처리 -->
+        <div id="tab-9" class="tab-content">
+            <div class="section">
+                <h2>⚡ 원클릭 처리</h2>
+                <p class="description">빈번한 작업 자동화</p>
+
+                <h3>원클릭 기능</h3>
+                <table>
+                    <tr>
+                        <th>기능</th>
+                        <th>설명</th>
+                        <th>효과</th>
+                    </tr>
+                    <tr>
+                        <td>계약 일괄 승인</td>
+                        <td>대기 중인 계약 결재 한 번에 처리</td>
+                        <td>시간 단축 80%</td>
+                    </tr>
+                    <tr>
+                        <td>선적 정보 자동 입력</td>
+                        <td>이메일 첨부 BL 자동 파싱</td>
+                        <td>수작업 제거</td>
+                    </tr>
+                    <tr>
+                        <td>월별 마감 일괄 처리</td>
+                        <td>수불부 + 손익계산서 한 클릭</td>
+                        <td>마감 시간 1일→30분</td>
+                    </tr>
+                    <tr>
+                        <td>미트와치 LIST 자동 등록</td>
+                        <td>출고 승인 시 자동으로 미트와치 등록</td>
+                        <td>수작업 제거</td>
+                    </tr>
+                    <tr>
+                        <td>FAX 발송 자동화</td>
+                        <td>출고 승인 → 즉시 FAX 발송</td>
+                        <td>오류율 0%</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 10: 메일 템플릿 -->
+        <div id="tab-10" class="tab-content">
+            <div class="section">
+                <h2>📝 메일 템플릿</h2>
+                <p class="description">거래처 별 표준 메일 템플릿</p>
+
+                <h3>표준 템플릿</h3>
+                <table>
+                    <tr>
+                        <th>템플릿명</th>
+                        <th>용도</th>
+                        <th>발송처</th>
+                    </tr>
+                    <tr>
+                        <td>계약 확인 요청</td>
+                        <td>거래처에 계약 승인 요청</td>
+                        <td>담당자</td>
+                    </tr>
+                    <tr>
+                        <td>선적 서류 수신 확인</td>
+                        <td>선적 정보 접수 통보</td>
+                        <td>자동화</td>
+                    </tr>
+                    <tr>
+                        <td>입항 예정 알림</td>
+                        <td>입항 D-7일 알림</td>
+                        <td>자동화</td>
+                    </tr>
+                    <tr>
+                        <td>창고 지정 안내</td>
+                        <td>선적 완료 시 창고 정보 전달</td>
+                        <td>담당자</td>
+                    </tr>
+                    <tr>
+                        <td>미수금 독촉</td>
+                        <td>기한 경과 수금 독촉</td>
+                        <td>자동화</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 11: 자가진단 엔진 -->
+        <div id="tab-11" class="tab-content">
+            <div class="section">
+                <h2>🔍 자가진단 엔진</h2>
+                <p class="description">시스템 자동 검증 및 데이터 무결성 확인</p>
+
+                <h3>진단 항목</h3>
+                <table>
+                    <tr>
+                        <th>진단 항목</th>
+                        <th>검사 내용</th>
+                        <th>알림 조건</th>
+                    </tr>
+                    <tr>
+                        <td>미지급금 현황</td>
+                        <td>계약 대비 결제 여부</td>
+                        <td>D+45일 미결제 시 경고</td>
+                    </tr>
+                    <tr>
+                        <td>미착재고 현황</td>
+                        <td>선적 대비 도착 여부</td>
+                        <td>입항 예정 3일 경과 시 경고</td>
+                    </tr>
+                    <tr>
+                        <td>미수금 현황</td>
+                        <td>판매 대비 수금 여부</td>
+                        <td>판매일 D+30일 미수금 시 경고</td>
+                    </tr>
+                    <tr>
+                        <td>결재 지연</td>
+                        <td>승인 대기 문서</td>
+                        <td>3일 이상 진행 중 문서 시 경고</td>
+                    </tr>
+                    <tr>
+                        <td>환율 변동</td>
+                        <td>BL 환율 vs 현재 환율</td>
+                        <td>2% 이상 차이 시 알림</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 12: BI 대시보드 -->
+        <div id="tab-12" class="tab-content">
+            <div class="section">
+                <h2>📈 BI 대시보드</h2>
+                <p class="description">경영 의사결정용 실시간 분석</p>
+
+                <h3>주요 KPI</h3>
+                <table>
+                    <tr>
+                        <th>KPI</th>
+                        <th>설명</th>
+                        <th>목표</th>
+                    </tr>
+                    <tr>
+                        <td>월별 매출액</td>
+                        <td>해당 월 총 판매액</td>
+                        <td>계획 대비 달성률</td>
+                    </tr>
+                    <tr>
+                        <td>영업이익률</td>
+                        <td>(이익 / 매출) × 100</td>
+                        <td>10% 이상</td>
+                    </tr>
+                    <tr>
+                        <td>재고회전율</td>
+                        <td>매출원가 / 평균 재고</td>
+                        <td>분기별 추이</td>
+                    </tr>
+                    <tr>
+                        <td>수금률</td>
+                        <td>수금액 / 매출액</td>
+                        <td>98% 이상</td>
+                    </tr>
+                    <tr>
+                        <td>재정지표</td>
+                        <td>자산 / 부채 / 자본</td>
+                        <td>건전성 모니터링</td>
+                    </tr>
+                </table>
+
+                <h3>분석 차트</h3>
+                <div class="alert-box success">
+                    <div class="alert-title">차트 유형</div>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>월별 매출 추이:</strong> 라인 차트</li>
+                        <li><strong>품목별 판매:</strong> 파이 차트</li>
+                        <li><strong>거래처별 매출:</strong> 바 차트</li>
+                        <li><strong>손익분석:</strong> 누적 바 차트</li>
+                        <li><strong>재고 현황:</strong> 누적 바 차트</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 13: 기초 데이터 관리 -->
+        <div id="tab-13" class="tab-content">
+            <div class="section">
+                <h2>🔧 기초 데이터 관리</h2>
+                <p class="description">거래처, 품목, 창고 마스터 데이터 관리 (V5 변경 반영)</p>
+
+                <h3>거래처 관리 (V5 변경)</h3>
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span>거래처 정보</span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <table>
+                        <tr>
+                            <th>항목</th>
+                            <th>설명</th>
+                            <th>필수</th>
+                        </tr>
+                        <tr>
+                            <td>사업자등록번호</td>
+                            <td>국내외 사업자등록번호 또는 통관부호</td>
+                            <td>○</td>
+                        </tr>
+                        <tr>
+                            <td>대표자명</td>
+                            <td>거래처 대표자</td>
+                            <td>○</td>
+                        </tr>
+                        <tr>
+                            <td>연락처</td>
+                            <td>전화, 이메일, FAX</td>
+                            <td>○</td>
+                        </tr>
+                        <tr>
+                            <td>주소</td>
+                            <td>거래처 주소</td>
+                            <td>○</td>
+                        </tr>
+                    </table>
+                    <div class="alert-box warning" style="margin-top: 15px;">
+                        <div class="alert-title">V5 변경사항</div>
+                        <p style="margin-top: 10px;">다음 항목은 거래처 관리에서 삭제되었습니다:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>"결제조건"</strong> - 계약관리에서 진행 (계약별로 다를 수 있음)</li>
+                            <li><strong>"적하보험"</strong> - 계약관리에서 진행 (계약별로 다를 수 있음)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>품목(제품) 관리 (V5 변경)</h3>
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span>품목 정보</span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <table>
+                        <tr>
+                            <th>항목</th>
+                            <th>설명</th>
+                            <th>필수</th>
+                        </tr>
+                        <tr>
+                            <td>품목명</td>
+                            <td>우육/돈육/계육 등</td>
+                            <td>○</td>
+                        </tr>
+                        <tr>
+                            <td>부위코드</td>
+                            <td>우육: BF001~BF012 / 돈육: PK001~PK009</td>
+                            <td>○</td>
+                        </tr>
+                        <tr>
+                            <td>박스당 중량</td>
+                            <td>표준 단위</td>
+                            <td>○</td>
+                        </tr>
+                        <tr>
+                            <td>규격/비규격</td>
+                            <td>제품 규격 구분</td>
+                            <td>○</td>
+                        </tr>
+                        <tr>
+                            <td>관세분류번호</td>
+                            <td>HS Code</td>
+                            <td>○</td>
+                        </tr>
+                    </table>
+                    <div class="alert-box warning" style="margin-top: 15px;">
+                        <div class="alert-title">V5 변경사항</div>
+                        <p style="margin-top: 10px;">다음 항목이 삭제되었습니다:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>"기본 판매단가"</strong> - 계약 또는 판매 시점에 결정</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>창고 관리 (V5 변경)</h3>
+                <div class="collapsible" onclick="toggleCollapsible(this)">
+                    <span>창고 정보</span>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <table>
+                        <tr>
+                            <th>항목</th>
+                            <th>설명</th>
+                            <th>필수</th>
+                        </tr>
+                        <tr>
+                            <td>창고명</td>
+                            <td>창고 이름 (예: 강남저온, 여의도냉장)</td>
+                            <td>○</td>
+                        </tr>
+                        <tr>
+                            <td>위치</td>
+                            <td>주소</td>
+                            <td>○</td>
+                        </tr>
+                        <tr>
+                            <td>유선번호</td>
+                            <td>창고 담당자 연락처 (V5: 분리됨)</td>
+                            <td>○</td>
+                        </tr>
+                        <tr>
+                            <td>FAX번호</td>
+                            <td>출고증 발송용 (V5: 분리됨, 디폴트)</td>
+                            <td>○</td>
+                        </tr>
+                        <tr>
+                            <td>월 보관료</td>
+                            <td>고정 또는 변동 비용</td>
+                            <td>○</td>
+                        </tr>
+                        <tr>
+                            <td>입출고 수수료</td>
+                            <td>톤당 또는 고정</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                    <div class="alert-box warning" style="margin-top: 15px;">
+                        <div class="alert-title">V5 변경사항</div>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>"용량" (최대 수용량)</strong> 항목 삭제</li>
+                            <li><strong>"연락처"</strong>를 <strong>"유선번호" + "FAX번호"</strong>로 분리</li>
+                            <li><strong>출고증은 FAX 번호로 보내는 것이 디폴트</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>미트와치 연동 부위코드</h3>
+                <table>
+                    <tr>
+                        <th>품목</th>
+                        <th>부위코드</th>
+                        <th>부위명</th>
+                    </tr>
+                    <tr>
+                        <td rowspan="9" style="vertical-align: middle;">돈육</td>
+                        <td>PK001</td>
+                        <td>삼겹살</td>
+                    </tr>
+                    <tr>
+                        <td>PK002</td>
+                        <td>목살</td>
+                    </tr>
+                    <tr>
+                        <td>PK003</td>
+                        <td>앞다리</td>
+                    </tr>
+                    <tr>
+                        <td>PK004</td>
+                        <td>뒷다리</td>
+                    </tr>
+                    <tr>
+                        <td>PK005</td>
+                        <td>갈비</td>
+                    </tr>
+                    <tr>
+                        <td>PK006</td>
+                        <td>등심</td>
+                    </tr>
+                    <tr>
+                        <td>PK007</td>
+                        <td>돈육부산물</td>
+                    </tr>
+                    <tr>
+                        <td>PK008</td>
+                        <td>정육</td>
+                    </tr>
+                    <tr>
+                        <td>PK009</td>
+                        <td>기타</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="12" style="vertical-align: middle;">우육</td>
+                        <td>BF001</td>
+                        <td>등심</td>
+                    </tr>
+                    <tr>
+                        <td>BF002</td>
+                        <td>채끝</td>
+                    </tr>
+                    <tr>
+                        <td>BF003</td>
+                        <td>안심</td>
+                    </tr>
+                    <tr>
+                        <td>BF004</td>
+                        <td>앞다리</td>
+                    </tr>
+                    <tr>
+                        <td>BF005</td>
+                        <td>뒷다리</td>
+                    </tr>
+                    <tr>
+                        <td>BF006</td>
+                        <td>갈비</td>
+                    </tr>
+                    <tr>
+                        <td>BF007</td>
+                        <td>우육 부산물</td>
+                    </tr>
+                    <tr>
+                        <td>BF008</td>
+                        <td>가공육</td>
+                    </tr>
+                    <tr>
+                        <td>BF009</td>
+                        <td>정육</td>
+                    </tr>
+                    <tr>
+                        <td>BF010</td>
+                        <td>내장</td>
+                    </tr>
+                    <tr>
+                        <td>BF011</td>
+                        <td>뼈</td>
+                    </tr>
+                    <tr>
+                        <td>BF012</td>
+                        <td>기타</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 14: 로드맵 -->
+        <div id="tab-14" class="tab-content">
+            <div class="section">
+                <h2>🗓️ 개발 로드맵</h2>
+                <p class="description">v5 이후 개선 계획</p>
+
+                <h3>Phase 1: 기초 구축 (2026년 2월~3월)</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">DB 스키마 설계 및 구현</div>
+                        <div class="timeline-item-duration">2월 1주~2주</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">기초 데이터 마스터 구축</div>
+                        <div class="timeline-item-duration">2월 2주~3주</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">전자결재 시스템 구축</div>
+                        <div class="timeline-item-duration">2월 3주~3월 1주</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">재고관리 모듈 개발</div>
+                        <div class="timeline-item-duration">3월 1주~3주</div>
+                    </div>
+                </div>
+
+                <h3>Phase 2: 회계 & 자금 (2026년 4월)</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">수불부 자동생성 엔진</div>
+                        <div class="timeline-item-duration">4월 1주</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">Cash Flow 자동화</div>
+                        <div class="timeline-item-duration">4월 1주~2주</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">LC/PU 환율 관리</div>
+                        <div class="timeline-item-duration">4월 2주~3주</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">손익계산서 자동생성 (기간선택 기능)</div>
+                        <div class="timeline-item-duration">4월 3주</div>
+                    </div>
+                </div>
+
+                <h3>Phase 3: 자동화 & BI (2026년 5월)</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">메일 자동화 규칙 engine</div>
+                        <div class="timeline-item-duration">5월 1주~2주</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">미트와치 자동 LIST UP</div>
+                        <div class="timeline-item-duration">5월 2주</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">BI 대시보드 구축</div>
+                        <div class="timeline-item-duration">5월 2주~3주</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">자가진단 엔진</div>
+                        <div class="timeline-item-duration">5월 3주</div>
+                    </div>
+                </div>
+
+                <h3>Phase 4: 안정화 & 확장 (2026년 6월~)</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">UAT 및 사용자 교육</div>
+                        <div class="timeline-item-duration">6월 1주~2주</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">라이브 환경 배포</div>
+                        <div class="timeline-item-duration">6월 3주</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">모바일 앱 개발</div>
+                        <div class="timeline-item-duration">6월 이후</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-title">API 공개 및 통합</div>
+                        <div class="timeline-item-duration">6월 이후</div>
+                    </div>
+                </div>
+
+                <h3>기술 스택</h3>
+                <div class="alert-box success">
+                    <div class="alert-title">권장 기술 스택</div>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Frontend:</strong> Next.js 14+, React 18, TypeScript, Tailwind CSS</li>
+                        <li><strong>Backend:</strong> FastAPI (Python), PostgreSQL 15+, Redis</li>
+                        <li><strong>DevOps:</strong> Docker, Kubernetes, GitHub Actions, AWS/GCP</li>
+                        <li><strong>Database:</strong> PostgreSQL (primary), Redis (cache), S3 (file storage)</li>
+                        <li><strong>Integration:</strong> REST API, GraphQL, WebSocket (real-time)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(index) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-button');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            const tabId = `tab-${index + 1}`;
+            const tab = document.getElementById(tabId);
+            if (tab) {
+                tab.classList.add('active');
+            }
+            buttons[index].classList.add('active');
+        }
+
+        function toggleCollapsible(element) {
+            element.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
