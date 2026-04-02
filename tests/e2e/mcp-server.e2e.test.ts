@@ -70,9 +70,9 @@ describe("MCP Server E2E", () => {
   // ── Protocol handshake ──
 
   describe("Protocol handshake", () => {
-    it("should complete initialize and list 88 tools", async () => {
+    it("should complete initialize and list 92 tools", async () => {
       const result = await client.listTools();
-      expect(result.tools.length).toBe(88);
+      expect(result.tools.length).toBe(92);
     });
 
     it("should have unique tool names", async () => {

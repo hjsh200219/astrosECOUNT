@@ -39,6 +39,10 @@ import { registerDashboardTools } from "./dashboard.js";
 import { registerPdfExportTools } from "./pdf-export.js";
 import { registerFaxTools } from "./fax.js";
 import { registerImportMeatTraceTools } from "./import-meat-trace.js";
+import { registerDiagramTools } from "./diagram.js";
+import { registerMapTools } from "./map.js";
+import { registerPresentationTools } from "./presentation.js";
+import { register3dTools } from "./three-d.js";
 
 export function registerAllTools(server: McpServer, client: EcountClient, config: EcountConfig): void {
   registerConnectionTools(server, client, config);
@@ -85,6 +89,11 @@ export function registerAllTools(server: McpServer, client: EcountClient, config
   registerFaxTools(server);
   // Category B tools (public API — no EcountClient dependency)
   registerImportMeatTraceTools(server);
+  // Category B+ tools (v6 visualization layer)
+  registerDiagramTools(server);
+  registerMapTools(server);
+  registerPresentationTools(server);
+  register3dTools(server);
   // Category B tools (EcountClient dependency - internal API)
   registerInternalApiTools(server, client);
 }

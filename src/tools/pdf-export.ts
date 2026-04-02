@@ -188,7 +188,7 @@ export function registerPdfExportTools(server: McpServer): void {
     {
       output_path: z.string().describe("저장할 PDF 파일 경로 (절대 경로)"),
       title: z.string().describe("PDF 제목"),
-      data: z.array(z.record(z.unknown())).describe("내보낼 데이터 배열"),
+      data: z.array(z.record(z.string(), z.unknown())).describe("내보낼 데이터 배열"),
       columns: z.array(z.string()).optional().describe("표시할 컬럼 목록 (순서 지정, 미지정시 자동)"),
       orientation: z.enum(["portrait", "landscape"]).optional().describe("용지 방향 (portrait: 세로, landscape: 가로)"),
     },

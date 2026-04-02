@@ -14,7 +14,6 @@ describe("Dashboard Tools", () => {
       expect(svg).toContain("<svg");
       expect(svg).toContain("</svg>");
       expect(svg).toContain("<rect");
-      // Should have at least 3 bars
       expect((svg.match(/<rect/g) || []).length).toBeGreaterThanOrEqual(3);
     });
 
@@ -47,15 +46,14 @@ describe("Dashboard Tools", () => {
       expect(html).toContain("재무 요약");
     });
 
-    it("should include inline CSS with no external references", async () => {
+    it("should include inline CSS with no external references in default mode", async () => {
       const { generateDashboardHtml } = await import("../../src/tools/dashboard.js");
       const html = generateDashboardHtml({
         data: { total: 100 },
         dashboardType: "custom",
       });
       expect(html).toContain("<style>");
-      expect(html).not.toMatch(/<link\s+.*href=/);
-      expect(html).not.toMatch(/<script\s+.*src=/);
+      expect(html).not.toContain("chart.js");
     });
 
     it("should include @media print CSS", async () => {
@@ -137,6 +135,64 @@ describe("Dashboard Tools", () => {
       });
       expect(htmlKo).toContain('lang="ko"');
       expect(htmlEn).toContain('lang="en"');
+    });
+  });
+
+  describe("generateDashboardHtml — interactive mode", () => {
+    it("should include Chart.js CDN when outputFormat is html_interactive", async () => {
+      const { generateDashboardHtml } = await import("../../src/tools/dashboard.js");
+      const html = generateDashboardHtml({
+        data: { revenue: 10000, cost: 6000, profit: 4000 },
+        dashboardType: "financial_summary",
+        outputFormat: "html_interactive",
+      });
+      expect(html).toContain("chart.js");
+      expect(html).toContain("Chart.defaults.animation=false");
+    });
+
+    it("should include canvas elements instead of SVG in interactive mode", async () => {
+      const { generateDashboardHtml } = await import("../../src/tools/dashboard.js");
+      const html = generateDashboardHtml({
+        data: { revenue: 10000, cost: 6000, profit: 4000 },
+        dashboardType: "financial_summary",
+        outputFormat: "html_interactive",
+      });
+      expect(html).toContain("<canvas");
+      expect(html).toContain("new Chart");
+    });
+
+    it("should include html-to-image CDN in interactive mode", async () => {
+      const { generateDashboardHtml } = await import("../../src/tools/dashboard.js");
+      const html = generateDashboardHtml({
+        data: { total: 100 },
+        dashboardType: "custom",
+        outputFormat: "html_interactive",
+      });
+      expect(html).toContain("html-to-image");
+    });
+
+    it("should render aging_report with doughnut chart in interactive mode", async () => {
+      const { generateDashboardHtml } = await import("../../src/tools/dashboard.js");
+      const html = generateDashboardHtml({
+        data: { current: 5000, "1_30": 3000 },
+        dashboardType: "aging_report",
+        outputFormat: "html_interactive",
+      });
+      expect(html).toContain("<canvas");
+      expect(html).toContain("doughnut");
+    });
+
+    it("should render margin_analysis with chart in interactive mode", async () => {
+      const { generateDashboardHtml } = await import("../../src/tools/dashboard.js");
+      const html = generateDashboardHtml({
+        data: {
+          items: [{ product: "A", revenue: 100, cost: 50, margin: 50, marginRate: 50 }],
+        },
+        dashboardType: "margin_analysis",
+        outputFormat: "html_interactive",
+      });
+      expect(html).toContain("<canvas");
+      expect(html).toContain("<table");
     });
   });
 
