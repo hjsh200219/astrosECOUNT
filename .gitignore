@@ -4,3 +4,4 @@ build/
 *.js.map
 .omc/
 .playwright-mcp/
+.DS_Store
