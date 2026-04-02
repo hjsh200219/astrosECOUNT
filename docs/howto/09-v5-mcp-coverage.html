@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>astrosECOUNT MCP — v6 구성안 서비스 커버리지</title>
+    <title>astrosECOUNT MCP — v7 구성안 서비스 커버리지</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #0d1017; color: #c9d1d9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; }
@@ -94,25 +94,25 @@
 <body>
     <div class="container">
         <header>
-            <h1>📊 astrosECOUNT MCP — v6 구성안 서비스 커버리지</h1>
+            <h1>📊 astrosECOUNT MCP — v7 구성안 서비스 커버리지</h1>
             <div class="badges">
-                <span class="badge badge-blue">MCP Server v3.3</span>
-                <span class="badge badge-green">88 Tools</span>
+                <span class="badge badge-blue">MCP Server v3.4</span>
+                <span class="badge badge-green">92 Tools</span>
                 <span class="badge badge-purple">vs v5.0 구성안</span>
-                <span class="badge badge-yellow">2026.03.31 기준</span>
+                <span class="badge badge-yellow">2026.04.02 기준</span>
             </div>
             <div class="meta-info">
                 <strong>대상:</strong> ASTROS 수입육 통합관리시스템 구성안 v5.0 (2026.03.26) 14개 탭 전체 기능 대비<br>
-                <strong>비교 기준:</strong> astrosECOUNT MCP 서버 (TypeScript, 88개 도구) — ECOUNT ERP Open API + Internal API + 공공 API + 자체 유틸리티<br>
-                <strong>아키텍처:</strong> MCP (Model Context Protocol) 기반 AI 에이전트 도구 서버 — UI/프론트엔드 없음<br>
-                <strong>최신 업데이트:</strong> v6 Output Layer — 대시보드 HTML/PDF 생성/팩스 발송 5개 + 수입축산물 이력조회 공공API 2개 신규 도구 + KeyPack V2 디코더 추가
+                <strong>비교 기준:</strong> astrosECOUNT MCP 서버 (TypeScript, 92개 도구) — ECOUNT ERP Open API + Internal API + 공공 API + 자체 유틸리티<br>
+                <strong>아키텍처:</strong> MCP (Model Context Protocol) 기반 AI 에이전트 도구 서버 — 6개 CDN 시각화 라이브러리 탑재<br>
+                <strong>최신 업데이트:</strong> v7 Visualization Layer — 6개 CDN 라이브러리(Chart.js/D3.js/Mermaid/Leaflet/Reveal.js/Three.js) 기반 인터랙티브 시각화 도구 4개 신규 + 대시보드 강화 (92개 도구)
             </div>
         </header>
 
         <!-- Summary Stats -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number stat-green">88</div>
+                <div class="stat-number stat-green">92</div>
                 <div class="stat-label">MCP 도구 총 수</div>
             </div>
             <div class="stat-card">
@@ -120,15 +120,15 @@
                 <div class="stat-label">v5 탭 (기능 영역)</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number stat-green">60%</div>
+                <div class="stat-number stat-green">65%</div>
                 <div class="stat-label">완전 커버 항목</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number stat-yellow">25%</div>
+                <div class="stat-number stat-yellow">22%</div>
                 <div class="stat-label">부분 커버 (데이터)</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number stat-red">15%</div>
+                <div class="stat-number stat-red">13%</div>
                 <div class="stat-label">미커버 (UI/인프라)</div>
             </div>
         </div>
@@ -137,9 +137,9 @@
         <div class="progress-container">
             <h3 style="margin-top:0;">전체 커버리지 프로그레스</h3>
             <div class="progress-bar-bg">
-                <div class="progress-segment progress-full" style="width:60%">완전 60%</div>
-                <div class="progress-segment progress-partial" style="width:25%">부분 25%</div>
-                <div class="progress-segment progress-none" style="width:15%">미커버 15%</div>
+                <div class="progress-segment progress-full" style="width:65%">완전 65%</div>
+                <div class="progress-segment progress-partial" style="width:22%">부분 22%</div>
+                <div class="progress-segment progress-none" style="width:13%">미커버 13%</div>
             </div>
             <div class="progress-legend">
                 <div class="legend-item"><div class="legend-dot" style="background:#238636;"></div> 완전 커버 — MCP 도구로 기능 수행 가능</div>
@@ -152,7 +152,7 @@
         <div class="tabs">
             <button class="tab-button active" onclick="switchTab(0)">탭별 커버리지</button>
             <button class="tab-button" onclick="switchTab(1)">업무 흐름 (14단계)</button>
-            <button class="tab-button" onclick="switchTab(2)">전체 도구 목록 (88개)</button>
+            <button class="tab-button" onclick="switchTab(2)">전체 도구 목록 (92개)</button>
             <button class="tab-button" onclick="switchTab(3)">커버리지 갭 분석</button>
             <button class="tab-button" onclick="switchTab(4)">구현 로드맵</button>
         </div>
@@ -181,7 +181,7 @@
                     <tr>
                         <td>2</td>
                         <td>업무 흐름도 (14단계)</td>
-                        <td><span class="st-full">75%</span></td>
+                        <td><span class="st-full">80%</span></td>
                         <td>
                             <span class="tool-tag">ecount_add_contract</span>
                             <span class="tool-tag">ecount_add_shipment</span>
@@ -193,8 +193,9 @@
                             <span class="tool-tag new">ecount_list_receivables</span>
                             <span class="tool-tag new">ecount_record_payment_out</span>
                             <span class="tool-tag new">ecount_calc_weight_settlement</span>
+                            <span class="tool-tag new">ecount_render_diagram</span>
                         </td>
-                        <td>계약→선적→통관→판매→출고→수금/지급 데이터 처리 가능. 전자결재/알림/FAX는 미지원. <strong>수금/지급/중량정산 신규 추가</strong></td>
+                        <td>계약→선적→통관→판매→출고→수금/지급 데이터 처리 가능. <strong>v7: Mermaid 워크플로우/상태 다이어그램으로 14단계 시각화 가능</strong>. 전자결재는 미지원</td>
                     </tr>
                     <tr>
                         <td>3</td>
@@ -256,7 +257,7 @@
                     <tr>
                         <td>8</td>
                         <td>비주얼 모니터링</td>
-                        <td><span class="st-partial">55%</span></td>
+                        <td><span class="st-full">80%</span></td>
                         <td>
                             <span class="tool-tag">ecount_calc_logistics_kpi</span>
                             <span class="tool-tag">ecount_daily_report</span>
@@ -266,8 +267,12 @@
                             <span class="tool-tag new">ecount_list_receivables</span>
                             <span class="tool-tag new">ecount_list_payables</span>
                             <span class="tool-tag new">ecount_analyze_cashflow</span>
+                            <span class="tool-tag new">ecount_render_dashboard</span>
+                            <span class="tool-tag new">ecount_render_diagram</span>
+                            <span class="tool-tag new">ecount_render_map</span>
+                            <span class="tool-tag new">ecount_render_3d</span>
                         </td>
-                        <td>KPI 수치 + 텍스트 리포트 + <strong>미수금/미지급금 현황 + 현금흐름</strong>. 차트/대시보드 UI 불가</td>
+                        <td>KPI 수치 + 텍스트 리포트 + 미수금/미지급금/현금흐름 + <strong>v7: Chart.js/D3.js 인터랙티브 대시보드 + Mermaid 상태 다이어그램 + Leaflet 물류 지도 + Three.js 3D 창고 뷰</strong>. 실시간 WebSocket 업데이트만 미지원</td>
                     </tr>
                     <tr>
                         <td>9</td>
@@ -315,7 +320,7 @@
                     <tr>
                         <td>12</td>
                         <td>BI 대시보드</td>
-                        <td><span class="st-partial">50%</span></td>
+                        <td><span class="st-full">75%</span></td>
                         <td>
                             <span class="tool-tag">ecount_calc_logistics_kpi</span>
                             <span class="tool-tag">ecount_daily_report</span>
@@ -323,8 +328,10 @@
                             <span class="tool-tag new">ecount_analyze_cashflow</span>
                             <span class="tool-tag new">ecount_analyze_margin</span>
                             <span class="tool-tag new">ecount_generate_pnl</span>
+                            <span class="tool-tag new">ecount_render_dashboard</span>
+                            <span class="tool-tag new">ecount_render_presentation</span>
                         </td>
-                        <td>KPI 수치 + CSV + <strong>현금흐름/마진/손익 분석 데이터</strong> 제공. 차트 시각화/실시간 대시보드는 웹 프론트엔드 필요</td>
+                        <td>KPI 수치 + CSV + 현금흐름/마진/손익 분석 + <strong>v7: Chart.js/D3.js 인터랙티브 대시보드(bar/line/pie/treemap/heatmap/sankey) + Reveal.js 경영 보고 프레젠테이션</strong>. 실시간 WebSocket만 미지원</td>
                     </tr>
                     <tr>
                         <td>13</td>
@@ -548,8 +555,8 @@
         <!-- TAB 3: 전체 도구 목록 -->
         <div id="tab-3" class="tab-content">
             <div class="section">
-                <h2>🔧 전체 MCP 도구 목록 (88개)</h2>
-                <p class="description">카테고리별 도구 분류와 v5 구성안 매핑. <span style="color:#3fb950;">녹색 행</span>은 v5 확장으로 새로 추가된 도구입니다.</p>
+                <h2>🔧 전체 MCP 도구 목록 (92개)</h2>
+                <p class="description">카테고리별 도구 분류와 v5 구성안 매핑. <span style="color:#3fb950;">녹색 행</span>은 v5 확장, <span style="color:#58a6ff;">파랑 행</span>은 v6 Output Layer, <span style="color:#a371f7;">보라 행</span>은 v7 Visualization Layer로 새로 추가된 도구입니다.</p>
 
                 <h3>Category A — ECOUNT Open API (23개)</h3>
                 <table>
@@ -706,6 +713,21 @@
                     <tr style="background-color:#1f6feb11;"><td><code>ecount_lookup_meat_by_bl</code></td><td>BL번호로 수입축산물 이력 조회</td><td>TAB 9 미트와치 대체</td><td>public-api</td></tr>
                 </table>
 
+                <h3 style="color:#a371f7;">Category B+ — v7 Visualization Layer (신규 4개 + 대시보드 강화)</h3>
+                <table>
+                    <tr>
+                        <th>도구명</th>
+                        <th>기능</th>
+                        <th>CDN 라이브러리</th>
+                        <th>v5 매핑</th>
+                    </tr>
+                    <tr style="background-color:#8957e511;"><td><code>ecount_render_dashboard</code> <span style="color:#d29922;font-size:0.8em;">강화</span></td><td>인터랙티브 대시보드 (bar/line/pie/doughnut/radar + treemap/heatmap/sankey)</td><td>Chart.js + D3.js + html-to-image</td><td>TAB 8/12 대시보드/BI</td></tr>
+                    <tr style="background-color:#8957e511;"><td><code>ecount_render_diagram</code></td><td>워크플로우/상태/시퀀스/ER/간트 다이어그램 생성</td><td>Mermaid</td><td>TAB 2/5 업무흐름/재고상태</td></tr>
+                    <tr style="background-color:#8957e511;"><td><code>ecount_render_map</code></td><td>선적경로/거래처분포/물류허브 인터랙티브 지도</td><td>Leaflet + OpenStreetMap</td><td>TAB 8 물류모니터링</td></tr>
+                    <tr style="background-color:#8957e511;"><td><code>ecount_render_presentation</code></td><td>경영 보고 슬라이드 프레젠테이션 (차트 포함)</td><td>Reveal.js + Chart.js</td><td>TAB 12 BI 보고</td></tr>
+                    <tr style="background-color:#8957e511;"><td><code>ecount_render_3d</code></td><td>3D 창고 점유율/물류 네트워크 시각화</td><td>Three.js + OrbitControls</td><td>TAB 5/8 재고/물류</td></tr>
+                </table>
+
                 <h3>유틸리티 (비도구)</h3>
                 <table>
                     <tr>
@@ -716,6 +738,14 @@
                     <tr><td><code>src/client/keypack.ts</code></td><td>KeyPack V1 (Base64 URL-encoded) + V2 (__$KeyPack hex-index) 인코더/디코더</td></tr>
                     <tr><td><code>src/client/ecount-client.ts</code></td><td>ECOUNT HTTP 클라이언트 (세션 자동관리, 회로 차단기)</td></tr>
                     <tr><td><code>src/client/session-manager.ts</code></td><td>이중 세션 관리 (Open API + Internal API)</td></tr>
+                    <tr><td><code>src/utils/cdn-loader.ts</code></td><td>6개 CDN 라이브러리 URL 관리 + 스크립트/링크 태그 생성</td></tr>
+                    <tr><td><code>src/utils/html-builder.ts</code></td><td>공통 HTML 문서 셸 (메타/테마/반응형/CDN 자동 로딩)</td></tr>
+                    <tr><td><code>src/utils/chart-renderer.ts</code></td><td>Chart.js 설정 빌더 + SVG 폴백 렌더러</td></tr>
+                    <tr><td><code>src/utils/d3-renderer.ts</code></td><td>D3.js Treemap/Heatmap/Sankey 렌더러</td></tr>
+                    <tr><td><code>src/utils/mermaid-renderer.ts</code></td><td>Mermaid 다이어그램 정의 생성 (5종)</td></tr>
+                    <tr><td><code>src/utils/map-renderer.ts</code></td><td>Leaflet 지도 스크립트 빌더</td></tr>
+                    <tr><td><code>src/utils/slide-renderer.ts</code></td><td>Reveal.js 슬라이드 렌더러 (6종 슬라이드 타입)</td></tr>
+                    <tr><td><code>src/utils/three-d-renderer.ts</code></td><td>Three.js 3D 씬 빌더 (창고/물류 네트워크)</td></tr>
                 </table>
             </div>
         </div>
@@ -729,14 +759,14 @@
                 <h3>갭 유형별 분류</h3>
 
                 <div class="alert-box danger">
-                    <div class="alert-title">🚫 MCP 아키텍처 한계 — 웹 프론트엔드 필요 (5건)</div>
-                    <p style="margin-top:10px;">MCP는 AI 에이전트와의 도구 인터페이스로, UI 렌더링이 불가합니다.</p>
+                    <div class="alert-title">🚫 MCP 아키텍처 한계 — 웹 프론트엔드 필요 (3건 잔여)</div>
+                    <p style="margin-top:10px;">MCP는 AI 에이전트와의 도구 인터페이스로, 실시간 인터랙션과 사용자 인증이 불가합니다. v7에서 시각화 갭이 대폭 해소되었습니다.</p>
                     <table style="margin-top:15px;">
                         <tr><th>기능</th><th>v5 탭</th><th>필요 기술</th></tr>
                         <tr><td>전자결재 시스템 (9종 결재 유형)</td><td>TAB 3</td><td>Next.js + 워크플로우 엔진</td></tr>
                         <tr><td>사용자 권한 관리 (RBAC)</td><td>TAB 4</td><td>Auth.js + PostgreSQL</td></tr>
-                        <tr><td>재고 5단계 칸반 보드</td><td>TAB 5</td><td>React DnD / Kanban UI</td></tr>
-                        <tr><td style="text-decoration:line-through;color:#484f58;">비주얼 대시보드 (차트/그래프)</td><td style="color:#484f58;">TAB 8/12</td><td><span class="st-full">✅ v6 해결</span> — ecount_render_dashboard (인라인 SVG HTML)</td></tr>
+                        <tr><td style="text-decoration:line-through;color:#484f58;">재고 5단계 칸반 보드</td><td style="color:#484f58;">TAB 5</td><td><span class="st-full">✅ v7 해결</span> — ecount_render_diagram (Mermaid 상태 다이어그램) + ecount_render_3d (Three.js 창고 뷰)</td></tr>
+                        <tr><td style="text-decoration:line-through;color:#484f58;">비주얼 대시보드 (차트/그래프)</td><td style="color:#484f58;">TAB 8/12</td><td><span class="st-full">✅ v6+v7 해결</span> — Chart.js/D3.js 인터랙티브 대시보드 + Leaflet 지도 + Three.js 3D</td></tr>
                         <tr><td style="text-decoration:line-through;color:#484f58;">결재 문서 양식 렌더링</td><td style="color:#484f58;">TAB 3</td><td><span class="st-full">✅ v6 해결</span> — ecount_export_pdf (pdf-lib)</td></tr>
                         <tr><td>기초데이터 관리 UI (CRUD 폼)</td><td>TAB 13</td><td>Next.js + Form 컴포넌트</td></tr>
                     </table>
@@ -780,42 +810,42 @@
                         <td>재고관리</td>
                         <td><span class="st-full">●</span> 완전</td>
                         <td><span class="st-full">●</span> 5단계+검증+조정</td>
-                        <td><span class="st-none">○</span> 미지원</td>
+                        <td><span class="st-full">●</span> 상태 다이어그램+3D 창고</td>
                         <td><span class="st-data">—</span> 불필요</td>
                     </tr>
                     <tr>
                         <td>선적/물류</td>
                         <td><span class="st-full">●</span> 완전</td>
                         <td><span class="st-full">●</span> KPI/지연감지</td>
-                        <td><span class="st-none">○</span> 미지원</td>
+                        <td><span class="st-full">●</span> 경로 지도+3D 네트워크</td>
                         <td><span class="st-partial">△</span> 선사 API</td>
                     </tr>
                     <tr>
                         <td>계약관리</td>
                         <td><span class="st-full">●</span> 완전</td>
                         <td><span class="st-full">●</span> 교차검증</td>
-                        <td><span class="st-none">○</span> 미지원</td>
+                        <td><span class="st-partial">△</span> 워크플로우 다이어그램</td>
                         <td><span class="st-data">—</span> 불필요</td>
                     </tr>
                     <tr>
                         <td>판매/출고</td>
                         <td><span class="st-full">●</span> 완전</td>
                         <td><span class="st-partial">△</span> 부분</td>
-                        <td><span class="st-none">○</span> 미지원</td>
+                        <td><span class="st-partial">△</span> 거래처 분포 지도</td>
                         <td><span class="st-full">●</span> FAX/이력조회 완료</td>
                     </tr>
                     <tr>
                         <td>회계/자금</td>
                         <td><span class="st-full">●</span> 완전</td>
                         <td><span class="st-full">●</span> 수불부/손익/현금흐름/마진</td>
-                        <td><span class="st-none">○</span> 미지원</td>
+                        <td><span class="st-full">●</span> 대시보드+트리맵+히트맵</td>
                         <td><span class="st-data">—</span> 불필요</td>
                     </tr>
                     <tr>
                         <td>수금/지급</td>
                         <td><span class="st-full">●</span> 완전</td>
                         <td><span class="st-full">●</span> 에이징/경고</td>
-                        <td><span class="st-none">○</span> 미지원</td>
+                        <td><span class="st-full">●</span> 에이징 차트+Sankey</td>
                         <td><span class="st-data">—</span> 불필요</td>
                     </tr>
                     <tr>
@@ -836,7 +866,7 @@
                         <td>자가진단</td>
                         <td><span class="st-full">●</span> 완전</td>
                         <td><span class="st-full">●</span> 10개 진단도구</td>
-                        <td><span class="st-none">○</span> 미지원</td>
+                        <td><span class="st-partial">△</span> 진단 대시보드</td>
                         <td><span class="st-partial">△</span> 스케줄러</td>
                     </tr>
                 </table>
@@ -950,7 +980,51 @@
                     </tr>
                 </table>
 
-                <h3>Phase 2: 추가 MCP 확장 가능 영역</h3>
+                <h3>Phase 2: Visualization Layer 완료 ✅ (v7 Visualization Layer)</h3>
+                <div class="alert-box success">
+                    <div class="alert-title">✅ 2026.04.02 구현 완료 — 4개 신규 도구 + 대시보드 강화 + 8개 유틸리티 모듈</div>
+                    <p style="margin-top:10px;">6개 CDN 라이브러리(Chart.js, D3.js, Mermaid, Leaflet, Reveal.js, Three.js)를 도입하여 도구 수가 88 → 92개로 확장되었습니다. 기존 정적 SVG 대시보드가 인터랙티브 시각화 시스템으로 진화하여 UI 레이어 갭이 대폭 해소되었습니다.</p>
+                </div>
+                <table>
+                    <tr>
+                        <th>기능</th>
+                        <th>도구 / CDN</th>
+                        <th>상태</th>
+                        <th>효과</th>
+                    </tr>
+                    <tr>
+                        <td>인터랙티브 차트 대시보드</td>
+                        <td>ecount_render_dashboard (Chart.js + D3.js)</td>
+                        <td><span class="st-full">✅ 완료</span></td>
+                        <td>TAB 8/12 차트 시각화 해결 (bar/line/pie/treemap/heatmap/sankey)</td>
+                    </tr>
+                    <tr>
+                        <td>업무 프로세스 다이어그램</td>
+                        <td>ecount_render_diagram (Mermaid)</td>
+                        <td><span class="st-full">✅ 완료</span></td>
+                        <td>TAB 2/5 워크플로우/상태/시퀀스/ER/간트 5종 다이어그램</td>
+                    </tr>
+                    <tr>
+                        <td>물류/거래처 지도 시각화</td>
+                        <td>ecount_render_map (Leaflet)</td>
+                        <td><span class="st-full">✅ 완료</span></td>
+                        <td>TAB 8 선적경로/거래처분포/물류허브 인터랙티브 지도</td>
+                    </tr>
+                    <tr>
+                        <td>경영 보고 프레젠테이션</td>
+                        <td>ecount_render_presentation (Reveal.js)</td>
+                        <td><span class="st-full">✅ 완료</span></td>
+                        <td>TAB 12 BI 데이터를 슬라이드 덱으로 자동 생성</td>
+                    </tr>
+                    <tr>
+                        <td>3D 창고/물류 시각화</td>
+                        <td>ecount_render_3d (Three.js)</td>
+                        <td><span class="st-full">✅ 완료</span></td>
+                        <td>TAB 5/8 창고 점유율 + 물류 네트워크 3D 뷰</td>
+                    </tr>
+                </table>
+
+                <h3>Phase 3: 추가 MCP 확장 가능 영역</h3>
                 <table>
                     <tr>
                         <th>기능</th>
@@ -972,7 +1046,7 @@
                     </tr>
                 </table>
 
-                <h3>Phase 3: astrosERP 웹앱 담당 영역</h3>
+                <h3>Phase 4: astrosERP 웹앱 담당 영역</h3>
                 <table>
                     <tr>
                         <th>기능</th>
@@ -1006,7 +1080,7 @@
                     </tr>
                 </table>
 
-                <h3>Phase 4: 외부 시스템 연동</h3>
+                <h3>Phase 5: 외부 시스템 연동</h3>
                 <table>
                     <tr>
                         <th>기능</th>
@@ -1043,10 +1117,10 @@
                 <div class="alert-box success">
                     <div class="alert-title">✅ 아키텍처 요약</div>
                     <p style="margin-top:10px;">
-                        <strong>astrosECOUNT MCP</strong> = 데이터 레이어 + 비즈니스 로직 + 출력 레이어 + 공공API (88개 도구)<br>
-                        <strong>astrosERP 웹앱</strong> = UI 레이어 + 워크플로우 엔진 + 사용자 인터페이스<br>
-                        <strong>외부 연동</strong> = 이메일 (Office 365 MCP) / 미트와치 / 스케줄러<br><br>
-                        v6에서 출력 레이어(대시보드 HTML, PDF, 팩스) + 공공API(수입축산물 이력)가 추가되어 기존 갭 4건이 해소되었습니다. MCP는 AI 에이전트가 ERP 데이터를 조회/입력/분석/출력하는 "두뇌"이고, 웹앱은 사용자가 직접 조작하는 "손"입니다.
+                        <strong>astrosECOUNT MCP</strong> = 데이터 레이어 + 비즈니스 로직 + 출력 레이어 + 시각화 레이어 + 공공API (92개 도구)<br>
+                        <strong>astrosERP 웹앱</strong> = 실시간 UI + 워크플로우 엔진 + 사용자 인증<br>
+                        <strong>외부 연동</strong> = 이메일 (Office 365 MCP) / 스케줄러<br><br>
+                        v6에서 출력 레이어(대시보드 HTML, PDF, 팩스) + 공공API(수입축산물 이력)가 추가되었고, v7에서 6개 CDN 시각화 레이어(Chart.js/D3.js/Mermaid/Leaflet/Reveal.js/Three.js)가 추가되어 UI 레이어 갭이 대폭 해소되었습니다. 잔여 갭은 전자결재 워크플로우, RBAC 사용자 인증, 실시간 WebSocket 업데이트뿐입니다.
                     </p>
                 </div>
             </div>
