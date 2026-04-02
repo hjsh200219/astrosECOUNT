@@ -1,6 +1,6 @@
 import { logger } from "../utils/logger.js";
 import { NetworkError, EcountApiError } from "../utils/error-handler.js";
-import { KeyPackEncoder } from "./keypack.js";
+import { KeyPackEncoder, KeyPackV2Decoder } from "./keypack.js";
 import type { InternalApiSession } from "./internal-session.js";
 import type { CircuitBreaker } from "./circuit-breaker.js";
 import type { EcountResponse } from "./types.js";
@@ -17,6 +17,7 @@ const KEYPACK_VERSION = "1.0.0";
 export class InternalApiClient {
   private readonly baseUrl: string;
   private readonly encoder = new KeyPackEncoder();
+  private readonly v2Decoder = new KeyPackV2Decoder();
 
   constructor(
     private readonly session: InternalApiSession,
@@ -48,7 +49,7 @@ export class InternalApiClient {
         if (Number(retryResponse.Status) !== 200 || retryResponse.Error) {
           throw this.extractError(retryResponse);
         }
-        return (retryResponse as EcountResponse<T>).Data;
+        return this.decodeV2IfNeeded((retryResponse as EcountResponse<T>).Data);
       }
 
       const response = result as unknown as EcountResponse<unknown>;
@@ -56,7 +57,7 @@ export class InternalApiClient {
         throw this.extractError(response);
       }
 
-      return (response as EcountResponse<T>).Data;
+      return this.decodeV2IfNeeded((response as EcountResponse<T>).Data);
     });
   }
 
@@ -89,6 +90,17 @@ export class InternalApiClient {
     const data = (await response.json()) as T;
     const duration = Date.now() - startTime;
     logger.info("내부 API 응답", { path, duration: `${duration}ms` });
+    return data;
+  }
+
+  /**
+   * If data is a KeyPack V2 array, decode it into plain objects.
+   * Otherwise return as-is.
+   */
+  private decodeV2IfNeeded<T>(data: T): T {
+    if (this.v2Decoder.isKeyPackV2(data)) {
+      return this.v2Decoder.decode(data as unknown as unknown[]) as unknown as T;
+    }
     return data;
   }
 

@@ -40,6 +40,52 @@ export interface InternalApiConfig {
  * Returns null if ECOUNT_WEB_ID or ECOUNT_WEB_PW are not set.
  * Both must be present for internal API to be enabled.
  */
+/** Popbill Fax API config (optional — requires POPBILL_LINK_ID + POPBILL_SECRET_KEY) */
+export interface PopbillConfig {
+  POPBILL_LINK_ID: string;
+  POPBILL_SECRET_KEY: string;
+  POPBILL_IS_TEST: boolean;
+  POPBILL_CORP_NUM: string;
+}
+
+/**
+ * Load Popbill config from environment.
+ * Returns null if POPBILL_LINK_ID or POPBILL_SECRET_KEY are not set.
+ * POPBILL_CORP_NUM is derived from ECOUNT_COM_CODE.
+ * POPBILL_IS_TEST defaults to true for safety.
+ */
+export function loadPopbillConfig(): PopbillConfig | null {
+  const linkId = process.env.POPBILL_LINK_ID;
+  const secretKey = process.env.POPBILL_SECRET_KEY;
+
+  if (!linkId || !secretKey) return null;
+
+  const corpNum = process.env.ECOUNT_COM_CODE;
+  if (!corpNum) return null;
+
+  return {
+    POPBILL_LINK_ID: linkId,
+    POPBILL_SECRET_KEY: secretKey,
+    POPBILL_IS_TEST: process.env.POPBILL_IS_TEST !== "false",
+    POPBILL_CORP_NUM: corpNum,
+  };
+}
+
+/** MAFRA (농림축산식품부) Open API config (optional — requires MAFRA_API_KEY) */
+export interface MafraConfig {
+  MAFRA_API_KEY: string;
+}
+
+/**
+ * Load MAFRA config from environment.
+ * Returns null if MAFRA_API_KEY is not set.
+ */
+export function loadMafraConfig(): MafraConfig | null {
+  const apiKey = process.env.MAFRA_API_KEY?.trim();
+  if (!apiKey) return null;
+  return { MAFRA_API_KEY: apiKey };
+}
+
 export function loadInternalApiConfig(): InternalApiConfig | null {
   const webId = process.env.ECOUNT_WEB_ID;
   const webPw = process.env.ECOUNT_WEB_PW;

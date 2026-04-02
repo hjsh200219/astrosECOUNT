@@ -64,3 +64,48 @@ export class KeyPackDecoder {
     return result;
   }
 }
+
+/**
+ * Decodes ECOUNT's KeyPack V2 format used in internal API responses.
+ *
+ * V2 format: ["__$KeyPack", {keymap}, {record1}, {record2}, ...]
+ * keymap: {"00": "field_name", "01": "field_name2", ...} — hex-indexed keys
+ * records: {"00": value, "01": value2, ...} — hex-indexed values
+ */
+export class KeyPackV2Decoder {
+  private maxDepth = 5;
+
+  isKeyPackV2(data: unknown): boolean {
+    return (
+      Array.isArray(data) &&
+      data.length >= 2 &&
+      data[0] === "__$KeyPack"
+    );
+  }
+
+  decode(data: unknown[], depth = 0): Record<string, unknown>[] {
+    if (typeof data[1] !== "object" || data[1] === null || Array.isArray(data[1])) {
+      return [];
+    }
+    const keymap = data[1] as Record<string, string>;
+    const records = data.slice(2);
+
+    return records.map((record) => {
+      const raw = record as Record<string, unknown>;
+      const decoded: Record<string, unknown> = {};
+
+      for (const hexKey of Object.keys(keymap)) {
+        const fieldName = keymap[hexKey];
+        const value = raw[hexKey];
+
+        if (this.isKeyPackV2(value) && depth < this.maxDepth) {
+          decoded[fieldName] = this.decode(value as unknown[], depth + 1);
+        } else {
+          decoded[fieldName] = value;
+        }
+      }
+
+      return decoded;
+    });
+  }
+}

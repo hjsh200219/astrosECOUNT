@@ -35,6 +35,10 @@ import { registerWeightSettlementTools } from "./weight-settlement.js";
 import { registerInventoryLifecycleTools } from "./inventory-lifecycle.js";
 import { registerFinancialStatementsTools } from "./financial-statements.js";
 import { registerMarginAnalysisTools } from "./margin-analysis.js";
+import { registerDashboardTools } from "./dashboard.js";
+import { registerPdfExportTools } from "./pdf-export.js";
+import { registerFaxTools } from "./fax.js";
+import { registerImportMeatTraceTools } from "./import-meat-trace.js";
 
 export function registerAllTools(server: McpServer, client: EcountClient, config: EcountConfig): void {
   registerConnectionTools(server, client, config);
@@ -75,6 +79,12 @@ export function registerAllTools(server: McpServer, client: EcountClient, config
   // Category B+ tools (v5 feature expansion — aggregation layer)
   registerFinancialStatementsTools(server);
   registerMarginAnalysisTools(server);
+  // Category B+ tools (v6 output layer)
+  registerDashboardTools(server);
+  registerPdfExportTools(server);
+  registerFaxTools(server);
+  // Category B tools (public API — no EcountClient dependency)
+  registerImportMeatTraceTools(server);
   // Category B tools (EcountClient dependency - internal API)
   registerInternalApiTools(server, client);
 }

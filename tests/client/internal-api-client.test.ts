@@ -170,4 +170,98 @@ describe("InternalApiClient", () => {
       expect(opts.headers).toHaveProperty("X-KeyPack-Version");
     });
   });
+
+  describe("KeyPack V2 response auto-decoding", () => {
+    it("should auto-decode KeyPack V2 Data field into plain objects", async () => {
+      const keypackV2Data = [
+        "__$KeyPack",
+        { "00": "SLIP_NO", "01": "PROD_CD", "02": "QTY" },
+        { "00": "S001", "01": "P100", "02": 10 },
+        { "00": "S002", "01": "P200", "02": 20 },
+      ];
+      mockApiResponse(keypackV2Data);
+
+      const result = await client.post("/Account/GetSaleSlipStatusList", {
+        FROM_DATE: "20260101",
+        TO_DATE: "20260331",
+      });
+
+      expect(result).toEqual([
+        { SLIP_NO: "S001", PROD_CD: "P100", QTY: 10 },
+        { SLIP_NO: "S002", PROD_CD: "P200", QTY: 20 },
+      ]);
+    });
+
+    it("should pass through non-V2 Data unchanged", async () => {
+      const plainData = { Data: [{ SLIP_NO: "S001" }], TotalCount: 1 };
+      mockApiResponse(plainData);
+
+      const result = await client.post("/Account/GetSaleSlipStatusList", {
+        FROM_DATE: "20260101",
+        TO_DATE: "20260331",
+      });
+
+      expect(result).toEqual(plainData);
+    });
+
+    it("should decode nested KeyPack V2 structures recursively", async () => {
+      const nestedV2Data = [
+        "__$KeyPack",
+        { "00": "SLIP_NO", "01": "ITEMS" },
+        {
+          "00": "S001",
+          "01": [
+            "__$KeyPack",
+            { "00": "PROD_CD", "01": "QTY" },
+            { "00": "P100", "01": 5 },
+          ],
+        },
+      ];
+      mockApiResponse(nestedV2Data);
+
+      const result = await client.post("/Account/GetSaleSlipStatusList", {
+        FROM_DATE: "20260101",
+        TO_DATE: "20260331",
+      });
+
+      expect(result).toEqual([
+        { SLIP_NO: "S001", ITEMS: [{ PROD_CD: "P100", QTY: 5 }] },
+      ]);
+    });
+
+    it("should decode V2 Data in session retry path as well", async () => {
+      (session.isSessionExpired as ReturnType<typeof vi.fn>).mockReturnValueOnce(true);
+
+      // First call: session expired
+      mockApiSessionExpired();
+      // Retry: returns V2 data
+      const keypackV2Data = [
+        "__$KeyPack",
+        { "00": "SLIP_NO" },
+        { "00": "S003" },
+      ];
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          Status: "200",
+          Data: keypackV2Data,
+          Error: null,
+          Errors: null,
+        }),
+      });
+
+      const realCb = mockCircuitBreaker();
+      (realCb.call as ReturnType<typeof vi.fn>).mockImplementation(async (fn: () => Promise<unknown>) => fn());
+      const retryClient = new InternalApiClient(session, realCb, "AU1");
+
+      const result = await retryClient.post("/Account/GetSaleSlipStatusList", {
+        FROM_DATE: "20260101",
+        TO_DATE: "20260331",
+      });
+
+      expect(result).toEqual([{ SLIP_NO: "S003" }]);
+      expect(session.forceRefresh).toHaveBeenCalledTimes(1);
+    });
+  });
 });

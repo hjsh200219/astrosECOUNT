@@ -14,7 +14,7 @@ describe("Server Integration", () => {
   });
 
   describe("createServer", () => {
-    it("should create server and register all 81 tools with valid config", async () => {
+    it("should create server and register all 88 tools with valid config", async () => {
       process.env.ECOUNT_COM_CODE = "TESTCO";
       process.env.ECOUNT_USER_ID = "testuser";
       process.env.ECOUNT_API_CERT_KEY = "testkey123";
@@ -62,7 +62,8 @@ describe("Server Integration", () => {
       // + 2 adjust-inventory + 2 customs-cost = 68
       // + 3 receivables + 3 payables + 1 weight-settlement
       // + 2 inventory-lifecycle + 3 financial-statements + 1 margin-analysis = 81
-      expect(toolSpy).toHaveBeenCalledTimes(81);
+      // + 1 dashboard + 1 pdf-export + 3 fax + 2 import-meat-trace = 88
+      expect(toolSpy).toHaveBeenCalledTimes(88);
     });
 
     it("should verify all 8 tool categories are registered", async () => {
@@ -179,6 +180,21 @@ describe("Server Integration", () => {
 
       // Daily report tools
       expect(toolNames).toContain("ecount_daily_report");
+
+      // Dashboard tools (v6 output layer)
+      expect(toolNames).toContain("ecount_render_dashboard");
+
+      // PDF export tools (v6 output layer)
+      expect(toolNames).toContain("ecount_export_pdf");
+
+      // Fax tools (v6 output layer)
+      expect(toolNames).toContain("ecount_send_fax");
+      expect(toolNames).toContain("ecount_get_fax_status");
+      expect(toolNames).toContain("ecount_list_fax_history");
+
+      // Import meat trace tools (public API)
+      expect(toolNames).toContain("ecount_search_import_meat");
+      expect(toolNames).toContain("ecount_lookup_meat_by_bl");
     });
 
     it("should start gracefully without config (no tools registered)", async () => {

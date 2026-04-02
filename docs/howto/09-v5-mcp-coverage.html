@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>astrosECOUNT MCP — v5 구성안 서비스 커버리지</title>
+    <title>astrosECOUNT MCP — v6 구성안 서비스 커버리지</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #0d1017; color: #c9d1d9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; }
@@ -94,25 +94,25 @@
 <body>
     <div class="container">
         <header>
-            <h1>📊 astrosECOUNT MCP — v5 구성안 서비스 커버리지</h1>
+            <h1>📊 astrosECOUNT MCP — v6 구성안 서비스 커버리지</h1>
             <div class="badges">
-                <span class="badge badge-blue">MCP Server v3.2</span>
-                <span class="badge badge-green">81 Tools</span>
+                <span class="badge badge-blue">MCP Server v3.3</span>
+                <span class="badge badge-green">88 Tools</span>
                 <span class="badge badge-purple">vs v5.0 구성안</span>
                 <span class="badge badge-yellow">2026.03.31 기준</span>
             </div>
             <div class="meta-info">
                 <strong>대상:</strong> ASTROS 수입육 통합관리시스템 구성안 v5.0 (2026.03.26) 14개 탭 전체 기능 대비<br>
-                <strong>비교 기준:</strong> astrosECOUNT MCP 서버 (TypeScript, 81개 도구) — ECOUNT ERP Open API + Internal API + 자체 유틸리티<br>
+                <strong>비교 기준:</strong> astrosECOUNT MCP 서버 (TypeScript, 88개 도구) — ECOUNT ERP Open API + Internal API + 공공 API + 자체 유틸리티<br>
                 <strong>아키텍처:</strong> MCP (Model Context Protocol) 기반 AI 에이전트 도구 서버 — UI/프론트엔드 없음<br>
-                <strong>최신 업데이트:</strong> v5 Feature Expansion — 수금/미지급/중량정산/재고5단계/회계/마진 분석 13개 신규 도구 추가
+                <strong>최신 업데이트:</strong> v6 Output Layer — 대시보드 HTML/PDF 생성/팩스 발송 5개 + 수입축산물 이력조회 공공API 2개 신규 도구 + KeyPack V2 디코더 추가
             </div>
         </header>
 
         <!-- Summary Stats -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number stat-green">81</div>
+                <div class="stat-number stat-green">88</div>
                 <div class="stat-label">MCP 도구 총 수</div>
             </div>
             <div class="stat-card">
@@ -120,7 +120,7 @@
                 <div class="stat-label">v5 탭 (기능 영역)</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number stat-green">55%</div>
+                <div class="stat-number stat-green">60%</div>
                 <div class="stat-label">완전 커버 항목</div>
             </div>
             <div class="stat-card">
@@ -128,7 +128,7 @@
                 <div class="stat-label">부분 커버 (데이터)</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number stat-red">20%</div>
+                <div class="stat-number stat-red">15%</div>
                 <div class="stat-label">미커버 (UI/인프라)</div>
             </div>
         </div>
@@ -137,9 +137,9 @@
         <div class="progress-container">
             <h3 style="margin-top:0;">전체 커버리지 프로그레스</h3>
             <div class="progress-bar-bg">
-                <div class="progress-segment progress-full" style="width:55%">완전 55%</div>
+                <div class="progress-segment progress-full" style="width:60%">완전 60%</div>
                 <div class="progress-segment progress-partial" style="width:25%">부분 25%</div>
-                <div class="progress-segment progress-none" style="width:20%">미커버 20%</div>
+                <div class="progress-segment progress-none" style="width:15%">미커버 15%</div>
             </div>
             <div class="progress-legend">
                 <div class="legend-item"><div class="legend-dot" style="background:#238636;"></div> 완전 커버 — MCP 도구로 기능 수행 가능</div>
@@ -152,7 +152,7 @@
         <div class="tabs">
             <button class="tab-button active" onclick="switchTab(0)">탭별 커버리지</button>
             <button class="tab-button" onclick="switchTab(1)">업무 흐름 (14단계)</button>
-            <button class="tab-button" onclick="switchTab(2)">전체 도구 목록 (81개)</button>
+            <button class="tab-button" onclick="switchTab(2)">전체 도구 목록 (88개)</button>
             <button class="tab-button" onclick="switchTab(3)">커버리지 갭 분석</button>
             <button class="tab-button" onclick="switchTab(4)">구현 로드맵</button>
         </div>
@@ -272,13 +272,16 @@
                     <tr>
                         <td>9</td>
                         <td>원클릭 처리</td>
-                        <td><span class="st-partial">30%</span></td>
+                        <td><span class="st-partial">55%</span></td>
                         <td>
                             <span class="tool-tag">ecount_parse_bl</span>
                             <span class="tool-tag">ecount_save_sale</span>
                             <span class="tool-tag">ecount_export_csv</span>
+                            <span class="tool-tag new">ecount_send_fax</span>
+                            <span class="tool-tag new">ecount_search_import_meat</span>
+                            <span class="tool-tag new">ecount_lookup_meat_by_bl</span>
                         </td>
-                        <td>BL 자동 파싱, ERP 전표 등록은 가능. 일괄 승인/FAX 자동 발송/미트와치 연동은 외부 시스템</td>
+                        <td>BL 자동 파싱 + ERP 전표 등록 + <strong>FAX 발송(v6) + 수입축산물 이력조회(공공API)</strong>. 일괄 승인은 결재 시스템 필요</td>
                     </tr>
                     <tr>
                         <td>10</td>
@@ -506,15 +509,17 @@
                     <tr>
                         <td>13</td>
                         <td>출고 ✓</td>
-                        <td><span class="st-partial">△</span></td>
+                        <td><span class="st-full">●</span></td>
                         <td>
                             <span class="tool-tag">ecount_save_sale</span>
                             <span class="tool-tag">ecount_stamp_pdf</span>
                             <span class="tool-tag">ecount_delivery_delays</span>
                             <span class="tool-tag new">ecount_track_inventory_stage</span>
+                            <span class="tool-tag new">ecount_send_fax</span>
+                            <span class="tool-tag new">ecount_search_import_meat</span>
                         </td>
                         <td>담당자 기안</td>
-                        <td>판매 전표 + PDF 직인 + <strong>상품→판매완료 전환</strong>. FAX 발송/미트와치 연동 미지원</td>
+                        <td>판매 전표 + PDF 직인 + <strong>상품→판매완료 전환 + FAX 발송(v6) + 수입축산물 이력조회(공공API)</strong> 완전 지원</td>
                     </tr>
                     <tr>
                         <td>14</td>
@@ -535,7 +540,7 @@
 
                 <div class="alert-box info">
                     <div class="alert-title">요약</div>
-                    <p>14단계 중 <strong>8단계 완전 커버</strong> (계약등록, BL파싱, 선적입력, 선박트래킹, 입항, 판매, 수금관리, 회계마감), <strong>5단계 부분 커버</strong> (서류알림, 입고, 검역, 통관, 출고), <strong>1단계 미커버</strong> (계약서수신). 이전 대비 완전 커버 3단계 추가 (입항, 수금관리, 회계마감).</p>
+                    <p>14단계 중 <strong>9단계 완전 커버</strong> (계약등록, BL파싱, 선적입력, 선박트래킹, 입항, 판매, 수금관리, 출고, 회계마감), <strong>4단계 부분 커버</strong> (서류알림, 입고, 검역, 통관), <strong>1단계 미커버</strong> (계약서수신). 이전 대비 완전 커버 4단계 추가 (입항, 수금관리, 출고, 회계마감).</p>
                 </div>
             </div>
         </div>
@@ -543,7 +548,7 @@
         <!-- TAB 3: 전체 도구 목록 -->
         <div id="tab-3" class="tab-content">
             <div class="section">
-                <h2>🔧 전체 MCP 도구 목록 (81개)</h2>
+                <h2>🔧 전체 MCP 도구 목록 (88개)</h2>
                 <p class="description">카테고리별 도구 분류와 v5 구성안 매핑. <span style="color:#3fb950;">녹색 행</span>은 v5 확장으로 새로 추가된 도구입니다.</p>
 
                 <h3>Category A — ECOUNT Open API (23개)</h3>
@@ -578,7 +583,7 @@
                     <tr><td><code>ecount_create_board</code></td><td>게시판 글 작성</td><td>—</td></tr>
                 </table>
 
-                <h3>Category B — 자체 도구 (Internal API 포함, 45개)</h3>
+                <h3>Category B — 자체 도구 (Internal API 포함, 47개)</h3>
                 <table>
                     <tr>
                         <th>도구명</th>
@@ -680,6 +685,27 @@
                     <tr style="background-color:#23863611;"><td><code>ecount_analyze_margin</code></td><td>계약별/품목별 마진 분석</td><td>TAB 6/12 회계/BI</td><td>aggregation</td></tr>
                 </table>
 
+                <h3 style="color:#58a6ff;">Category B+ — v6 Output Layer (신규 7개)</h3>
+                <table>
+                    <tr>
+                        <th>도구명</th>
+                        <th>기능</th>
+                        <th>v5 매핑</th>
+                        <th>레이어</th>
+                    </tr>
+                    <!-- Dashboard -->
+                    <tr style="background-color:#1f6feb11;"><td><code>ecount_render_dashboard</code></td><td>자체 HTML 대시보드 생성 (재무요약/에이징/파이프라인/마진분석)</td><td>TAB 8/12 대시보드/BI</td><td>output</td></tr>
+                    <!-- PDF Export -->
+                    <tr style="background-color:#1f6feb11;"><td><code>ecount_export_pdf</code></td><td>데이터를 PDF 파일로 내보내기 (테이블 형식, A4 세로/가로)</td><td>TAB 3/9 결재문서/출력</td><td>output</td></tr>
+                    <!-- Fax -->
+                    <tr style="background-color:#1f6feb11;"><td><code>ecount_send_fax</code></td><td>팝빌 API로 팩스 발송</td><td>TAB 9 팩스 자동발송</td><td>output</td></tr>
+                    <tr style="background-color:#1f6feb11;"><td><code>ecount_get_fax_status</code></td><td>팩스 전송 결과 조회</td><td>TAB 9 팩스 발송현황</td><td>output</td></tr>
+                    <tr style="background-color:#1f6feb11;"><td><code>ecount_list_fax_history</code></td><td>팩스 전송 내역 검색</td><td>TAB 9 팩스 발송내역</td><td>output</td></tr>
+                    <!-- Import Meat Trace (Public API) -->
+                    <tr style="background-color:#1f6feb11;"><td><code>ecount_search_import_meat</code></td><td>수입축산물 이력 검색 (수입일자/원산지/BL/품목코드)</td><td>TAB 9 미트와치 대체</td><td>public-api</td></tr>
+                    <tr style="background-color:#1f6feb11;"><td><code>ecount_lookup_meat_by_bl</code></td><td>BL번호로 수입축산물 이력 조회</td><td>TAB 9 미트와치 대체</td><td>public-api</td></tr>
+                </table>
+
                 <h3>유틸리티 (비도구)</h3>
                 <table>
                     <tr>
@@ -687,6 +713,7 @@
                         <th>기능</th>
                     </tr>
                     <tr><td><code>src/utils/persistence.ts</code></td><td>JSON 파일 영속화 (Map/Array ↔ 파일)</td></tr>
+                    <tr><td><code>src/client/keypack.ts</code></td><td>KeyPack V1 (Base64 URL-encoded) + V2 (__$KeyPack hex-index) 인코더/디코더</td></tr>
                     <tr><td><code>src/client/ecount-client.ts</code></td><td>ECOUNT HTTP 클라이언트 (세션 자동관리, 회로 차단기)</td></tr>
                     <tr><td><code>src/client/session-manager.ts</code></td><td>이중 세션 관리 (Open API + Internal API)</td></tr>
                 </table>
@@ -702,29 +729,28 @@
                 <h3>갭 유형별 분류</h3>
 
                 <div class="alert-box danger">
-                    <div class="alert-title">🚫 MCP 아키텍처 한계 — 웹 프론트엔드 필요 (7건)</div>
+                    <div class="alert-title">🚫 MCP 아키텍처 한계 — 웹 프론트엔드 필요 (5건)</div>
                     <p style="margin-top:10px;">MCP는 AI 에이전트와의 도구 인터페이스로, UI 렌더링이 불가합니다.</p>
                     <table style="margin-top:15px;">
                         <tr><th>기능</th><th>v5 탭</th><th>필요 기술</th></tr>
                         <tr><td>전자결재 시스템 (9종 결재 유형)</td><td>TAB 3</td><td>Next.js + 워크플로우 엔진</td></tr>
                         <tr><td>사용자 권한 관리 (RBAC)</td><td>TAB 4</td><td>Auth.js + PostgreSQL</td></tr>
-                        <tr><td>비주얼 대시보드 (차트/그래프)</td><td>TAB 8</td><td>Chart.js / Recharts</td></tr>
-                        <tr><td>BI 대시보드 (실시간 차트)</td><td>TAB 12</td><td>Chart.js + WebSocket</td></tr>
                         <tr><td>재고 5단계 칸반 보드</td><td>TAB 5</td><td>React DnD / Kanban UI</td></tr>
-                        <tr><td>결재 문서 양식 렌더링</td><td>TAB 3</td><td>PDF 생성 + 미리보기</td></tr>
+                        <tr><td style="text-decoration:line-through;color:#484f58;">비주얼 대시보드 (차트/그래프)</td><td style="color:#484f58;">TAB 8/12</td><td><span class="st-full">✅ v6 해결</span> — ecount_render_dashboard (인라인 SVG HTML)</td></tr>
+                        <tr><td style="text-decoration:line-through;color:#484f58;">결재 문서 양식 렌더링</td><td style="color:#484f58;">TAB 3</td><td><span class="st-full">✅ v6 해결</span> — ecount_export_pdf (pdf-lib)</td></tr>
                         <tr><td>기초데이터 관리 UI (CRUD 폼)</td><td>TAB 13</td><td>Next.js + Form 컴포넌트</td></tr>
                     </table>
                 </div>
 
                 <div class="alert-box warning">
-                    <div class="alert-title">⚠️ 외부 시스템 연동 필요 (5건)</div>
+                    <div class="alert-title">⚠️ 외부 시스템 연동 필요 (4건)</div>
                     <p style="margin-top:10px;">MCP 도구만으로는 불가능하며, 외부 서비스 API 연동이 필요합니다.</p>
                     <table style="margin-top:15px;">
                         <tr><th>기능</th><th>v5 탭</th><th>필요 서비스</th></tr>
-                        <tr><td>이메일 자동 수신/분류</td><td>TAB 7</td><td>MS Graph API 웹훅</td></tr>
-                        <tr><td>이메일 자동 발송</td><td>TAB 7/10</td><td>nodemailer + SMTP</td></tr>
-                        <tr><td>FAX 자동 발송</td><td>TAB 9</td><td>FAX API (eFax 등)</td></tr>
-                        <tr><td>미트와치 자동 LIST UP</td><td>TAB 9</td><td>미트와치 API 연동</td></tr>
+                        <tr><td>이메일 자동 수신/분류</td><td>TAB 7</td><td>MS Graph API 웹훅 (Office 365 MCP 예정)</td></tr>
+                        <tr><td>이메일 자동 발송</td><td>TAB 7/10</td><td>Office 365 MCP (v7 예정)</td></tr>
+                        <tr><td style="text-decoration:line-through;color:#484f58;">FAX 자동 발송</td><td style="color:#484f58;">TAB 9</td><td><span class="st-full">✅ v6 해결</span> — ecount_send_fax (팝빌 Fax API)</td></tr>
+                        <tr><td style="text-decoration:line-through;color:#484f58;">미트와치 자동 LIST UP</td><td style="color:#484f58;">TAB 9</td><td><span class="st-full">✅ v6 해결</span> — ecount_search_import_meat (농림축산검역본부 공공 API)</td></tr>
                         <tr><td>자가진단 상시 데몬</td><td>TAB 11</td><td>PM2 + cron scheduler</td></tr>
                     </table>
                 </div>
@@ -776,7 +802,7 @@
                         <td><span class="st-full">●</span> 완전</td>
                         <td><span class="st-partial">△</span> 부분</td>
                         <td><span class="st-none">○</span> 미지원</td>
-                        <td><span class="st-ext">✕</span> FAX/미트와치</td>
+                        <td><span class="st-full">●</span> FAX/이력조회 완료</td>
                     </tr>
                     <tr>
                         <td>회계/자금</td>
@@ -834,6 +860,7 @@
                     <div class="alert-title">✅ 2026.03.31 구현 완료 — 13개 신규 도구</div>
                     <p style="margin-top:10px;">아래 6개 영역이 모두 구현되어 도구 수가 68 → 81개로 확장되었습니다.</p>
                 </div>
+
                 <table>
                     <tr>
                         <th>기능</th>
@@ -876,6 +903,50 @@
                         <td>ecount_analyze_margin</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 12 BI 강화</td>
+                    </tr>
+                </table>
+
+                <h3>Phase 1.5: Output Layer 완료 ✅ (v6 Output Layer)</h3>
+                <div class="alert-box success">
+                    <div class="alert-title">✅ 2026.03.31 구현 완료 — 7개 신규 도구 + KeyPack V2 디코더</div>
+                    <p style="margin-top:10px;">데이터/집계 레이어 위에 출력 레이어를 추가하여 도구 수가 81 → 88개로 확장되었습니다. 대시보드 HTML, PDF 내보내기, 팩스 발송, 수입축산물 이력조회(공공API) 기능이 추가되어 커버리지 갭 4건이 해소되었습니다.</p>
+                </div>
+                <table>
+                    <tr>
+                        <th>기능</th>
+                        <th>도구</th>
+                        <th>상태</th>
+                        <th>효과</th>
+                    </tr>
+                    <tr>
+                        <td>HTML 대시보드 생성</td>
+                        <td>ecount_render_dashboard</td>
+                        <td><span class="st-full">✅ 완료</span></td>
+                        <td>TAB 8/12 대시보드/BI 해결</td>
+                    </tr>
+                    <tr>
+                        <td>PDF 내보내기</td>
+                        <td>ecount_export_pdf</td>
+                        <td><span class="st-full">✅ 완료</span></td>
+                        <td>TAB 3/9 결재문서 렌더링 해결</td>
+                    </tr>
+                    <tr>
+                        <td>팩스 발송/조회</td>
+                        <td>ecount_send_fax, ecount_get_fax_status, ecount_list_fax_history</td>
+                        <td><span class="st-full">✅ 완료</span></td>
+                        <td>TAB 9 팩스 자동발송 해결</td>
+                    </tr>
+                    <tr>
+                        <td>수입축산물 이력조회</td>
+                        <td>ecount_search_import_meat, ecount_lookup_meat_by_bl</td>
+                        <td><span class="st-full">✅ 완료</span></td>
+                        <td>TAB 9 미트와치 대체 (농림축산검역본부 공공API)</td>
+                    </tr>
+                    <tr>
+                        <td>KeyPack V2 디코더</td>
+                        <td>(내부 유틸리티)</td>
+                        <td><span class="st-full">✅ 완료</span></td>
+                        <td>내부 API 응답 자동 디코딩</td>
                     </tr>
                 </table>
 
@@ -958,9 +1029,9 @@
                         <td>출고 승인 이벤트 → FAX API 호출</td>
                     </tr>
                     <tr>
-                        <td>미트와치 연동</td>
-                        <td>미트와치 API</td>
-                        <td>출고 완료 이벤트 → 자동 등록</td>
+                        <td style="text-decoration:line-through;color:#484f58;">미트와치 연동</td>
+                        <td><span class="st-full">✅ v6 해결</span> — 농림축산검역본부 공공API</td>
+                        <td>ecount_search_import_meat / ecount_lookup_meat_by_bl로 이력조회 대체</td>
                     </tr>
                     <tr>
                         <td>자가진단 스케줄러</td>
@@ -972,10 +1043,10 @@
                 <div class="alert-box success">
                     <div class="alert-title">✅ 아키텍처 요약</div>
                     <p style="margin-top:10px;">
-                        <strong>astrosECOUNT MCP</strong> = 데이터 레이어 + 비즈니스 로직 (81개 도구, 522개 테스트)<br>
+                        <strong>astrosECOUNT MCP</strong> = 데이터 레이어 + 비즈니스 로직 + 출력 레이어 + 공공API (88개 도구)<br>
                         <strong>astrosERP 웹앱</strong> = UI 레이어 + 워크플로우 엔진 + 사용자 인터페이스<br>
-                        <strong>외부 연동</strong> = 이메일/FAX/미트와치/스케줄러<br><br>
-                        MCP는 AI 에이전트가 ERP 데이터를 조회/입력/분석하는 "두뇌"이고, 웹앱은 사용자가 직접 조작하는 "손"입니다. 두 시스템이 상호 보완하여 v5 구성안의 100% 커버리지를 달성합니다.
+                        <strong>외부 연동</strong> = 이메일 (Office 365 MCP) / 미트와치 / 스케줄러<br><br>
+                        v6에서 출력 레이어(대시보드 HTML, PDF, 팩스) + 공공API(수입축산물 이력)가 추가되어 기존 갭 4건이 해소되었습니다. MCP는 AI 에이전트가 ERP 데이터를 조회/입력/분석/출력하는 "두뇌"이고, 웹앱은 사용자가 직접 조작하는 "손"입니다.
                     </p>
                 </div>
             </div>
