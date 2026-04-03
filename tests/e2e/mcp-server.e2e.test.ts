@@ -70,9 +70,9 @@ describe("MCP Server E2E", () => {
   // ── Protocol handshake ──
 
   describe("Protocol handshake", () => {
-    it("should complete initialize and list 92 tools", async () => {
+    it("should complete initialize and list 108 tools", async () => {
       const result = await client.listTools();
-      expect(result.tools.length).toBe(92);
+      expect(result.tools.length).toBe(108);
     });
 
     it("should have unique tool names", async () => {
@@ -81,10 +81,10 @@ describe("MCP Server E2E", () => {
       expect(new Set(names).size).toBe(names.length);
     });
 
-    it("should prefix all tools with ecount_", async () => {
+    it("should prefix all tools with ecount_ or unipass_", async () => {
       const result = await client.listTools();
       for (const tool of result.tools) {
-        expect(tool.name).toMatch(/^ecount_/);
+        expect(tool.name).toMatch(/^(ecount_|unipass_)/);
       }
     });
 

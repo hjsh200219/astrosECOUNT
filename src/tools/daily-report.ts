@@ -39,18 +39,19 @@ function daysSince(isoDate: string): number {
   return Math.floor((Date.now() - new Date(isoDate).getTime()) / (1000 * 60 * 60 * 24));
 }
 
-export function generateDiagnosticReport(date?: string): DiagnosticReport {
+export async function generateDiagnosticReport(date?: string): Promise<DiagnosticReport> {
   const reportDate = date ?? today();
   const diagnostics: DiagnosticItem[] = [];
 
   // L1 — Infrastructure
-  const rates = listExchangeRates();
+  const ratesResult = await listExchangeRates();
+  const allRates = [...ratesResult.manual, ...ratesResult.market, ...ratesResult.customs];
   diagnostics.push({
     level: "L1",
     category: "exchange_rates",
-    status: rates.length >= 1 ? "pass" : "warning",
-    message: rates.length >= 1
-      ? `환율 데이터 ${rates.length}개 정상 로드`
+    status: allRates.length >= 1 ? "pass" : "warning",
+    message: allRates.length >= 1
+      ? `환율 데이터 ${allRates.length}개 정상 로드`
       : "환율 데이터 없음",
   });
 
@@ -76,7 +77,7 @@ export function generateDiagnosticReport(date?: string): DiagnosticReport {
   });
 
   const todayStr = today();
-  const staleRates = rates.filter((r) => r.date !== todayStr);
+  const staleRates = allRates.filter((r: { date: string }) => r.date !== todayStr);
   diagnostics.push({
     level: "L2",
     category: "exchange_rate_freshness",
@@ -121,7 +122,7 @@ export function generateDiagnosticReport(date?: string): DiagnosticReport {
   return { date: reportDate, diagnostics, passCount, warningCount, failCount, overallHealth };
 }
 
-export function generateDailyReport(options?: ReportOptions): string {
+export async function generateDailyReport(options?: ReportOptions): Promise<string> {
   const date = options?.date ?? today();
   const includeShipments = options?.includeShipments ?? true;
   const includeContracts = options?.includeContracts ?? true;
@@ -168,16 +169,17 @@ export function generateDailyReport(options?: ReportOptions): string {
   }
 
   if (includeRates) {
-    const rates = listExchangeRates();
+    const ratesResult = await listExchangeRates();
+    const allRates = [...ratesResult.manual, ...ratesResult.market, ...ratesResult.customs];
     lines.push("");
     lines.push("▶ 환율 정보");
-    for (const r of rates) {
+    for (const r of allRates) {
       lines.push(`  - ${r.currency}: ${r.rate}원 (${r.date})`);
     }
   }
 
   if (includeDiagnostics) {
-    const diagReport = generateDiagnosticReport(date);
+    const diagReport = await generateDiagnosticReport(date);
     lines.push("");
     lines.push(`▶ 자가진단 결과 (${diagReport.overallHealth})`);
     for (const item of diagReport.diagnostics) {
@@ -203,7 +205,7 @@ export function registerDailyReportTools(server: McpServer): void {
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {
       try {
-        const report = generateDiagnosticReport(params.date as string | undefined);
+        const report = await generateDiagnosticReport(params.date as string | undefined);
         return formatResponse(report);
       } catch (error) {
         return handleToolError(error);
@@ -223,7 +225,7 @@ export function registerDailyReportTools(server: McpServer): void {
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {
       try {
-        const report = generateDailyReport({
+        const report = await generateDailyReport({
           date: params.date as string | undefined,
           includeShipments: params.include_shipments as boolean,
           includeContracts: params.include_contracts as boolean,

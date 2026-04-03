@@ -43,6 +43,7 @@ import { registerDiagramTools } from "./diagram.js";
 import { registerMapTools } from "./map.js";
 import { registerPresentationTools } from "./presentation.js";
 import { register3dTools } from "./three-d.js";
+import { registerUnipassTools } from "./unipass.js";
 
 export function registerAllTools(server: McpServer, client: EcountClient, config: EcountConfig): void {
   registerConnectionTools(server, client, config);
@@ -87,13 +88,15 @@ export function registerAllTools(server: McpServer, client: EcountClient, config
   registerDashboardTools(server);
   registerPdfExportTools(server);
   registerFaxTools(server);
-  // Category B tools (public API — no EcountClient dependency)
+  // Category B tools (public API -- no EcountClient dependency)
   registerImportMeatTraceTools(server);
   // Category B+ tools (v6 visualization layer)
   registerDiagramTools(server);
   registerMapTools(server);
   registerPresentationTools(server);
   register3dTools(server);
+  // Category B tools (UNI-PASS API -- standalone)
+  registerUnipassTools(server);
   // Category B tools (EcountClient dependency - internal API)
   registerInternalApiTools(server, client);
 }

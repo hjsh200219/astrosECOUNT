@@ -2,6 +2,11 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { formatResponse } from "../utils/response-formatter.js";
 import { handleToolError } from "../utils/error-handler.js";
+import { getCargoTracking, getContainerInfo } from "../services/unipass/cargo-tracking.js";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
 export interface Shipment {
   id: string;
@@ -26,6 +31,10 @@ export interface EtaChange {
   changedAt: string;
 }
 
+// ---------------------------------------------------------------------------
+// In-memory storage (local registration data)
+// ---------------------------------------------------------------------------
+
 const SHIPMENTS: Map<string, Shipment> = new Map();
 const ETA_HISTORY: Map<string, EtaChange[]> = new Map();
 let idCounter = 1;
@@ -37,6 +46,10 @@ function nowIso(): string {
 function generateId(): string {
   return `SHP-${Date.now()}-${idCounter++}`;
 }
+
+// ---------------------------------------------------------------------------
+// Local CRUD helpers
+// ---------------------------------------------------------------------------
 
 export function addShipment(data: Omit<Shipment, "id" | "createdAt" | "updatedAt">): Shipment {
   const now = nowIso();
@@ -109,10 +122,15 @@ export function getEtaHistory(id: string): EtaChange[] {
   return ETA_HISTORY.get(id) ?? [];
 }
 
+// ---------------------------------------------------------------------------
+// Tool registration
+// ---------------------------------------------------------------------------
+
 export function registerShipmentTrackingTools(server: McpServer): void {
+  // Register shipment (local only -- UNI-PASS is read-only)
   server.tool(
     "ecount_add_shipment",
-    "새로운 선적(Shipment) 정보를 등록합니다.",
+    "새로운 선적(Shipment) 정보를 등록합니다. (로컬 등록 -- UNI-PASS 실시간 추적과 결합됩니다)",
     {
       blNumber: z.string().describe("B/L 번호"),
       carrier: z.string().describe("선사명 (예: Maersk, MSC, Evergreen)"),
@@ -149,9 +167,10 @@ export function registerShipmentTrackingTools(server: McpServer): void {
     }
   );
 
+  // Track shipment -- combines local data with real-time UNI-PASS tracking
   server.tool(
     "ecount_get_shipment",
-    "선적 ID 또는 B/L 번호로 선적 정보를 조회합니다.",
+    "선적 정보를 조회합니다. 로컬 등록 데이터와 UNI-PASS 실시간 통관 진행정보를 결합하여 반환합니다.",
     {
       id: z.string().optional().describe("선적 ID"),
       blNumber: z.string().optional().describe("B/L 번호"),
@@ -159,27 +178,71 @@ export function registerShipmentTrackingTools(server: McpServer): void {
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {
       try {
-        let result: Shipment | null = null;
+        let localShipment: Shipment | null = null;
+        let blNumber: string | null = null;
+
         if (params.id) {
-          result = getShipment(params.id as string);
+          localShipment = getShipment(params.id as string);
+          blNumber = localShipment?.blNumber ?? null;
         } else if (params.blNumber) {
-          result = getShipmentByBL(params.blNumber as string);
+          blNumber = params.blNumber as string;
+          localShipment = getShipmentByBL(blNumber);
         } else {
           return formatResponse({ found: false, message: "id 또는 blNumber 중 하나를 입력하세요." });
         }
-        if (!result) {
+
+        // Fetch real-time tracking from UNI-PASS
+        let unipassTracking = null;
+        if (blNumber) {
+          const trackingItems = await getCargoTracking(blNumber);
+          if (trackingItems.length > 0) {
+            unipassTracking = trackingItems;
+          }
+        }
+
+        if (!localShipment && !unipassTracking) {
           return formatResponse({ found: false, message: "선적 정보를 찾을 수 없습니다." });
         }
-        return formatResponse({ found: true, shipment: result });
+
+        return formatResponse({
+          found: true,
+          shipment: localShipment ?? null,
+          unipassTracking: unipassTracking ?? null,
+        });
       } catch (error) {
         return handleToolError(error);
       }
     }
   );
 
+  // Container info -- real-time from UNI-PASS
+  server.tool(
+    "ecount_get_container_info",
+    "B/L 번호로 컨테이너 정보를 조회합니다. UNI-PASS API에서 실시간 데이터를 가져옵니다.",
+    {
+      blNumber: z.string().describe("B/L 번호"),
+    },
+    { readOnlyHint: true },
+    async (params: Record<string, unknown>) => {
+      try {
+        const blNumber = params.blNumber as string;
+        const containers = await getContainerInfo(blNumber);
+
+        if (containers.length === 0) {
+          return formatResponse({ found: false, message: `B/L '${blNumber}'에 대한 컨테이너 정보가 없습니다.` });
+        }
+
+        return formatResponse({ found: true, count: containers.length, containers });
+      } catch (error) {
+        return handleToolError(error);
+      }
+    }
+  );
+
+  // List shipments (in-memory -- no UNI-PASS equivalent)
   server.tool(
     "ecount_list_shipments",
-    "선적 목록을 조회합니다. 상태 또는 선사로 필터링 가능합니다.",
+    "선적 목록을 조회합니다. 상태 또는 선사로 필터링 가능합니다. (로컬 등록 데이터 기준)",
     {
       status: z
         .enum(["booked", "departed", "in_transit", "arrived", "customs", "cleared", "delivered"])
@@ -201,9 +264,10 @@ export function registerShipmentTrackingTools(server: McpServer): void {
     }
   );
 
+  // Update shipment status (local only -- UNI-PASS is read-only)
   server.tool(
     "ecount_update_shipment_status",
-    "선적 상태를 업데이트합니다.",
+    "선적 상태를 업데이트합니다. (로컬 등록 데이터)",
     {
       id: z.string().describe("선적 ID"),
       status: z
@@ -224,6 +288,7 @@ export function registerShipmentTrackingTools(server: McpServer): void {
     }
   );
 
+  // Update ETA (local only)
   server.tool(
     "ecount_update_eta",
     "선적의 ETA(도착 예정일)를 업데이트하고 변경 이력을 기록합니다.",
@@ -250,6 +315,7 @@ export function registerShipmentTrackingTools(server: McpServer): void {
     }
   );
 
+  // ETA history (local only)
   server.tool(
     "ecount_get_eta_history",
     "특정 선적의 ETA 변경 이력을 조회합니다.",

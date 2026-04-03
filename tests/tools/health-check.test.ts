@@ -1,7 +1,15 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { checkHealth, type HealthReport, type SubsystemHealth } from "../../src/tools/health-check.js";
+import { setExchangeRate } from "../../src/tools/exchange-rate.js";
 
 describe("checkHealth", () => {
+  beforeEach(() => {
+    // Seed manual overrides so exchange rate check passes
+    setExchangeRate("USD", 1350, "manual");
+    setExchangeRate("BRL", 270, "manual");
+    setExchangeRate("EUR", 1470, "manual");
+  });
+
   it("should return a HealthReport with all required subsystems", async () => {
     const report = await checkHealth();
     expect(report).toHaveProperty("overall");

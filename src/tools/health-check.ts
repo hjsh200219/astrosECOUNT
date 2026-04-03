@@ -49,9 +49,10 @@ function checkCircuitBreaker(): SubsystemHealth {
   };
 }
 
-function checkExchangeRates(): SubsystemHealth {
-  const rates = listExchangeRates();
-  if (rates.length === 0) {
+async function checkExchangeRates(): Promise<SubsystemHealth> {
+  const ratesResult = await listExchangeRates();
+  const totalCount = ratesResult.manual.length + ratesResult.market.length + ratesResult.customs.length;
+  if (totalCount === 0) {
     return {
       name: "exchangeRates",
       status: "degraded",
@@ -62,7 +63,7 @@ function checkExchangeRates(): SubsystemHealth {
   return {
     name: "exchangeRates",
     status: "ok",
-    message: `환율 데이터 정상 — ${rates.length}개 통화 등록됨`,
+    message: `환율 데이터 정상 — ${totalCount}개 통화 등록됨`,
     checkedAt: nowIso(),
   };
 }
@@ -92,11 +93,12 @@ function deriveOverall(subsystems: SubsystemHealth[]): HealthReport["overall"] {
 }
 
 export async function checkHealth(): Promise<HealthReport> {
+  const exchangeRatesHealth = await checkExchangeRates();
   const subsystems: SubsystemHealth[] = [
     checkOpenApi(),
     checkInternalApi(),
     checkCircuitBreaker(),
-    checkExchangeRates(),
+    exchangeRatesHealth,
     checkShipments(),
   ];
 
