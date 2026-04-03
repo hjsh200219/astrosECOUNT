@@ -15,8 +15,10 @@ src/index.ts          Entry point (stdio transport)
 src/server.ts         McpServer factory (config -> client -> tools)
 src/config.ts         Env validation (zod): ECOUNT_COM_CODE, USER_ID, API_CERT_KEY, ZONE
 src/client/           HTTP client, session managers, circuit breaker, KeyPack encoder
-src/tools/            22 MCP tool modules (Category A: ERP CRUD, B: standalone, B+: utilities)
-src/utils/            Error handling, response formatting, logger, persistence
+src/tools/            43 MCP tool modules (Category A: ERP CRUD, B: standalone, B+: utilities)
+src/services/         External service clients (exchange-rate, unipass customs API)
+src/utils/            Error handling, response formatting, renderers, logger, persistence
+src/types/            Type declarations (popbill)
 tests/                Vitest unit tests (mirrors src/ 1:1)
 docs/                 Domain knowledge, API docs, architecture
 ```
@@ -84,6 +86,7 @@ npm run inspector    # MCP Inspector debugging
 | [docs/howto/05-api-coverage-gap.md](docs/howto/05-api-coverage-gap.md) | API coverage gap analysis (~80% coverage) |
 | [docs/howto/07-internal-api-reverse-engineering.md](docs/howto/07-internal-api-reverse-engineering.md) | Internal Web API reverse engineering (__$KeyPack) |
 | [docs/howto/08-v3-mcp-coverage.md](docs/howto/08-v3-mcp-coverage.md) | V3 system MCP implementation coverage |
+| [docs/howto/09-v5-mcp-coverage.html](docs/howto/09-v5-mcp-coverage.html) | V5 system MCP implementation coverage |
 
 ### Architecture Decisions (`docs/design-docs/`)
 

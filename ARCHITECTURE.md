@@ -14,7 +14,7 @@ LLM (Claude Desktop/Code)
   v
 McpServer (src/server.ts)
   |
-  +-- registerAllTools() --> 22 tool modules (src/tools/*)
+  +-- registerAllTools() --> 43 tool modules (src/tools/*)
   |     +-- Category A: ERP CRUD (via EcountClient)
   |     +-- Category B: Standalone utilities (no ERP dependency)
   |     +-- Category B+: Data utilities (persistence, no EcountClient)
@@ -36,18 +36,21 @@ McpServer (src/server.ts)
 | **Entry** | `src/index.ts`, `src/server.ts` | Stdio transport, McpServer creation |
 | **Config** | `src/config.ts` | Zod-validated env vars (Open API + Internal API) |
 | **Client** | `src/client/*` (8 files) | HTTP client, session mgmt, circuit breaker, KeyPack |
-| **Tools** | `src/tools/*` (22 files) | MCP tool definitions, tool-factory pattern |
-| **Utils** | `src/utils/*` (4 files) | Error handling, response formatting, logging, persistence |
-| **Tests** | `tests/*` (36 files) | Vitest unit/integration tests (mirrors src/) |
+| **Tools** | `src/tools/*` (43 modules + index + factory) | MCP tool definitions, tool-factory pattern |
+| **Services** | `src/services/*` (13 files) | External service clients (exchange-rate, unipass customs) |
+| **Utils** | `src/utils/*` (14 files) | Error handling, response formatting, renderers, logging, persistence |
+| **Types** | `src/types/*` (1 file) | Type declarations (popbill) |
+| **Tests** | `tests/*` (68 files) | Vitest unit/integration/e2e tests (mirrors src/) |
 | **Docs** | `docs/*` | Domain knowledge, API docs, architecture decisions |
 
 ## Layer Structure
 
 ```
 Layer 0: Entry        src/index.ts --> src/server.ts
-Layer 1: Tools        src/tools/*  (22 modules)
+Layer 1: Tools        src/tools/*  (43 modules)
 Layer 2: Client       src/client/*  (EcountClient, SessionManager, InternalApiClient)
-Layer 3: Utils        src/utils/*  (error-handler, response-formatter, logger, persistence)
+         Services     src/services/*  (exchange-rate, unipass customs API)
+Layer 3: Utils        src/utils/*  (error-handler, response-formatter, renderers, logger, persistence)
 Layer 4: Config       src/config.ts
 Layer 5: External     @modelcontextprotocol/sdk, zod, pdf-lib
 ```
@@ -96,7 +99,7 @@ No upward imports. Tools must not import other tools.
 | Test | Vitest v3 |
 | Dev | tsx (TypeScript execution) |
 
-## Tool Categories (58 tools across 22 modules)
+## Tool Categories (43 modules)
 
 | Category | Modules | Examples |
 |----------|---------|---------|

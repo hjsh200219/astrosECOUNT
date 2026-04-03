@@ -52,6 +52,7 @@
 |------|------|
 | [howto/07-internal-api-reverse-engineering.md](howto/07-internal-api-reverse-engineering.md) | 내부 Web API 역공학 -- `__$KeyPack` 프로토콜, 구현 전략 |
 | [howto/08-v3-mcp-coverage.md](howto/08-v3-mcp-coverage.md) | V3 시스템 구성안 MCP 구현 커버리지 분석 |
+| [howto/09-v5-mcp-coverage.html](howto/09-v5-mcp-coverage.html) | V5 시스템 MCP 구현 커버리지 분석 |
 | [references/ECOUNT_Open_API_Documentation.md](references/ECOUNT_Open_API_Documentation.md) | ECOUNT 공식 Open API 문서 |
 
 ---
