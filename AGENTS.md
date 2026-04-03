@@ -107,12 +107,3 @@ npm run inspector    # MCP Inspector debugging
 | `docs/references/` | External references (LLM docs, design system refs) |
 | [docs/generated/db-schema.md](docs/generated/db-schema.md) | ERP entity map (no local DB) |
 
-## Agent Operating Rules
-
-1. **Never throw from tool handlers** -- always return `handleToolError(error)`
-2. **Layer direction**: Entry -> Tools -> Client -> Utils -> Config (no upward imports)
-3. **Tools never import other tools** -- shared logic goes to utils/ or client/
-4. **All logs to stderr** -- stdout is reserved for MCP JSON-RPC
-5. **Zod validates all inputs** -- no raw `process.env` outside config.ts
-6. **Test every change** -- `npm test` before committing
-7. **Read before writing** -- consult docs/ for domain context before making changes
