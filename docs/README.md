@@ -41,7 +41,7 @@
 |------|------|
 | [howto/00-setup-operations.md](howto/00-setup-operations.md) | 환경 설정, 인증 (Open API + 내부 API), 세션 관리 |
 | [howto/02-entity-relationship.md](howto/02-entity-relationship.md) | ERD, 엔티티 관계, 코드 체계 (거래처/창고/프로젝트) |
-| [howto/04-tool-reference.md](howto/04-tool-reference.md) | MCP 도구 23개 + 시스템 아키텍처 + 내부 API V5 9개 엔드포인트 |
+| [howto/04-tool-reference.md](howto/04-tool-reference.md) | MCP 도구 43모듈 + 시스템 아키텍처 + 내부 API V5 9개 엔드포인트 |
 | [howto/05-api-coverage-gap.md](howto/05-api-coverage-gap.md) | API 커버리지 갭 분석 + 내부 API로 해소된 갭 (**~80%** 커버리지) |
 
 ---

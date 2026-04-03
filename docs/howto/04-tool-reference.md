@@ -1,6 +1,7 @@
-# ECOUNT MCP 도구 레퍼런스 (23개)
+# ECOUNT MCP 도구 레퍼런스 (43 모듈)
 
-> 소스 코드 기준 | 수집일: 2026-03-24
+> 소스 코드 기준 | 수집일: 2026-03-24 | 최종 업데이트: 2026-04-03
+> 아래 23개는 Open API 핵심 도구. Category B/B+ 포함 총 43 모듈 (src/tools/ 참조)
 
 ## 시스템 아키텍처
 
@@ -14,7 +15,7 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │                    astrosECOUNT MCP Server                      │
 │  ┌──────────┐  ┌──────────────┐  ┌───────────────────────┐     │
-│  │ server.ts │→│ tool-factory  │→│ 23개 MCP 도구 등록      │     │
+│  │ server.ts │→│ tool-factory  │→│ 43개 MCP 도구 모듈 등록   │     │
 │  │          │  │ (Save/Query)  │  │ connection(3) master(4)│     │
 │  │ McpServer│  └──────┬───────┘  │ sales(3) purchase(2)   │     │
 │  │ v1.0.0   │         │          │ inventory(4) prod(3)   │     │
@@ -292,9 +293,9 @@
 
 ---
 
-## 내부 Web API 도구 (향후 구현)
+## 내부 Web API 도구 (일부 구현)
 
-> 내부 Web API 역공학으로 확인된 조회 기능. 현재 MCP 도구로 미구현 상태.
+> 내부 Web API 역공학으로 확인된 조회 기능. 4개 구현 완료 (internal-api.ts).
 > 기술 상세: [07-internal-api-reverse-engineering.md](07-internal-api-reverse-engineering.md)
 
 ### V5 App API 엔드포인트 패턴
@@ -309,12 +310,12 @@ POST https://login{ZONE}.ecount.com/ec5/api/app.{MODULE}/action/{ACTION}:{bizz_t
 
 | 모듈 | Action | bizz_type | 메뉴 | bizz_sid | 확인 건수 | 구현 상태 |
 |------|--------|-----------|------|----------|----------|----------|
-| `app.inventory` | `SelectInventorySearchListAction` | `sales` | 판매조회 | `B_000000E040205` | 622건 | 미구현 |
-| `app.inventory` | `SelectInventorySearchListAction` | `purchases` | 구매조회 | `B_000000E040303` | 261건 | 미구현 |
+| `app.inventory` | `SelectInventorySearchListAction` | `sales` | 판매조회 | `B_000000E040205` | 622건 | 구현 (ecount_list_sales_internal) |
+| `app.inventory` | `SelectInventorySearchListAction` | `purchases` | 구매조회 | `B_000000E040303` | 261건 | 구현 (ecount_list_purchases_internal) |
 | `app.inventory` | `SelectInventorySearchListAction` | `quotation` | 견적서조회 | `B_000000E040201` | 3건 | 미구현 |
 | `app.inventory` | `SelectInventorySearchListAction` | `sales_order` | 주문서조회 | `B_000000E040203` | 0건 | 미구현 |
-| `app.vatslip` | `SelectVatSlipListAction` | `vatslipkor` | 세금계산서 | `B_000000E010727` | 147건 | 미구현 |
-| `app.account` | `SelectAccountSearchListAction` | `account_slip` | 회계전표 | — | 1,609건 | 미구현 |
+| `app.vatslip` | `SelectVatSlipListAction` | `vatslipkor` | 세금계산서 | `B_000000E010727` | 147건 | 구현 (ecount_list_vat_slips_internal) |
+| `app.account` | `SelectAccountSearchListAction` | `account_slip` | 회계전표 | — | 1,609건 | 구현 (ecount_list_account_slips_internal) |
 | `app.account` | `SelectAccountSearchBalProcessAction` | `account_bond` | 채권관리 | — | 0건 | 미구현 |
 | `app.account` | `SelectAccountSearchBalProcessAction` | `account_debt` | 채무관리 | — | 0건 | 미구현 |
 | `app.tax` | `SelectVatfilingListAction` | `vat_filing` | 부가세신고서 | `B_000000E030215` | 1건 | 미구현 |

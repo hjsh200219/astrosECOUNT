@@ -8,21 +8,18 @@ The "interface" for this project is the MCP tool protocol:
 
 - **Transport**: StdioServerTransport (stdin/stdout JSON-RPC)
 - **Consumer**: LLM clients (Claude Desktop, Claude Code, MCP Inspector)
-- **Tools**: 58 MCP tools across 22 modules
+- **Tools**: MCP tools across 43 modules
 - **Responses**: JSON text content wrapped in MCP `TextContent` format
 
-## Tool Interface Categories
+## Tool Interface Categories (43 modules)
 
-| Category | Tool Count | Interface Pattern |
-|----------|-----------|------------------|
-| Connection/Auth | 2 | Login, status check |
-| Master Data (CRUD) | 10 | List/Save/View/Delete operations |
-| Sales | 12 | Slip CRUD, orders, quotations |
-| Purchase | 7 | Purchase slips, POs |
-| Inventory | 8 | Stock queries, movements, barcodes |
-| Production | 6 | Work orders, BOM management |
-| Accounting | 10 | Journals, ledgers, AR/AP |
-| Utilities | 3 | Standalone data tools |
+| Category | Modules | Interface Pattern |
+|----------|---------|------------------|
+| Category A (ERP CRUD) | 9 | connection, master-data, sales, purchase, inventory, production, accounting, other, board |
+| Category B (Standalone) | 10 | bl-parser, contacts, business-rules, pdf-stamp, email-templates, exchange-rate, shipment-tracking, logistics-kpi, contracts, import-meat-trace |
+| Category B (Internal API) | 1 | internal-api (V5 web API access) |
+| Category B (UNI-PASS) | 1 | unipass (customs API) |
+| Category B+ (Utilities) | 22 | inventory-verify, stale-shipments, csv-export, daily-report, health-check, data-integrity, document-status, adjust-inventory, customs-cost, receivables, payables, weight-settlement, inventory-lifecycle, financial-statements, margin-analysis, dashboard, pdf-export, fax, diagram, map, presentation, three-d |
 
 ## Testing the Interface
 
