@@ -39,10 +39,10 @@
 
 | 문서 | 내용 |
 |------|------|
-| [00-setup-operations.md](00-setup-operations.md) | 환경 설정, 인증 (Open API + 내부 API), 세션 관리 |
-| [02-entity-relationship.md](02-entity-relationship.md) | ERD, 엔티티 관계, 코드 체계 (거래처/창고/프로젝트) |
-| [04-tool-reference.md](04-tool-reference.md) | MCP 도구 23개 + 시스템 아키텍처 + 내부 API V5 9개 엔드포인트 |
-| [05-api-coverage-gap.md](05-api-coverage-gap.md) | API 커버리지 갭 분석 + 내부 API로 해소된 갭 (**~80%** 커버리지) |
+| [howto/00-setup-operations.md](howto/00-setup-operations.md) | 환경 설정, 인증 (Open API + 내부 API), 세션 관리 |
+| [howto/02-entity-relationship.md](howto/02-entity-relationship.md) | ERD, 엔티티 관계, 코드 체계 (거래처/창고/프로젝트) |
+| [howto/04-tool-reference.md](howto/04-tool-reference.md) | MCP 도구 23개 + 시스템 아키텍처 + 내부 API V5 9개 엔드포인트 |
+| [howto/05-api-coverage-gap.md](howto/05-api-coverage-gap.md) | API 커버리지 갭 분석 + 내부 API로 해소된 갭 (**~80%** 커버리지) |
 
 ---
 
@@ -50,9 +50,9 @@
 
 | 문서 | 내용 |
 |------|------|
-| [07-internal-api-reverse-engineering.md](07-internal-api-reverse-engineering.md) | 내부 Web API 역공학 -- `__$KeyPack` 프로토콜, 구현 전략 |
-| [08-v3-mcp-coverage.md](08-v3-mcp-coverage.md) | V3 시스템 구성안 MCP 구현 커버리지 분석 |
-| [ECOUNT_Open_API_Documentation.md](ECOUNT_Open_API_Documentation.md) | ECOUNT 공식 Open API 문서 |
+| [howto/07-internal-api-reverse-engineering.md](howto/07-internal-api-reverse-engineering.md) | 내부 Web API 역공학 -- `__$KeyPack` 프로토콜, 구현 전략 |
+| [howto/08-v3-mcp-coverage.md](howto/08-v3-mcp-coverage.md) | V3 시스템 구성안 MCP 구현 커버리지 분석 |
+| [references/ECOUNT_Open_API_Documentation.md](references/ECOUNT_Open_API_Documentation.md) | ECOUNT 공식 Open API 문서 |
 
 ---
 

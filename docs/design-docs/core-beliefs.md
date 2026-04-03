@@ -9,7 +9,7 @@ domain concept, and operating rule must be written down. If it is not documented
 it does not exist for agents.
 
 - `AGENTS.md` is the entry point -- agents read this first
-- `agent.md` / `CLAUDE.md` contains invariants and commands
+- `AGENTS.md` / `CLAUDE.md` contains invariants and commands
 - `docs/` contains domain knowledge and architectural decisions
 
 ## 2. Layers Protect Invariants
