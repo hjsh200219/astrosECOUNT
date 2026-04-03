@@ -1,7 +1,7 @@
 # Quality Score -- astrosECOUNT
 
 > Quality grades per domain with actionable improvement paths.
-> Last updated: 2026-03-27
+> Last updated: 2026-04-03
 
 ## Overall Score: A-
 
@@ -21,7 +21,10 @@
 | Utils / error-handler | A | A | A | A | **A** | = |
 | Utils / response-formatter | A | A | A | A | **A** | = |
 | Utils / logger | B | A | A | A | **A-** | = |
+| Utils / renderers | C | B | B | B | **B-** | NEW |
 | Utils / persistence | B | B | C | A | **B** | = |
+| Services / exchange-rate | A | A | B | A | **A-** | NEW |
+| Services / unipass | C | A | B | A | **B** | NEW |
 
 ## Rating Criteria
 
@@ -50,6 +53,11 @@
 | P3 | Category B tools | In-memory data without validation | B+ -> A |
 | P4 | Integration tests | Only 1 E2E test file | Add mock API server |
 | P5 | Coverage metrics | V8 configured but not enforced | Add CI threshold |
+| P6 | Tools (5 files) | Tool-to-tool imports violate Core Invariant #5 | Extract shared logic to utils/services |
+| P7 | Services | process.env direct access (3 vars) bypasses config.ts | Inject via config.ts |
+| P8 | Services / unipass | 10/12 modules have no tests | Add unit tests |
+| P9 | Utils / renderers | dashboard-renderers.ts, logger.ts missing tests | Add tests |
+| P10 | Tools | board.ts, unipass.ts missing tests | Add tests |
 
 ## Test Summary
 

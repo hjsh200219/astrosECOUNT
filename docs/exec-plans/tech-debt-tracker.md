@@ -29,6 +29,8 @@
 | TD-006 | Logger | Relies on `process.stderr.write` without abstraction; harder to test | Test friction | S |
 | TD-007 | Utils / error-handler | Cross-layer import from client/circuit-breaker (exception to layer rules) | Architectural purity | M |
 | TD-008 | API coverage | V3 Legacy endpoints (supplier lists, production intake) not covered (~20% gap) | Feature gap | XL |
+| TD-012 | Utils / renderers | dashboard-renderers.ts test missing; logger.ts test missing | Test gap | S |
+| TD-013 | Tools | board.ts and unipass.ts test files missing | Test gap | S |
 
 ## Resolved Tech Debt
 
