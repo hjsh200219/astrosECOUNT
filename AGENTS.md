@@ -1,7 +1,12 @@
-# agent.md -- astrosECOUNT
+# AGENTS.md -- astrosECOUNT
 
 > ECOUNT ERP Open API MCP Server
 > TypeScript (ESM, strict) | Node >= 18 | MCP SDK v1.27.1 | Zod v3.25 | Vitest
+
+## Project Identity
+
+ECOUNT ERP Open API MCP Server -- TypeScript (ESM, strict) | Node >= 18.
+Wraps ECOUNT ERP Open API + Internal Web API for LLM access via MCP protocol.
 
 ## Quick Reference
 
@@ -27,7 +32,7 @@ docs/                 Domain knowledge, API docs, architecture
 7. **Circuit breaker on Internal API** -- 3 failures -> OPEN (30s reset)
 8. **All logs to stderr** -- stdout is reserved for MCP JSON-RPC protocol
 
-## Commands
+## Quick Commands
 
 ```bash
 npm run build        # TypeScript compile
@@ -47,97 +52,46 @@ npm run inspector    # MCP Inspector debugging
 
 ## Documentation Map
 
-| Document | Contents |
-|----------|----------|
-| [AGENTS.md](AGENTS.md) | Agent entry point, full docs/ map |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Domain map, layers, dependency graph, tech stack |
-| [docs/DESIGN.md](docs/DESIGN.md) | Coding patterns, naming, error hierarchy |
-| [docs/SECURITY.md](docs/SECURITY.md) | Auth, secrets, session security |
-| [docs/RELIABILITY.md](docs/RELIABILITY.md) | Session reliability, circuit breaker, error contract |
-| [docs/QUALITY_SCORE.md](docs/QUALITY_SCORE.md) | Quality grades per domain |
-| [docs/PRODUCT_SENSE.md](docs/PRODUCT_SENSE.md) | Product principles, user personas |
-| [docs/PLANS.md](docs/PLANS.md) | Exec plans index |
-
-## Domain Knowledge
-
-| Document | Contents |
-|----------|----------|
-| [docs/README.md](docs/README.md) | Documentation index |
-| [docs/01-data-catalog.md](docs/01-data-catalog.md) | Data catalog (products, inventory, orders, accounting) |
-| [docs/02-entity-relationship.md](docs/02-entity-relationship.md) | ERD, entity relationships, code systems |
-| [docs/03-business-workflow.md](docs/03-business-workflow.md) | End-to-end workflow: purchase -> logistics -> inventory -> sales -> accounting |
-| [docs/04-tool-reference.md](docs/04-tool-reference.md) | MCP tool reference + internal API endpoints |
-| [docs/05-api-coverage-gap.md](docs/05-api-coverage-gap.md) | API coverage gap analysis (~80% coverage) |
-| [docs/07-internal-api-reverse-engineering.md](docs/07-internal-api-reverse-engineering.md) | Internal Web API reverse engineering (__$KeyPack protocol) |
-
-## Architecture Decisions
-
-| Document | Contents |
-|----------|----------|
-| [docs/design-docs/layer-rules.md](docs/design-docs/layer-rules.md) | Import directions, forbidden patterns |
-| [docs/design-docs/core-beliefs.md](docs/design-docs/core-beliefs.md) | Agent-first operating principles |
-| [docs/exec-plans/tech-debt-tracker.md](docs/exec-plans/tech-debt-tracker.md) | Known tech debt items |
-
-
----
-
-# AGENTS.md -- astrosECOUNT
-
-> Agent entry point. This file describes how AI agents should navigate and operate in this repo.
-
-## Project Identity
-
-ECOUNT ERP Open API MCP Server -- TypeScript (ESM, strict) | Node >= 18.
-Wraps ECOUNT ERP Open API + Internal Web API for LLM access via MCP protocol.
-
-## How to Start
-
-1. Read this file first for orientation
-2. Read `agent.md` (symlinked as `CLAUDE.md`) for core invariants and commands
-3. Consult docs/ for domain knowledge and architecture decisions
-
-## Documentation Map
-
 ### Root Files
 
 | File | Purpose |
 |------|---------|
-| `agent.md` / `CLAUDE.md` | Core invariants, commands, quick reference (~100 lines) |
-| `ARCHITECTURE.md` | Domain map, layers, dependency graph, data flow, tech stack |
+| [AGENTS.md](AGENTS.md) / `CLAUDE.md` | Agent entry point, core invariants, commands |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Domain map, layers, dependency graph, data flow, tech stack |
 
 ### Harness Docs (`docs/`)
 
 | File | Purpose |
 |------|---------|
-| `docs/DESIGN.md` | Coding patterns, naming conventions, error hierarchy |
-| `docs/FRONTEND.md` | N/A -- backend MCP server (no frontend) |
-| `docs/PRODUCT_SENSE.md` | Product principles, user personas, domain context |
-| `docs/QUALITY_SCORE.md` | Quality grades per domain, test coverage, improvement paths |
-| `docs/SECURITY.md` | Authentication, secrets management, threat model |
-| `docs/RELIABILITY.md` | Session reliability, circuit breaker, error contract |
-| `docs/PLANS.md` | Plans index linking to exec-plans/ |
+| [docs/DESIGN.md](docs/DESIGN.md) | Coding patterns, naming conventions, error hierarchy |
+| [docs/FRONTEND.md](docs/FRONTEND.md) | N/A -- backend MCP server (no frontend) |
+| [docs/PRODUCT_SENSE.md](docs/PRODUCT_SENSE.md) | Product principles, user personas, domain context |
+| [docs/QUALITY_SCORE.md](docs/QUALITY_SCORE.md) | Quality grades per domain, test coverage, improvement paths |
+| [docs/SECURITY.md](docs/SECURITY.md) | Authentication, secrets management, threat model |
+| [docs/RELIABILITY.md](docs/RELIABILITY.md) | Session reliability, circuit breaker, error contract |
+| [docs/PLANS.md](docs/PLANS.md) | Plans index linking to exec-plans/ |
 
-### Domain Knowledge (`docs/`)
+### Domain Knowledge (`docs/howto/`)
 
 | File | Purpose |
 |------|---------|
-| `docs/README.md` | Documentation index (full map) |
-| `docs/00-setup-operations.md` | Environment setup, authentication, session management |
-| `docs/01-data-catalog.md` | Data catalog (products, inventory, orders, accounting) |
-| `docs/02-entity-relationship.md` | ERD, entity relationships, code systems |
-| `docs/03-business-workflow.md` | End-to-end: purchase -> logistics -> inventory -> sales -> accounting |
-| `docs/04-tool-reference.md` | MCP tool reference + internal API endpoints |
-| `docs/05-api-coverage-gap.md` | API coverage gap analysis (~80% coverage) |
-| `docs/07-internal-api-reverse-engineering.md` | Internal Web API reverse engineering (__$KeyPack) |
-| `docs/08-v3-mcp-coverage.md` | V3 system MCP implementation coverage |
+| [docs/README.md](docs/README.md) | Documentation index (full map) |
+| [docs/howto/00-setup-operations.md](docs/howto/00-setup-operations.md) | Environment setup, authentication, session management |
+| [docs/howto/01-data-catalog.md](docs/howto/01-data-catalog.md) | Data catalog (products, inventory, orders, accounting) |
+| [docs/howto/02-entity-relationship.md](docs/howto/02-entity-relationship.md) | ERD, entity relationships, code systems |
+| [docs/howto/03-business-workflow.md](docs/howto/03-business-workflow.md) | End-to-end: purchase -> logistics -> inventory -> sales -> accounting |
+| [docs/howto/04-tool-reference.md](docs/howto/04-tool-reference.md) | MCP tool reference + internal API endpoints |
+| [docs/howto/05-api-coverage-gap.md](docs/howto/05-api-coverage-gap.md) | API coverage gap analysis (~80% coverage) |
+| [docs/howto/07-internal-api-reverse-engineering.md](docs/howto/07-internal-api-reverse-engineering.md) | Internal Web API reverse engineering (__$KeyPack) |
+| [docs/howto/08-v3-mcp-coverage.md](docs/howto/08-v3-mcp-coverage.md) | V3 system MCP implementation coverage |
 
 ### Architecture Decisions (`docs/design-docs/`)
 
 | File | Purpose |
 |------|---------|
-| `docs/design-docs/index.md` | Design docs index |
-| `docs/design-docs/layer-rules.md` | Import directions, forbidden patterns |
-| `docs/design-docs/core-beliefs.md` | Agent-first operating principles |
+| [docs/design-docs/index.md](docs/design-docs/index.md) | Design docs index |
+| [docs/design-docs/layer-rules.md](docs/design-docs/layer-rules.md) | Import directions, forbidden patterns |
+| [docs/design-docs/core-beliefs.md](docs/design-docs/core-beliefs.md) | Agent-first operating principles |
 
 ### Execution & Specs
 
@@ -145,10 +99,10 @@ Wraps ECOUNT ERP Open API + Internal Web API for LLM access via MCP protocol.
 |-----------|---------|
 | `docs/exec-plans/active/` | In-progress execution plans |
 | `docs/exec-plans/completed/` | Completed execution plans |
-| `docs/exec-plans/tech-debt-tracker.md` | Known technical debt items |
+| [docs/exec-plans/tech-debt-tracker.md](docs/exec-plans/tech-debt-tracker.md) | Known technical debt items |
 | `docs/product-specs/` | Product specifications and feature requirements |
 | `docs/references/` | External references (LLM docs, design system refs) |
-| `docs/generated/db-schema.md` | ERP entity map (no local DB) |
+| [docs/generated/db-schema.md](docs/generated/db-schema.md) | ERP entity map (no local DB) |
 
 ## Agent Operating Rules
 
@@ -159,13 +113,3 @@ Wraps ECOUNT ERP Open API + Internal Web API for LLM access via MCP protocol.
 5. **Zod validates all inputs** -- no raw `process.env` outside config.ts
 6. **Test every change** -- `npm test` before committing
 7. **Read before writing** -- consult docs/ for domain context before making changes
-
-## Quick Commands
-
-```bash
-npm run build    # TypeScript compile
-npm test         # Vitest tests
-npm run lint     # Type check (tsc --noEmit)
-npm run dev      # Watch mode (tsx)
-npm start        # Run built server
-```

@@ -30,8 +30,8 @@
 
 | 문서 | 내용 |
 |------|------|
-| [03-business-workflow.md](03-business-workflow.md) | **업무 플로우 (End-to-End)** -- 구매->물류->재고->판매->회계 전체 사이클 |
-| [01-data-catalog.md](01-data-catalog.md) | **데이터 카탈로그** -- 품목 29건, 재고 1,358톤, 발주 30건, 판매 622건, 구매 261건, 회계 1,609건, 세금계산서 147건 |
+| [howto/03-business-workflow.md](howto/03-business-workflow.md) | **업무 플로우 (End-to-End)** -- 구매->물류->재고->판매->회계 전체 사이클 |
+| [howto/01-data-catalog.md](howto/01-data-catalog.md) | **데이터 카탈로그** -- 품목 29건, 재고 1,358톤, 발주 30건, 판매 622건, 구매 261건, 회계 1,609건, 세금계산서 147건 |
 
 ---
 
