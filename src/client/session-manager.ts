@@ -1,6 +1,6 @@
 import { logger } from "../utils/logger.js";
 import { NetworkError, EcountApiError } from "../utils/error-handler.js";
-import { apiHostPrefix, type EcountConfig } from "../config.js";
+import { apiHostPrefix, HTTP_TIMEOUT_MS, type EcountConfig } from "../config.js";
 import type { EcountResponse, EcountLoginData } from "./types.js";
 
 // Session expiry error codes (to be confirmed in Phase 2.5)
@@ -44,7 +44,7 @@ export class SessionManager {
           LAN_TYPE: this.config.ECOUNT_LAN_TYPE,
           ZONE: this.config.ECOUNT_ZONE,
         }),
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(HTTP_TIMEOUT_MS),
       });
     } catch (error) {
       throw new NetworkError(

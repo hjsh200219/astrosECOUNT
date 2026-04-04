@@ -2,8 +2,8 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { formatResponse } from "../utils/response-formatter.js";
 import { handleToolError } from "../utils/error-handler.js";
-import { listExchangeRates } from "./exchange-rate.js";
-import { listShipments } from "./shipment-tracking.js";
+import { nowIso } from "../utils/date-helpers.js";
+import { listShipments } from "../utils/shipment-store.js";
 
 export interface SubsystemHealth {
   name: string;
@@ -16,10 +16,6 @@ export interface HealthReport {
   overall: "healthy" | "degraded" | "unhealthy";
   subsystems: SubsystemHealth[];
   checkedAt: string;
-}
-
-function nowIso(): string {
-  return new Date().toISOString();
 }
 
 function checkOpenApi(): SubsystemHealth {
@@ -49,25 +45,6 @@ function checkCircuitBreaker(): SubsystemHealth {
   };
 }
 
-async function checkExchangeRates(): Promise<SubsystemHealth> {
-  const ratesResult = await listExchangeRates();
-  const totalCount = ratesResult.manual.length + ratesResult.market.length + ratesResult.customs.length;
-  if (totalCount === 0) {
-    return {
-      name: "exchangeRates",
-      status: "degraded",
-      message: "환율 데이터 없음 — ecount_set_exchange_rate로 등록 필요",
-      checkedAt: nowIso(),
-    };
-  }
-  return {
-    name: "exchangeRates",
-    status: "ok",
-    message: `환율 데이터 정상 — ${totalCount}개 통화 등록됨`,
-    checkedAt: nowIso(),
-  };
-}
-
 function checkShipments(): SubsystemHealth {
   const shipments = listShipments();
   if (shipments.length === 0) {
@@ -92,13 +69,11 @@ function deriveOverall(subsystems: SubsystemHealth[]): HealthReport["overall"] {
   return "healthy";
 }
 
-export async function checkHealth(): Promise<HealthReport> {
-  const exchangeRatesHealth = await checkExchangeRates();
+export function checkHealth(): HealthReport {
   const subsystems: SubsystemHealth[] = [
     checkOpenApi(),
     checkInternalApi(),
     checkCircuitBreaker(),
-    exchangeRatesHealth,
     checkShipments(),
   ];
 
@@ -112,7 +87,7 @@ export async function checkHealth(): Promise<HealthReport> {
 export function registerHealthCheckTools(server: McpServer): void {
   server.tool(
     "ecount_health_check",
-    "L1 인프라 헬스 체크 — API 연결성, 세션 상태, 서킷 브레이커, 환율/선적 데이터 가용성을 확인합니다.",
+    "L1 인프라 헬스 체크 — API 연결성, 세션 상태, 서킷 브레이커, 선적 데이터 가용성을 확인합니다.",
     {},
     { readOnlyHint: true },
     async () => {

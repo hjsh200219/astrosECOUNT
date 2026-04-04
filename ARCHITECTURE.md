@@ -1,7 +1,7 @@
 # Architecture -- astrosECOUNT
 
 > ECOUNT ERP Open API MCP Server
-> TypeScript (ESM, strict) | Node >= 18 | MCP SDK v1.27.1
+> TypeScript (ESM, strict) | Node >= 18 | MCP SDK v1.28
 
 ## System Overview
 
@@ -14,10 +14,10 @@ LLM (Claude Desktop/Code)
   v
 McpServer (src/server.ts)
   |
-  +-- registerAllTools() --> 43 tool modules (src/tools/*)
+  +-- registerAllTools() --> 40 tool modules (src/tools/*)
   |     +-- Category A: ERP CRUD (via EcountClient)
   |     +-- Category B: Standalone utilities (no ERP dependency)
-  |     +-- Category B+: Data utilities (persistence, no EcountClient)
+  |     +-- Category B+: Data utilities (stores, no EcountClient)
   |
   +-- EcountClient (src/client/ecount-client.ts)
   |     +-- SessionManager (Open API, API_CERT_KEY auth)
@@ -36,21 +36,19 @@ McpServer (src/server.ts)
 | **Entry** | `src/index.ts`, `src/server.ts` | Stdio transport, McpServer creation |
 | **Config** | `src/config.ts` | Zod-validated env vars (Open API + Internal API) |
 | **Client** | `src/client/*` (8 files) | HTTP client, session mgmt, circuit breaker, KeyPack |
-| **Tools** | `src/tools/*` (43 modules + index + factory) | MCP tool definitions, tool-factory pattern |
-| **Services** | `src/services/*` (13 files) | External service clients (exchange-rate, unipass customs) |
-| **Utils** | `src/utils/*` (14 files) | Error handling, response formatting, renderers, logging, persistence |
+| **Tools** | `src/tools/*` (40 modules + index + factory) | MCP tool definitions, tool-factory pattern |
+| **Utils** | `src/utils/*` (23 files) | Error handling, response formatting, renderers, logging, stores |
 | **Types** | `src/types/*` (1 file) | Type declarations (popbill) |
-| **Tests** | `tests/*` (68 files) | Vitest unit/integration/e2e tests (mirrors src/) |
+| **Tests** | `tests/*` (71 files) | Vitest unit/integration/e2e tests (mirrors src/) |
 | **Docs** | `docs/*` | Domain knowledge, API docs, architecture decisions |
 
 ## Layer Structure
 
 ```
 Layer 0: Entry        src/index.ts --> src/server.ts
-Layer 1: Tools        src/tools/*  (43 modules)
+Layer 1: Tools        src/tools/*  (40 modules)
 Layer 2: Client       src/client/*  (EcountClient, SessionManager, InternalApiClient)
-         Services     src/services/*  (exchange-rate, unipass customs API)
-Layer 3: Utils        src/utils/*  (error-handler, response-formatter, renderers, logger, persistence)
+Layer 3: Utils        src/utils/*  (error-handler, response-formatter, renderers, logger, stores)
 Layer 4: Config       src/config.ts
 Layer 5: External     @modelcontextprotocol/sdk, zod, pdf-lib
 ```
@@ -93,13 +91,13 @@ No upward imports. Tools must not import other tools.
 |-----------|-----------|
 | Language | TypeScript (ESM, strict mode) |
 | Runtime | Node.js >= 18 |
-| Protocol | MCP SDK v1.27.1 (StdioServerTransport) |
-| Validation | Zod v3.25 |
+| Protocol | MCP SDK v1.28 (StdioServerTransport) |
+| Validation | Zod v4 |
 | PDF | pdf-lib v1.17.1 |
-| Test | Vitest v3 |
+| Test | Vitest v4 |
 | Dev | tsx (TypeScript execution) |
 
-## Tool Categories (43 modules)
+## Tool Categories (40 modules)
 
 | Category | Modules | Examples |
 |----------|---------|---------|
@@ -110,6 +108,6 @@ No upward imports. Tools must not import other tools.
 | Inventory | inventory.ts | Stock status, in/out, transfers |
 | Production | production.ts | Work orders, BOM |
 | Accounting | accounting.ts | Journals, ledgers, AR/AP |
-| Utilities | bl-parser, contacts, contracts, etc. | B/L parsing, exchange rates, PDF stamps |
+| Utilities | bl-parser, contacts, contracts, etc. | B/L parsing, PDF stamps, diagrams |
 | Internal API | internal-api.ts | V5 web API access |
 | Data Utils | inventory-verify, csv-export, daily-report | Verification, export, reporting |

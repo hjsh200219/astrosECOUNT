@@ -70,9 +70,9 @@ describe("MCP Server E2E", () => {
   // ── Protocol handshake ──
 
   describe("Protocol handshake", () => {
-    it("should complete initialize and list 108 tools", async () => {
+    it("should complete initialize and list 85 tools", async () => {
       const result = await client.listTools();
-      expect(result.tools.length).toBe(108);
+      expect(result.tools.length).toBe(85);
     });
 
     it("should have unique tool names", async () => {
@@ -81,10 +81,10 @@ describe("MCP Server E2E", () => {
       expect(new Set(names).size).toBe(names.length);
     });
 
-    it("should prefix all tools with ecount_ or unipass_", async () => {
+    it("should prefix all tools with ecount_", async () => {
       const result = await client.listTools();
       for (const tool of result.tools) {
-        expect(tool.name).toMatch(/^(ecount_|unipass_)/);
+        expect(tool.name).toMatch(/^ecount_/);
       }
     });
 
@@ -256,57 +256,6 @@ describe("MCP Server E2E", () => {
       const result = await client.callTool({
         name: "ecount_render_email",
         arguments: { id: "NONEXISTENT", data: {} },
-      });
-      expect(result.isError).toBeFalsy();
-      const data = parseResult(result) as { found: boolean };
-      expect(data.found).toBe(false);
-    });
-  });
-
-  describe("Exchange Rate", () => {
-    it("should set and get exchange rate", async () => {
-      // Set rate
-      const setResult = await client.callTool({
-        name: "ecount_set_exchange_rate",
-        arguments: { currency: "USD", rate: 1350.5 },
-      });
-      expect(setResult.isError).toBeFalsy();
-      const setData = parseResult(setResult) as { success: boolean; exchangeRate: { rate: number } };
-      expect(setData.success).toBe(true);
-
-      // Get rate
-      const getResult = await client.callTool({
-        name: "ecount_get_exchange_rate",
-        arguments: { currency: "USD" },
-      });
-      expect(getResult.isError).toBeFalsy();
-      const getData = parseResult(getResult) as { found: boolean; exchangeRate: { rate: number } };
-      expect(getData.found).toBe(true);
-      expect(getData.exchangeRate.rate).toBe(1350.5);
-    });
-
-    it("should convert currency to KRW", async () => {
-      // Ensure rate is set
-      await client.callTool({
-        name: "ecount_set_exchange_rate",
-        arguments: { currency: "USD", rate: 1350 },
-      });
-
-      const result = await client.callTool({
-        name: "ecount_convert_currency",
-        arguments: { amount: 100, currency: "USD" },
-      });
-      expect(result.isError).toBeFalsy();
-      const data = parseResult(result) as { found: boolean; krw: number; rate: number; amount: number };
-      expect(data.found).toBe(true);
-      expect(data.krw).toBe(135000);
-      expect(data.rate).toBe(1350);
-    });
-
-    it("should return found=false for unknown currency", async () => {
-      const result = await client.callTool({
-        name: "ecount_convert_currency",
-        arguments: { amount: 100, currency: "ZZZ" },
       });
       expect(result.isError).toBeFalsy();
       const data = parseResult(result) as { found: boolean };

@@ -1,6 +1,6 @@
 import { logger } from "../utils/logger.js";
 import { NetworkError, EcountApiError } from "../utils/error-handler.js";
-import type { InternalApiConfig } from "../config.js";
+import { HTTP_TIMEOUT_MS, type InternalApiConfig } from "../config.js";
 import type { EcountResponse } from "./types.js";
 
 /** Session expiry error codes for internal API */
@@ -68,7 +68,7 @@ export class InternalApiSession {
           USER_PW: this.config.ECOUNT_WEB_PW,
           ZONE: this.config.ECOUNT_ZONE,
         }),
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(HTTP_TIMEOUT_MS),
       });
     } catch (error) {
       throw new NetworkError(

@@ -14,7 +14,7 @@ describe("Server Integration", () => {
   });
 
   describe("createServer", () => {
-    it("should create server and register all 108 tools with valid config", async () => {
+    it("should create server and register all 85 tools with valid config", async () => {
       process.env.ECOUNT_COM_CODE = "TESTCO";
       process.env.ECOUNT_USER_ID = "testuser";
       process.env.ECOUNT_API_CERT_KEY = "testkey123";
@@ -55,17 +55,16 @@ describe("Server Integration", () => {
       // 3 connection + 4 master-data + 3 sales + 2 purchase
       // + 4 inventory + 3 production + 1 accounting + 2 other + 1 board
       // + 1 bl-parser + 2 contacts + 3 business-rules + 1 pdf-stamp
-      // + 3 email-templates + 7 exchange-rate + 7 shipment-tracking
+      // + 3 email-templates + 6 shipment-tracking
       // + 1 logistics-kpi + 4 contracts + 4 internal-api
       // + 2 inventory-verify + 3 stale-shipments + 1 csv-export + 2 daily-report
       // + 1 health-check + 1 data-integrity + 1 document-status
-      // + 2 adjust-inventory + 2 customs-cost = 70
+      // + 2 adjust-inventory + 2 customs-cost = 65
       // + 3 receivables + 3 payables + 1 weight-settlement
-      // + 2 inventory-lifecycle + 3 financial-statements + 1 margin-analysis = 81
-      // + 1 dashboard + 1 pdf-export + 3 fax + 2 import-meat-trace = 88
-      // + 1 diagram + 1 map + 1 presentation + 1 3d = 92
-      // + 13 unipass = 108 (note: exchange-rate 5→7, shipment-tracking 6→7)
-      expect(toolSpy).toHaveBeenCalledTimes(108);
+      // + 2 inventory-lifecycle + 3 financial-statements + 1 margin-analysis = 76
+      // + 1 dashboard + 1 pdf-export + 3 fax = 81
+      // + 1 diagram + 1 map + 1 presentation + 1 3d = 85
+      expect(toolSpy).toHaveBeenCalledTimes(85);
     });
 
     it("should verify all 8 tool categories are registered", async () => {
@@ -148,11 +147,6 @@ describe("Server Integration", () => {
       expect(toolNames).toContain("ecount_get_email_template");
       expect(toolNames).toContain("ecount_render_email");
 
-      // Exchange rate tools
-      expect(toolNames).toContain("ecount_get_exchange_rate");
-      expect(toolNames).toContain("ecount_set_exchange_rate");
-      expect(toolNames).toContain("ecount_convert_currency");
-
       // Shipment tracking tools
       expect(toolNames).toContain("ecount_add_shipment");
       expect(toolNames).toContain("ecount_list_shipments");
@@ -194,9 +188,6 @@ describe("Server Integration", () => {
       expect(toolNames).toContain("ecount_get_fax_status");
       expect(toolNames).toContain("ecount_list_fax_history");
 
-      // Import meat trace tools (public API)
-      expect(toolNames).toContain("ecount_search_import_meat");
-      expect(toolNames).toContain("ecount_lookup_meat_by_bl");
     });
 
     it("should start gracefully without config (no tools registered)", async () => {
@@ -241,7 +232,7 @@ describe("Server Integration", () => {
       expect(uniqueNames.size).toBe(toolNames.length);
     });
 
-    it("should prefix all tools with 'ecount_' or 'unipass_'", async () => {
+    it("should prefix all tools with 'ecount_'", async () => {
       const server = new McpServer({ name: "prefix-test", version: "0.1" });
       const toolNames: string[] = [];
       vi.spyOn(server, "tool").mockImplementation((...args: unknown[]) => {
@@ -264,7 +255,7 @@ describe("Server Integration", () => {
       registerAllTools(server, client);
 
       for (const name of toolNames) {
-        expect(name).toMatch(/^(ecount_|unipass_)/);
+        expect(name).toMatch(/^ecount_/);
       }
     });
   });

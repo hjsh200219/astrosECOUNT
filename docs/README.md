@@ -41,7 +41,7 @@
 |------|------|
 | [howto/00-setup-operations.md](howto/00-setup-operations.md) | 환경 설정, 인증 (Open API + 내부 API), 세션 관리 |
 | [howto/02-entity-relationship.md](howto/02-entity-relationship.md) | ERD, 엔티티 관계, 코드 체계 (거래처/창고/프로젝트) |
-| [howto/04-tool-reference.md](howto/04-tool-reference.md) | MCP 도구 43모듈 + 시스템 아키텍처 + 내부 API V5 9개 엔드포인트 |
+| [howto/04-tool-reference.md](howto/04-tool-reference.md) | MCP 도구 40모듈 + 시스템 아키텍처 + 내부 API V5 9개 엔드포인트 |
 | [howto/05-api-coverage-gap.md](howto/05-api-coverage-gap.md) | API 커버리지 갭 분석 + 내부 API로 해소된 갭 (**~80%** 커버리지) |
 
 ---
@@ -54,6 +54,20 @@
 | [howto/08-v3-mcp-coverage.md](howto/08-v3-mcp-coverage.md) | V3 시스템 구성안 MCP 구현 커버리지 분석 |
 | [howto/09-v5-mcp-coverage.html](howto/09-v5-mcp-coverage.html) | V5 시스템 MCP 구현 커버리지 분석 |
 | [references/ECOUNT_Open_API_Documentation.md](references/ECOUNT_Open_API_Documentation.md) | ECOUNT 공식 Open API 문서 |
+| [howto/10-public-data-setup-guide.md](howto/10-public-data-setup-guide.md) | **public-data MCP 설치 가이드** (초보자용) — Claude/ChatGPT/Cursor 연결 방법 |
+
+---
+
+## 외부 MCP — korea-public-data-mcp
+
+환율 조회, 관세청 유니패스, 축산물 이력추적 기능은 이 프로젝트에서 **의도적으로 제거**되었습니다.
+해당 기능이 필요하면 **korea-public-data-mcp**를 호출하세요.
+
+- 관세환율 / 시장환율 조회
+- 관세청 유니패스 (통관진행, 화물추적, HS부호, 관세율 등 51개 API)
+- 축산물 이력추적 (MAFRA)
+
+설치 가이드: [howto/10-public-data-setup-guide.md](howto/10-public-data-setup-guide.md)
 
 ---
 

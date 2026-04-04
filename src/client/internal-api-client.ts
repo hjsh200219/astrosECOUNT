@@ -1,5 +1,6 @@
 import { logger } from "../utils/logger.js";
 import { NetworkError, EcountApiError } from "../utils/error-handler.js";
+import { HTTP_TIMEOUT_MS } from "../config.js";
 import { KeyPackEncoder, KeyPackV2Decoder } from "./keypack.js";
 import type { InternalApiSession } from "./internal-session.js";
 import type { CircuitBreaker } from "./circuit-breaker.js";
@@ -79,7 +80,7 @@ export class InternalApiClient {
           "X-KeyPack-Version": KEYPACK_VERSION,
         },
         body: `__$KeyPack=${encodeURIComponent(encodedParams)}`,
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(HTTP_TIMEOUT_MS),
       });
     } catch (error) {
       throw new NetworkError(

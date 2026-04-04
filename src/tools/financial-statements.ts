@@ -3,9 +3,9 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { formatResponse } from "../utils/response-formatter.js";
 import { handleToolError } from "../utils/error-handler.js";
-import { payments, receivableContracts } from "./receivables.js";
-import { paymentOuts, payableContracts } from "./payables.js";
-import { transitions } from "./inventory-lifecycle.js";
+import { payments, receivableContracts } from "../utils/receivable-store.js";
+import { paymentOuts, payableContracts } from "../utils/payable-store.js";
+import { transitions } from "../utils/inventory-transition-store.js";
 
 export { receivableContracts, payableContracts };
 
@@ -57,19 +57,15 @@ export function generateSubuibu(params: {
     filtered = filtered.filter((t) => products.includes(t.product));
   }
 
-  // 기초미착품: items in 미착 stage at period start (transitions to 미착 before period, not yet transitioned out)
   const beforePeriod = filtered.filter((t) => isBeforePeriod(t.timestamp, period));
   const inPeriod = filtered.filter((t) => isInPeriod(t.timestamp, period));
 
-  // Count items that entered 미착 before period
   const enteredMichak = beforePeriod.filter((t) => t.toStage === "미착").reduce((sum, t) => sum + t.quantity, 0);
   const leftMichakBefore = beforePeriod.filter((t) => t.fromStage === "미착").reduce((sum, t) => sum + t.quantity, 0);
   const 기초미착품 = Math.max(0, enteredMichak - leftMichakBefore);
 
-  // 당기입고: transitions to 상품 during period (도착→상품)
   const 당기입고 = inPeriod.filter((t) => t.toStage === "상품").reduce((sum, t) => sum + t.quantity, 0);
 
-  // 기말미착품: items in 미착 stage at period end
   const allUpToPeriodEnd = filtered.filter(
     (t) => isBeforePeriod(t.timestamp, period) || isInPeriod(t.timestamp, period),
   );
@@ -77,12 +73,10 @@ export function generateSubuibu(params: {
   const totalLeftMichak = allUpToPeriodEnd.filter((t) => t.fromStage === "미착").reduce((sum, t) => sum + t.quantity, 0);
   const 기말미착품 = Math.max(0, totalEnteredMichak - totalLeftMichak);
 
-  // 상품재고: items currently in 상품 stage at period end
   const totalEnteredSangpum = allUpToPeriodEnd.filter((t) => t.toStage === "상품").reduce((sum, t) => sum + t.quantity, 0);
   const totalLeftSangpum = allUpToPeriodEnd.filter((t) => t.fromStage === "상품").reduce((sum, t) => sum + t.quantity, 0);
   const 상품재고 = Math.max(0, totalEnteredSangpum - totalLeftSangpum);
 
-  // 매출원가: transitions to 판매완료 during period (상품→판매완료)
   const 매출원가 = inPeriod.filter((t) => t.toStage === "판매완료").reduce((sum, t) => sum + t.quantity, 0);
 
   return { period, 기초미착품, 당기입고, 기말미착품, 상품재고, 매출원가 };
@@ -99,7 +93,6 @@ export function generatePnl(params: {
   const sgaExpenses = params.sgaExpenses ?? 0;
   const financialExpenses = params.financialExpenses ?? 0;
 
-  // COGS from transitions: 상품→판매완료 in period
   const allTransitions = Array.from(transitions.values());
   const cogs = allTransitions
     .filter((t) => t.toStage === "판매완료" && t.timestamp >= periodFrom && t.timestamp <= periodTo + "T23:59:59Z")
@@ -115,12 +108,10 @@ export function analyzeCashflow(params: { asOfDate?: string }): CashflowResult {
   const asOfDate = params.asOfDate || new Date().toISOString().slice(0, 10);
   const now = new Date(asOfDate);
 
-  // Advance payments: paymentOuts with type 'advance'
   const advancePayments = Array.from(paymentOuts.values())
     .filter((p) => p.type === "advance")
     .reduce((sum, p) => sum + p.amount, 0);
 
-  // On-time payments: receivable payments made before due date
   let onTimePayments = 0;
   for (const payment of payments.values()) {
     const contract = receivableContracts.get(payment.contractId);
@@ -129,7 +120,6 @@ export function analyzeCashflow(params: { asOfDate?: string }): CashflowResult {
     }
   }
 
-  // Overdue receivables: contracts past due with outstanding balance
   let overdueReceivables = 0;
   for (const contract of receivableContracts.values()) {
     if (new Date(contract.dueDate) < now) {
@@ -137,22 +127,17 @@ export function analyzeCashflow(params: { asOfDate?: string }): CashflowResult {
         .filter((p) => p.contractId === contract.contractId)
         .reduce((sum, p) => sum + p.amount, 0);
       const outstanding = contract.totalAmount - paid;
-      if (outstanding > 0) {
-        overdueReceivables += outstanding;
-      }
+      if (outstanding > 0) overdueReceivables += outstanding;
     }
   }
 
-  // Outstanding payables: total unpaid across all payable contracts
   let outstandingPayables = 0;
   for (const contract of payableContracts.values()) {
     const paid = Array.from(paymentOuts.values())
       .filter((p) => p.contractId === contract.contractId)
       .reduce((sum, p) => sum + p.amount, 0);
     const outstanding = contract.totalAmount - paid;
-    if (outstanding > 0) {
-      outstandingPayables += outstanding;
-    }
+    if (outstanding > 0) outstandingPayables += outstanding;
   }
 
   return { advancePayments, onTimePayments, overdueReceivables, outstandingPayables, asOfDate };
@@ -186,7 +171,7 @@ export function registerFinancialStatementsTools(server: McpServer): void {
     {
       periodFrom: z.string().describe("시작일 (YYYY-MM-DD)"),
       periodTo: z.string().describe("종료일 (YYYY-MM-DD)"),
-      revenue: z.number().nonnegative().describe("매출액 (AI 에이전트가 ECOUNT 매출전표에서 산출)"),
+      revenue: z.number().nonnegative().describe("매출액"),
       sgaExpenses: z.number().nonnegative().optional().describe("판관비 (기본값: 0)"),
       financialExpenses: z.number().nonnegative().optional().describe("금융비용 (기본값: 0)"),
     },

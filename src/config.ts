@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+/** HTTP request timeout shared across all API clients (ms) */
+export const HTTP_TIMEOUT_MS = 30_000;
+
+/** Circuit breaker reset timeout (ms) */
+export const CIRCUIT_BREAKER_RESET_MS = 30_000;
+
 const envSchema = z.object({
   ECOUNT_COM_CODE: z.string().min(1, "ECOUNT_COM_CODE is required"),
   ECOUNT_USER_ID: z.string().min(1, "ECOUNT_USER_ID is required"),
@@ -69,21 +75,6 @@ export function loadPopbillConfig(): PopbillConfig | null {
     POPBILL_IS_TEST: process.env.POPBILL_IS_TEST !== "false",
     POPBILL_CORP_NUM: corpNum,
   };
-}
-
-/** MAFRA (농림축산식품부) Open API config (optional — requires MAFRA_API_KEY) */
-export interface MafraConfig {
-  MAFRA_API_KEY: string;
-}
-
-/**
- * Load MAFRA config from environment.
- * Returns null if MAFRA_API_KEY is not set.
- */
-export function loadMafraConfig(): MafraConfig | null {
-  const apiKey = process.env.MAFRA_API_KEY?.trim();
-  if (!apiKey) return null;
-  return { MAFRA_API_KEY: apiKey };
 }
 
 export function loadInternalApiConfig(): InternalApiConfig | null {

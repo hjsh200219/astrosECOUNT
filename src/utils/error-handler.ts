@@ -1,6 +1,12 @@
 import { formatError, type McpResponse } from "./response-formatter.js";
 import { logger } from "./logger.js";
-import { CircuitBreakerOpen } from "../client/circuit-breaker.js";
+
+export class CircuitBreakerOpen extends Error {
+  constructor(message = "Circuit breaker is OPEN — 요청이 차단되었습니다. 잠시 후 재시도하세요.") {
+    super(message);
+    this.name = "CircuitBreakerOpen";
+  }
+}
 
 export class EcountApiError extends Error {
   constructor(

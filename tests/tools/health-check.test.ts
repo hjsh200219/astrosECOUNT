@@ -1,35 +1,26 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import { checkHealth, type HealthReport, type SubsystemHealth } from "../../src/tools/health-check.js";
-import { setExchangeRate } from "../../src/tools/exchange-rate.js";
 
 describe("checkHealth", () => {
-  beforeEach(() => {
-    // Seed manual overrides so exchange rate check passes
-    setExchangeRate("USD", 1350, "manual");
-    setExchangeRate("BRL", 270, "manual");
-    setExchangeRate("EUR", 1470, "manual");
-  });
-
-  it("should return a HealthReport with all required subsystems", async () => {
-    const report = await checkHealth();
+  it("should return a HealthReport with all required subsystems", () => {
+    const report = checkHealth();
     expect(report).toHaveProperty("overall");
     expect(report).toHaveProperty("subsystems");
     expect(report).toHaveProperty("checkedAt");
     expect(Array.isArray(report.subsystems)).toBe(true);
   });
 
-  it("should include openApi, internalApi, circuitBreaker, exchangeRates, shipments subsystems", async () => {
-    const report = await checkHealth();
+  it("should include openApi, internalApi, circuitBreaker, shipments subsystems", () => {
+    const report = checkHealth();
     const names = report.subsystems.map((s) => s.name);
     expect(names).toContain("openApi");
     expect(names).toContain("internalApi");
     expect(names).toContain("circuitBreaker");
-    expect(names).toContain("exchangeRates");
     expect(names).toContain("shipments");
   });
 
-  it("each subsystem should have name, status, message, checkedAt", async () => {
-    const report = await checkHealth();
+  it("each subsystem should have name, status, message, checkedAt", () => {
+    const report = checkHealth();
     for (const sub of report.subsystems) {
       expect(sub).toHaveProperty("name");
       expect(sub).toHaveProperty("status");
@@ -39,17 +30,16 @@ describe("checkHealth", () => {
     }
   });
 
-  it("overall should be 'healthy' when all subsystems are ok", async () => {
-    const report = await checkHealth();
+  it("overall should be 'healthy' when all subsystems are ok", () => {
+    const report = checkHealth();
     const allOk = report.subsystems.every((s) => s.status === "ok");
     if (allOk) {
       expect(report.overall).toBe("healthy");
     }
   });
 
-  it("overall should be 'degraded' when any subsystem is degraded and none is down", async () => {
-    // exchange rates always exist (defaulted), shipments map starts empty → degraded
-    const report = await checkHealth();
+  it("overall should be 'degraded' when any subsystem is degraded and none is down", () => {
+    const report = checkHealth();
     const hasDegraded = report.subsystems.some((s) => s.status === "degraded");
     const hasDown = report.subsystems.some((s) => s.status === "down");
     if (hasDegraded && !hasDown) {
@@ -57,52 +47,44 @@ describe("checkHealth", () => {
     }
   });
 
-  it("overall should be 'unhealthy' when any subsystem is down", async () => {
-    const report = await checkHealth();
+  it("overall should be 'unhealthy' when any subsystem is down", () => {
+    const report = checkHealth();
     const hasDown = report.subsystems.some((s) => s.status === "down");
     if (hasDown) {
       expect(report.overall).toBe("unhealthy");
     }
   });
 
-  it("checkedAt on HealthReport should be a valid ISO string", async () => {
-    const report = await checkHealth();
+  it("checkedAt on HealthReport should be a valid ISO string", () => {
+    const report = checkHealth();
     expect(report.checkedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });
 
-  it("checkedAt on each SubsystemHealth should be a valid ISO string", async () => {
-    const report = await checkHealth();
+  it("checkedAt on each SubsystemHealth should be a valid ISO string", () => {
+    const report = checkHealth();
     for (const sub of report.subsystems) {
       expect(sub.checkedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     }
   });
 
-  it("exchangeRates subsystem is 'ok' because default rates exist", async () => {
-    const report = await checkHealth();
-    const er = report.subsystems.find((s) => s.name === "exchangeRates");
-    expect(er).toBeDefined();
-    expect(er!.status).toBe("ok");
-  });
-
-  it("shipments subsystem is 'degraded' when no shipments registered", async () => {
-    const report = await checkHealth();
+  it("shipments subsystem is 'degraded' when no shipments registered", () => {
+    const report = checkHealth();
     const sh = report.subsystems.find((s) => s.name === "shipments");
     expect(sh).toBeDefined();
-    // SHIPMENTS map starts empty in test environment
     expect(sh!.status).toBe("degraded");
     expect(sh!.message).toBeTruthy();
   });
 
-  it("openApi subsystem should have a message about connectivity", async () => {
-    const report = await checkHealth();
+  it("openApi subsystem should have a message about connectivity", () => {
+    const report = checkHealth();
     const oa = report.subsystems.find((s) => s.name === "openApi");
     expect(oa).toBeDefined();
     expect(typeof oa!.message).toBe("string");
     expect(oa!.message.length).toBeGreaterThan(0);
   });
 
-  it("circuitBreaker subsystem status should be ok when no failures recorded", async () => {
-    const report = await checkHealth();
+  it("circuitBreaker subsystem status should be ok when no failures recorded", () => {
+    const report = checkHealth();
     const cb = report.subsystems.find((s) => s.name === "circuitBreaker");
     expect(cb).toBeDefined();
     expect(cb!.status).toBe("ok");

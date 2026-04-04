@@ -2,6 +2,8 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { formatResponse } from "../utils/response-formatter.js";
 import { handleToolError } from "../utils/error-handler.js";
+import { nowIso } from "../utils/date-helpers.js";
+import { generateId } from "../utils/id-generator.js";
 
 export interface InventoryAdjustment {
   id: string;
@@ -19,15 +21,6 @@ export interface AdjustmentFilter {
 }
 
 const ADJUSTMENTS: Map<string, InventoryAdjustment> = new Map();
-let idCounter = 1;
-
-function nowIso(): string {
-  return new Date().toISOString();
-}
-
-function generateId(): string {
-  return `ADJ-${Date.now()}-${idCounter++}`;
-}
 
 export function adjustInventory(
   data: Omit<InventoryAdjustment, "id" | "createdAt">
@@ -40,7 +33,7 @@ export function adjustInventory(
   }
   const adjustment: InventoryAdjustment = {
     ...data,
-    id: generateId(),
+    id: generateId("ADJ"),
     createdAt: nowIso(),
   };
   ADJUSTMENTS.set(adjustment.id, adjustment);

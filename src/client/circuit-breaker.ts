@@ -1,4 +1,8 @@
 import { logger } from "../utils/logger.js";
+import { CircuitBreakerOpen } from "../utils/error-handler.js";
+import { CIRCUIT_BREAKER_RESET_MS } from "../config.js";
+
+export { CircuitBreakerOpen };
 
 export type CircuitState = "CLOSED" | "OPEN" | "HALF_OPEN";
 
@@ -9,16 +13,6 @@ export interface CircuitBreakerOptions {
   resetTimeoutMs?: number;
   /** Callback fired on state transitions */
   onStateChange?: (from: CircuitState, to: CircuitState) => void;
-}
-
-/**
- * Error thrown when a call is attempted while the circuit breaker is OPEN.
- */
-export class CircuitBreakerOpen extends Error {
-  constructor(message = "Circuit breaker is OPEN — 요청이 차단되었습니다. 잠시 후 재시도하세요.") {
-    super(message);
-    this.name = "CircuitBreakerOpen";
-  }
 }
 
 /**
@@ -39,7 +33,7 @@ export class CircuitBreaker {
 
   constructor(options?: CircuitBreakerOptions) {
     this.failureThreshold = options?.failureThreshold ?? 3;
-    this.resetTimeoutMs = options?.resetTimeoutMs ?? 30_000;
+    this.resetTimeoutMs = options?.resetTimeoutMs ?? CIRCUIT_BREAKER_RESET_MS;
     this.onStateChange = options?.onStateChange;
   }
 

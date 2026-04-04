@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { formatResponse } from "../utils/response-formatter.js";
 import { handleToolError } from "../utils/error-handler.js";
+import { MS_PER_DAY } from "../utils/date-helpers.js";
 
 export interface ShipmentDoc {
   shipmentId: string;
@@ -76,7 +77,7 @@ export function findOverdueDeliveries(
   for (const sale of sales) {
     if (sale.delivered) continue;
     const saleMs = new Date(sale.saleDate).getTime();
-    const daysPending = Math.floor((now - saleMs) / (1000 * 60 * 60 * 24));
+    const daysPending = Math.floor((now - saleMs) / MS_PER_DAY);
     if (daysPending > maxDays) {
       results.push({
         id: sale.id,
@@ -101,7 +102,7 @@ export function findOverdueCustomsClearance(
     if (s.status !== "arrived") continue;
     if (!s.arrivedAt) continue;
     const arrivedMs = new Date(s.arrivedAt).getTime();
-    const daysPending = Math.floor((now - arrivedMs) / (1000 * 60 * 60 * 24));
+    const daysPending = Math.floor((now - arrivedMs) / MS_PER_DAY);
     if (daysPending > maxDays) {
       results.push({
         id: s.shipmentId,

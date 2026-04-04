@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { formatResponse } from "../utils/response-formatter.js";
 import { handleToolError } from "../utils/error-handler.js";
+import { generateId } from "../utils/id-generator.js";
 
 export interface AdditionalCost {
   name: string;    // e.g., "운송비", "보험료", "하역비"
@@ -31,15 +32,10 @@ export interface LandedCostResult {
 
 const COST_OVERRIDES: Map<string, CostOverride> = new Map();
 
-let _idCounter = 0;
-
-function generateId(): string {
-  return `co-${Date.now()}-${++_idCounter}`;
-}
 
 export function addCostOverride(override: Omit<CostOverride, "id" | "createdAt">): CostOverride {
   const record: CostOverride = {
-    id: generateId(),
+    id: generateId("co"),
     ...override,
     createdAt: new Date().toISOString(),
   };

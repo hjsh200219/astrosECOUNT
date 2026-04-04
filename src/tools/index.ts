@@ -15,7 +15,6 @@ import { registerContactTools } from "./contacts.js";
 import { registerBusinessRuleTools } from "./business-rules.js";
 import { registerPdfStampTool } from "./pdf-stamp.js";
 import { registerEmailTemplateTools } from "./email-templates.js";
-import { registerExchangeRateTools } from "./exchange-rate.js";
 import { registerShipmentTrackingTools } from "./shipment-tracking.js";
 import { registerLogisticsKpiTools } from "./logistics-kpi.js";
 import { registerContractTools } from "./contracts.js";
@@ -38,13 +37,10 @@ import { registerMarginAnalysisTools } from "./margin-analysis.js";
 import { registerDashboardTools } from "./dashboard.js";
 import { registerPdfExportTools } from "./pdf-export.js";
 import { registerFaxTools } from "./fax.js";
-import { registerImportMeatTraceTools } from "./import-meat-trace.js";
 import { registerDiagramTools } from "./diagram.js";
 import { registerMapTools } from "./map.js";
 import { registerPresentationTools } from "./presentation.js";
 import { register3dTools } from "./three-d.js";
-import { registerUnipassTools } from "./unipass.js";
-
 export function registerAllTools(server: McpServer, client: EcountClient, config: EcountConfig): void {
   registerConnectionTools(server, client, config);
   registerMasterDataTools(server, client);
@@ -61,7 +57,6 @@ export function registerAllTools(server: McpServer, client: EcountClient, config
   registerBusinessRuleTools(server);
   registerPdfStampTool(server);
   registerEmailTemplateTools(server);
-  registerExchangeRateTools(server);
   registerShipmentTrackingTools(server);
   registerLogisticsKpiTools(server);
   registerContractTools(server);
@@ -88,15 +83,11 @@ export function registerAllTools(server: McpServer, client: EcountClient, config
   registerDashboardTools(server);
   registerPdfExportTools(server);
   registerFaxTools(server);
-  // Category B tools (public API -- no EcountClient dependency)
-  registerImportMeatTraceTools(server);
   // Category B+ tools (v6 visualization layer)
   registerDiagramTools(server);
   registerMapTools(server);
   registerPresentationTools(server);
   register3dTools(server);
-  // Category B tools (UNI-PASS API -- standalone)
-  registerUnipassTools(server);
   // Category B tools (EcountClient dependency - internal API)
   registerInternalApiTools(server, client);
 }

@@ -2,42 +2,16 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { formatResponse } from "../utils/response-formatter.js";
 import { handleToolError } from "../utils/error-handler.js";
+import {
+  STAGES,
+  type Stage,
+  type InventoryTransition,
+  transitions,
+  addTransition,
+} from "../utils/inventory-transition-store.js";
 
-export const STAGES = ["계약", "미착", "도착", "상품", "판매완료"] as const;
-export type Stage = (typeof STAGES)[number];
-
-export interface InventoryTransition {
-  id: string;
-  shipmentId: string;
-  product: string;
-  fromStage: Stage;
-  toStage: Stage;
-  quantity: number;
-  warehouse?: string;
-  timestamp: string;
-}
-
-export const transitions = new Map<string, InventoryTransition>();
-
-let _idCounter = 0;
-
-function generateId(): string {
-  return `it-${Date.now()}-${++_idCounter}`;
-}
-
-function validateTransition(fromStage: Stage, toStage: Stage): void {
-  const fromIdx = STAGES.indexOf(fromStage);
-  const toIdx = STAGES.indexOf(toStage);
-
-  if (fromIdx === -1 || toIdx === -1) {
-    throw new Error(`유효하지 않은 단계입니다: ${fromStage} → ${toStage}`);
-  }
-  if (toIdx - fromIdx !== 1) {
-    throw new Error(
-      `단계 전환은 순차적이어야 합니다. ${fromStage}(${fromIdx}) → ${toStage}(${toIdx})는 허용되지 않습니다. 유효한 전환: ${STAGES.slice(0, -1).map((s, i) => `${s}→${STAGES[i + 1]}`).join(", ")}`,
-    );
-  }
-}
+export type { Stage, InventoryTransition };
+export { STAGES, transitions };
 
 export function trackInventoryStage(params: {
   shipmentId: string;
@@ -47,20 +21,7 @@ export function trackInventoryStage(params: {
   quantity: number;
   warehouse?: string;
 }): InventoryTransition {
-  validateTransition(params.fromStage, params.toStage);
-
-  const record: InventoryTransition = {
-    id: generateId(),
-    shipmentId: params.shipmentId,
-    product: params.product,
-    fromStage: params.fromStage,
-    toStage: params.toStage,
-    quantity: params.quantity,
-    warehouse: params.warehouse,
-    timestamp: new Date().toISOString(),
-  };
-  transitions.set(record.id, record);
-  return record;
+  return addTransition(params);
 }
 
 export function getInventoryPipeline(params: {
@@ -69,7 +30,6 @@ export function getInventoryPipeline(params: {
 }): { pipeline: { shipmentId: string; product: string; currentStage: Stage; quantity: number; warehouse?: string }[]; totalItems: number } {
   const allTransitions = Array.from(transitions.values());
 
-  // Group by shipmentId+product, find latest stage
   const grouped = new Map<string, InventoryTransition>();
   for (const t of allTransitions) {
     const key = `${t.shipmentId}::${t.product}`;
@@ -87,12 +47,8 @@ export function getInventoryPipeline(params: {
     warehouse: t.warehouse,
   }));
 
-  if (params.product) {
-    pipeline = pipeline.filter((p) => p.product === params.product);
-  }
-  if (params.stage) {
-    pipeline = pipeline.filter((p) => p.currentStage === params.stage);
-  }
+  if (params.product) pipeline = pipeline.filter((p) => p.product === params.product);
+  if (params.stage) pipeline = pipeline.filter((p) => p.currentStage === params.stage);
 
   return { pipeline, totalItems: pipeline.length };
 }

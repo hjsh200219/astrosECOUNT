@@ -1,7 +1,7 @@
 # AGENTS.md -- astrosECOUNT
 
 > ECOUNT ERP Open API MCP Server
-> TypeScript (ESM, strict) | Node >= 18 | MCP SDK v1.27.1 | Zod v3.25 | Vitest
+> TypeScript (ESM, strict) | Node >= 18 | MCP SDK v1.28 | Zod v4 | Vitest v4
 
 ## Project Identity
 
@@ -15,13 +15,25 @@ src/index.ts          Entry point (stdio transport)
 src/server.ts         McpServer factory (config -> client -> tools)
 src/config.ts         Env validation (zod): ECOUNT_COM_CODE, USER_ID, API_CERT_KEY, ZONE
 src/client/           HTTP client, session managers, circuit breaker, KeyPack encoder
-src/tools/            43 MCP tool modules (Category A: ERP CRUD, B: standalone, B+: utilities)
-src/services/         External service clients (exchange-rate, unipass customs API)
-src/utils/            Error handling, response formatting, renderers, logger, persistence
+src/tools/            40 MCP tool modules (Category A: ERP CRUD, B: standalone, B+: utilities)
+src/utils/            Error handling, response formatting, renderers, logger, stores
 src/types/            Type declarations (popbill)
 tests/                Vitest unit tests (mirrors src/ 1:1)
 docs/                 Domain knowledge, API docs, architecture
 ```
+
+## External MCP — korea-public-data-mcp
+
+아래 기능은 이 프로젝트에서 **의도적으로 제거**되었으며, 별도의 `korea-public-data-mcp` 서버에서 제공합니다.
+환율 조회, 관세청 유니패스, 축산물 이력추적 등이 필요하면 **반드시 korea-public-data-mcp를 호출**하세요.
+
+| 기능 | 도구 예시 | MCP 서버 |
+|------|----------|---------|
+| 관세환율 / 시장환율 조회 | `get_customs_exchange_rate`, `get_exchange_rate` | `korea-public-data-mcp` |
+| 관세청 유니패스 (통관/화물/HS부호 등) | `unipass_*` (51개 API) | `korea-public-data-mcp` |
+| 축산물 이력추적 (MAFRA) | `search_meat_trace` | `korea-public-data-mcp` |
+
+설치 가이드: [docs/howto/10-public-data-setup-guide.md](docs/howto/10-public-data-setup-guide.md)
 
 ## Core Invariants
 
@@ -95,6 +107,15 @@ npm run inspector    # MCP Inspector debugging
 | [docs/design-docs/index.md](docs/design-docs/index.md) | Design docs index |
 | [docs/design-docs/layer-rules.md](docs/design-docs/layer-rules.md) | Import directions, forbidden patterns |
 | [docs/design-docs/core-beliefs.md](docs/design-docs/core-beliefs.md) | Agent-first operating principles |
+
+### Harness Engineering (`docs/harness/`)
+
+| File | Purpose |
+|------|---------|
+| [docs/harness/principles.md](docs/harness/principles.md) | 12 harness principles, scoring criteria, checklists |
+| [docs/harness/maturity-framework.md](docs/harness/maturity-framework.md) | L1-L5 maturity tiers, 4-dimension weighted scoring |
+| [docs/harness/fix-catalog.md](docs/harness/fix-catalog.md) | Principle × score range → remediation actions |
+| [docs/harness/gc-history.md](docs/harness/gc-history.md) | GC run history, maturity trend tracking |
 
 ### Execution & Specs
 

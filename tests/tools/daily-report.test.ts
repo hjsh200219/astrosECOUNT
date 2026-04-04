@@ -1,14 +1,6 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import { generateDailyReport, generateDiagnosticReport } from "../../src/tools/daily-report.js";
 import { addShipment } from "../../src/tools/shipment-tracking.js";
-import { setExchangeRate } from "../../src/tools/exchange-rate.js";
-
-beforeEach(() => {
-  // Seed manual overrides so tests have known data
-  setExchangeRate("USD", 1350, "manual");
-  setExchangeRate("BRL", 270, "manual");
-  setExchangeRate("EUR", 1470, "manual");
-});
 
 describe("generateDailyReport", () => {
   it("should produce report structure even with empty data (no shipments/contracts)", async () => {
@@ -49,24 +41,10 @@ describe("generateDailyReport", () => {
     expect(report).not.toContain("계약 현황");
   });
 
-  it("should include exchange rate section with USD, BRL, EUR by default", async () => {
-    const report = await generateDailyReport();
-    expect(report).toContain("환율 정보");
-    expect(report).toContain("USD");
-    expect(report).toContain("BRL");
-    expect(report).toContain("EUR");
-  });
-
-  it("should exclude exchange rate section when includeRates is false", async () => {
-    const report = await generateDailyReport({ includeRates: false });
-    expect(report).not.toContain("환율 정보");
-  });
-
   it("should produce a report with all sections when no options provided", async () => {
     const report = await generateDailyReport();
     expect(report).toContain("선적 현황");
     expect(report).toContain("계약 현황");
-    expect(report).toContain("환율 정보");
   });
 });
 
@@ -97,17 +75,7 @@ describe("generateDiagnosticReport", () => {
     expect(report.date).toBe("2026-03-27");
   });
 
-  it("L1 checks pass when exchange rates exist (manual overrides)", async () => {
-    const report = await generateDiagnosticReport();
-    const rateCheck = report.diagnostics.find(
-      (d) => d.level === "L1" && d.category === "exchange_rates"
-    );
-    expect(rateCheck).toBeDefined();
-    expect(rateCheck?.status).toBe("pass");
-  });
-
   it("L1 shipments check returns warning when no shipments", async () => {
-    // No shipments added in fresh state
     const report = await generateDiagnosticReport();
     const shipmentCheck = report.diagnostics.find(
       (d) => d.level === "L1" && d.category === "shipments"
@@ -116,8 +84,7 @@ describe("generateDiagnosticReport", () => {
     expect(shipmentCheck?.status).toBe("warning");
   });
 
-  it("L2 stale shipment detection returns warning when stale shipments exist", async () => {
-    // Add a shipment with an old updatedAt date (10 days ago)
+  it("L2 stale shipment detection returns pass or warning", async () => {
     addShipment({
       blNumber: "TEST-STALE-001",
       carrier: "TestCarrier",
@@ -126,23 +93,12 @@ describe("generateDiagnosticReport", () => {
       destination: "Destination",
       status: "in_transit",
     });
-    // We need to manually patch the updatedAt -- since addShipment sets it to now,
-    // we verify the check logic: with a freshly added shipment it should be pass (0 stale)
     const report = await generateDiagnosticReport();
     const staleCheck = report.diagnostics.find(
       (d) => d.level === "L2" && d.category === "stale_shipments"
     );
     expect(staleCheck).toBeDefined();
     expect(["pass", "warning"]).toContain(staleCheck?.status);
-  });
-
-  it("L2 exchange rate freshness check passes when rates have today's date", async () => {
-    const report = await generateDiagnosticReport();
-    const ratesFreshCheck = report.diagnostics.find(
-      (d) => d.level === "L2" && d.category === "exchange_rate_freshness"
-    );
-    expect(ratesFreshCheck).toBeDefined();
-    expect(ratesFreshCheck?.status).toBe("pass");
   });
 
   it("L3 customs stuck check: no shipments stuck in customs returns pass", async () => {
@@ -163,7 +119,7 @@ describe("generateDiagnosticReport", () => {
     expect(arrivedCheck?.status).toBe("pass");
   });
 
-  it("overall health is 'critical' when any diagnostic fails", async () => {
+  it("overall health is consistent with counts", async () => {
     const report = await generateDiagnosticReport();
     if (report.failCount > 0) {
       expect(report.overallHealth).toBe("critical");

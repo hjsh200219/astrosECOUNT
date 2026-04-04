@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import type { PDFFont, PDFPage } from "pdf-lib";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
@@ -14,24 +15,124 @@ export interface PdfFromDataOptions {
   orientation?: "portrait" | "landscape";
 }
 
-/**
- * Strips characters that cannot be encoded in WinAnsi (pdf-lib StandardFonts limitation).
- * Non-encodable chars (e.g. Korean, CJK) are replaced with '?'.
- */
 function toWinAnsi(text: string): string {
   return text.replace(/[^\u0000-\u00FF]/g, "?");
 }
 
-// A4 dimensions in points
 const A4_WIDTH = 595;
 const A4_HEIGHT = 842;
-
 const MARGIN = 40;
 const HEADER_FONT_SIZE = 14;
 const CELL_FONT_SIZE = 9;
 const ROW_HEIGHT = 16;
 const HEADER_ROW_HEIGHT = 20;
 const TITLE_HEIGHT = 30;
+
+function drawTitle(page: PDFPage, title: string, boldFont: PDFFont, cursorY: number): number {
+  page.drawText(toWinAnsi(title), {
+    x: MARGIN,
+    y: cursorY - HEADER_FONT_SIZE,
+    size: HEADER_FONT_SIZE,
+    font: boldFont,
+    color: rgb(0, 0, 0),
+  });
+  return cursorY - (TITLE_HEIGHT + 8);
+}
+
+function drawColumnHeaders(
+  page: PDFPage,
+  cols: string[],
+  colWidth: number,
+  contentWidth: number,
+  boldFont: PDFFont,
+  cursorY: number,
+): number {
+  page.drawRectangle({
+    x: MARGIN,
+    y: cursorY - HEADER_ROW_HEIGHT,
+    width: contentWidth,
+    height: HEADER_ROW_HEIGHT,
+    color: rgb(0.85, 0.85, 0.85),
+  });
+
+  for (let ci = 0; ci < cols.length; ci++) {
+    page.drawText(toWinAnsi(String(cols[ci])), {
+      x: MARGIN + ci * colWidth + 3,
+      y: cursorY - HEADER_ROW_HEIGHT + 5,
+      size: CELL_FONT_SIZE,
+      font: boldFont,
+      color: rgb(0, 0, 0),
+      maxWidth: colWidth - 6,
+    });
+  }
+
+  return cursorY - HEADER_ROW_HEIGHT;
+}
+
+function drawDataRows(
+  page: PDFPage,
+  rows: Record<string, unknown>[],
+  cols: string[],
+  colWidth: number,
+  contentWidth: number,
+  font: PDFFont,
+  cursorY: number,
+): void {
+  for (let ri = 0; ri < rows.length; ri++) {
+    const row = rows[ri];
+    const rowY = cursorY - (ri + 1) * ROW_HEIGHT;
+
+    if (ri % 2 === 1) {
+      page.drawRectangle({
+        x: MARGIN,
+        y: rowY,
+        width: contentWidth,
+        height: ROW_HEIGHT,
+        color: rgb(0.96, 0.96, 0.96),
+      });
+    }
+
+    for (let ci = 0; ci < cols.length; ci++) {
+      const cellValue = row[cols[ci]];
+      page.drawText(toWinAnsi(cellValue == null ? "" : String(cellValue)), {
+        x: MARGIN + ci * colWidth + 3,
+        y: rowY + 4,
+        size: CELL_FONT_SIZE,
+        font,
+        color: rgb(0, 0, 0),
+        maxWidth: colWidth - 6,
+      });
+    }
+  }
+}
+
+function drawTableBorder(
+  page: PDFPage,
+  contentWidth: number,
+  rowCount: number,
+  cursorY: number,
+): void {
+  page.drawRectangle({
+    x: MARGIN,
+    y: cursorY - rowCount * ROW_HEIGHT,
+    width: contentWidth,
+    height: HEADER_ROW_HEIGHT + rowCount * ROW_HEIGHT,
+    borderColor: rgb(0.6, 0.6, 0.6),
+    borderWidth: 0.5,
+  });
+}
+
+function drawPageNumber(page: PDFPage, font: PDFFont, pageIdx: number, totalPages: number, pageWidth: number): void {
+  const pageNumText = `${pageIdx + 1} / ${totalPages}`;
+  const textWidth = font.widthOfTextAtSize(pageNumText, 8);
+  page.drawText(pageNumText, {
+    x: pageWidth / 2 - textWidth / 2,
+    y: MARGIN / 2,
+    size: 8,
+    font,
+    color: rgb(0.5, 0.5, 0.5),
+  });
+}
 
 export async function generatePdfFromData(opts: PdfFromDataOptions): Promise<Uint8Array> {
   const { title, data, columns, orientation = "portrait" } = opts;
@@ -40,12 +141,10 @@ export async function generatePdfFromData(opts: PdfFromDataOptions): Promise<Uin
   const pageHeight = orientation === "landscape" ? A4_WIDTH : A4_HEIGHT;
 
   const pdfDoc = await PDFDocument.create();
-  // Embed orientation in metadata so portrait/landscape always produce different byte lengths
   pdfDoc.setCreator(`astros-ecount-mcp orientation=${orientation}`);
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  // Derive column list
   const cols: string[] =
     columns && columns.length > 0
       ? columns
@@ -56,23 +155,18 @@ export async function generatePdfFromData(opts: PdfFromDataOptions): Promise<Uin
   const contentWidth = pageWidth - MARGIN * 2;
   const colWidth = cols.length > 0 ? contentWidth / cols.length : contentWidth;
 
-  // Calculate rows per page
-  // Title area only on first page
   const titleAreaHeight = TITLE_HEIGHT + 8;
   const firstPageUsable = pageHeight - MARGIN * 2 - titleAreaHeight - HEADER_ROW_HEIGHT;
   const otherPageUsable = pageHeight - MARGIN * 2 - HEADER_ROW_HEIGHT;
   const rowsPerFirstPage = Math.floor(firstPageUsable / ROW_HEIGHT);
   const rowsPerOtherPage = Math.floor(otherPageUsable / ROW_HEIGHT);
 
-  // Split data into page chunks
   const pageChunks: Record<string, unknown>[][] = [];
   if (data.length === 0) {
     pageChunks.push([]);
   } else {
-    let remaining = [...data];
-    // First page chunk
+    const remaining = [...data];
     pageChunks.push(remaining.splice(0, rowsPerFirstPage));
-    // Subsequent page chunks
     while (remaining.length > 0) {
       pageChunks.push(remaining.splice(0, rowsPerOtherPage));
     }
@@ -81,104 +175,24 @@ export async function generatePdfFromData(opts: PdfFromDataOptions): Promise<Uin
   for (let pageIdx = 0; pageIdx < pageChunks.length; pageIdx++) {
     const page = pdfDoc.addPage([pageWidth, pageHeight]);
     const chunk = pageChunks[pageIdx];
-
     let cursorY = pageHeight - MARGIN;
 
     if (pageIdx === 0) {
-      // Draw title
-      page.drawText(toWinAnsi(title), {
-        x: MARGIN,
-        y: cursorY - HEADER_FONT_SIZE,
-        size: HEADER_FONT_SIZE,
-        font: boldFont,
-        color: rgb(0, 0, 0),
-      });
-      cursorY -= titleAreaHeight;
+      cursorY = drawTitle(page, title, boldFont, cursorY);
     } else {
       cursorY -= 8;
     }
 
-    // Draw column headers (if any columns)
     if (cols.length > 0) {
-      // Header background
-      page.drawRectangle({
-        x: MARGIN,
-        y: cursorY - HEADER_ROW_HEIGHT,
-        width: contentWidth,
-        height: HEADER_ROW_HEIGHT,
-        color: rgb(0.85, 0.85, 0.85),
-      });
-
-      for (let ci = 0; ci < cols.length; ci++) {
-        const cellX = MARGIN + ci * colWidth;
-        page.drawText(toWinAnsi(String(cols[ci])), {
-          x: cellX + 3,
-          y: cursorY - HEADER_ROW_HEIGHT + 5,
-          size: CELL_FONT_SIZE,
-          font: boldFont,
-          color: rgb(0, 0, 0),
-          maxWidth: colWidth - 6,
-        });
-      }
-      cursorY -= HEADER_ROW_HEIGHT;
-
-      // Draw rows
-      for (let ri = 0; ri < chunk.length; ri++) {
-        const row = chunk[ri];
-        const rowY = cursorY - (ri + 1) * ROW_HEIGHT;
-
-        // Alternate row shading
-        if (ri % 2 === 1) {
-          page.drawRectangle({
-            x: MARGIN,
-            y: rowY,
-            width: contentWidth,
-            height: ROW_HEIGHT,
-            color: rgb(0.96, 0.96, 0.96),
-          });
-        }
-
-        for (let ci = 0; ci < cols.length; ci++) {
-          const cellX = MARGIN + ci * colWidth;
-          const cellValue = row[cols[ci]];
-          const cellText = toWinAnsi(cellValue == null ? "" : String(cellValue));
-
-          page.drawText(cellText, {
-            x: cellX + 3,
-            y: rowY + 4,
-            size: CELL_FONT_SIZE,
-            font,
-            color: rgb(0, 0, 0),
-            maxWidth: colWidth - 6,
-          });
-        }
-      }
-
-      // Draw table border
-      page.drawRectangle({
-        x: MARGIN,
-        y: cursorY - chunk.length * ROW_HEIGHT,
-        width: contentWidth,
-        height: HEADER_ROW_HEIGHT + chunk.length * ROW_HEIGHT,
-        borderColor: rgb(0.6, 0.6, 0.6),
-        borderWidth: 0.5,
-      });
+      cursorY = drawColumnHeaders(page, cols, colWidth, contentWidth, boldFont, cursorY);
+      drawDataRows(page, chunk, cols, colWidth, contentWidth, font, cursorY);
+      drawTableBorder(page, contentWidth, chunk.length, cursorY);
     }
 
-    // Page number at bottom
-    const pageNumText = `${pageIdx + 1} / ${pageChunks.length}`;
-    const textWidth = font.widthOfTextAtSize(pageNumText, 8);
-    page.drawText(pageNumText, {
-      x: pageWidth / 2 - textWidth / 2,
-      y: MARGIN / 2,
-      size: 8,
-      font,
-      color: rgb(0.5, 0.5, 0.5),
-    });
+    drawPageNumber(page, font, pageIdx, pageChunks.length, pageWidth);
   }
 
-  const pdfBytes = await pdfDoc.save();
-  return pdfBytes;
+  return pdfDoc.save();
 }
 
 export function registerPdfExportTools(server: McpServer): void {

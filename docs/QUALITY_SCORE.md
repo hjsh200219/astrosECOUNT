@@ -23,8 +23,6 @@
 | Utils / logger | B | A | A | A | **A-** | = |
 | Utils / renderers | C | B | B | B | **B-** | NEW |
 | Utils / persistence | B | B | C | A | **B** | = |
-| Services / exchange-rate | A | A | B | A | **A-** | NEW |
-| Services / unipass | C | A | B | A | **B** | NEW |
 
 ## Rating Criteria
 
@@ -40,7 +38,7 @@
 
 1. **Type safety**: `strict: true` + zod runtime validation on all inputs
 2. **Error hierarchy**: 4 distinct error types, each handled specifically
-3. **Test mirroring**: 68 test files mirror src/ structure 1:1
+3. **Test mirroring**: 66 test files mirror src/ structure 1:1
 4. **Session resilience**: Promise deduplication, auto-retry, circuit breaker
 5. **Layer discipline**: Clear dependency direction, no circular imports
 
@@ -53,15 +51,13 @@
 | P3 | Category B tools | In-memory data without validation | B+ -> A |
 | P4 | Integration tests | Only 1 E2E test file | Add mock API server |
 | P5 | Coverage metrics | V8 configured but not enforced | Add CI threshold |
-| P6 | Tools (5 files) | Tool-to-tool imports violate Core Invariant #5 | Extract shared logic to utils/services |
-| P7 | Services | process.env direct access (3 vars) bypasses config.ts | Inject via config.ts |
-| P8 | Services / unipass | 10/12 modules have no tests | Add unit tests |
-| P9 | Utils / renderers | dashboard-renderers.ts, logger.ts missing tests | Add tests |
-| P10 | Tools | board.ts, unipass.ts missing tests | Add tests |
+| P6 | Tools (5 files) | Tool-to-tool imports violate Core Invariant #5 | Extract shared logic to utils/ |
+| P7 | Utils / renderers | dashboard-renderers.ts, logger.ts missing tests | Add tests |
+| P8 | Tools | board.ts missing tests | Add tests |
 
 ## Test Summary
 
-- **Unit tests**: 65 files covering client/, tools/, utils/, services/, config
+- **Unit tests**: 66 files covering client/, tools/, utils/, config
 - **Integration tests**: 1 file (server.test.ts) + 1 E2E (mcp-server.e2e.test.ts)
 - **Framework**: Vitest v3 with globals
 - **Coverage provider**: V8 (configured, not enforced in CI)

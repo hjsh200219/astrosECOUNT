@@ -2,7 +2,8 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { formatResponse } from "../utils/response-formatter.js";
 import { handleToolError } from "../utils/error-handler.js";
-import { listShipments, type Shipment } from "./shipment-tracking.js";
+import { listShipments, type Shipment } from "../utils/shipment-store.js";
+import { MS_PER_DAY } from "../utils/date-helpers.js";
 
 export interface LogisticsKPI {
   totalShipments: number;
@@ -13,8 +14,7 @@ export interface LogisticsKPI {
 }
 
 function daysBetween(from: string, to: string): number {
-  const msPerDay = 1000 * 60 * 60 * 24;
-  return Math.round((new Date(to).getTime() - new Date(from).getTime()) / msPerDay);
+  return Math.round((new Date(to).getTime() - new Date(from).getTime()) / MS_PER_DAY);
 }
 
 export function calculateKPI(shipments: Shipment[]): LogisticsKPI {

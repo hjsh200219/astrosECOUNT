@@ -2,16 +2,15 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { formatResponse } from "../utils/response-formatter.js";
 import { handleToolError } from "../utils/error-handler.js";
-import { listShipments } from "./shipment-tracking.js";
-import { listContracts } from "./contracts.js";
-import { listExchangeRates } from "./exchange-rate.js";
-import { listStaleShipments } from "./stale-shipments.js";
+import { today, daysSince } from "../utils/date-helpers.js";
+import { listShipments } from "../utils/shipment-store.js";
+import { listContracts } from "../utils/contract-store.js";
+import { listStaleShipments } from "../utils/stale-shipment-detector.js";
 
 export interface ReportOptions {
   date?: string;
   includeShipments?: boolean;
   includeContracts?: boolean;
-  includeRates?: boolean;
   includeDiagnostics?: boolean;
 }
 
@@ -31,29 +30,9 @@ export interface DiagnosticReport {
   overallHealth: "healthy" | "attention" | "critical";
 }
 
-function today(): string {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function daysSince(isoDate: string): number {
-  return Math.floor((Date.now() - new Date(isoDate).getTime()) / (1000 * 60 * 60 * 24));
-}
-
 export async function generateDiagnosticReport(date?: string): Promise<DiagnosticReport> {
   const reportDate = date ?? today();
   const diagnostics: DiagnosticItem[] = [];
-
-  // L1 — Infrastructure
-  const ratesResult = await listExchangeRates();
-  const allRates = [...ratesResult.manual, ...ratesResult.market, ...ratesResult.customs];
-  diagnostics.push({
-    level: "L1",
-    category: "exchange_rates",
-    status: allRates.length >= 1 ? "pass" : "warning",
-    message: allRates.length >= 1
-      ? `환율 데이터 ${allRates.length}개 정상 로드`
-      : "환율 데이터 없음",
-  });
 
   const shipments = listShipments();
   diagnostics.push({
@@ -65,7 +44,6 @@ export async function generateDiagnosticReport(date?: string): Promise<Diagnosti
       : "선적 데이터 없음",
   });
 
-  // L2 — Data
   const stale = listStaleShipments(7);
   diagnostics.push({
     level: "L2",
@@ -76,18 +54,6 @@ export async function generateDiagnosticReport(date?: string): Promise<Diagnosti
       : `7일 이상 미갱신 선적 ${stale.length}건`,
   });
 
-  const todayStr = today();
-  const staleRates = allRates.filter((r: { date: string }) => r.date !== todayStr);
-  diagnostics.push({
-    level: "L2",
-    category: "exchange_rate_freshness",
-    status: staleRates.length === 0 ? "pass" : "warning",
-    message: staleRates.length === 0
-      ? "모든 환율 데이터가 오늘 날짜"
-      : `오래된 환율 데이터 ${staleRates.length}개`,
-  });
-
-  // L3 — Process
   const customsStuck = shipments.filter(
     (s) => s.status === "customs" && daysSince(s.updatedAt) > 7
   );
@@ -126,7 +92,6 @@ export async function generateDailyReport(options?: ReportOptions): Promise<stri
   const date = options?.date ?? today();
   const includeShipments = options?.includeShipments ?? true;
   const includeContracts = options?.includeContracts ?? true;
-  const includeRates = options?.includeRates ?? true;
   const includeDiagnostics = options?.includeDiagnostics ?? true;
 
   const divider = "═══════════════════════════════════════";
@@ -168,16 +133,6 @@ export async function generateDailyReport(options?: ReportOptions): Promise<stri
     lines.push(`  - 완료: ${completed}건`);
   }
 
-  if (includeRates) {
-    const ratesResult = await listExchangeRates();
-    const allRates = [...ratesResult.manual, ...ratesResult.market, ...ratesResult.customs];
-    lines.push("");
-    lines.push("▶ 환율 정보");
-    for (const r of allRates) {
-      lines.push(`  - ${r.currency}: ${r.rate}원 (${r.date})`);
-    }
-  }
-
   if (includeDiagnostics) {
     const diagReport = await generateDiagnosticReport(date);
     lines.push("");
@@ -215,12 +170,11 @@ export function registerDailyReportTools(server: McpServer): void {
 
   server.tool(
     "ecount_daily_report",
-    "현재 선적/계약/환율 데이터를 종합한 일일 업무 리포트를 텍스트로 생성합니다.",
+    "현재 선적/계약 데이터를 종합한 일일 업무 리포트를 텍스트로 생성합니다.",
     {
       date: z.string().optional().describe("리포트 날짜 (기본: 오늘, YYYY-MM-DD)"),
       include_shipments: z.boolean().default(true),
       include_contracts: z.boolean().default(true),
-      include_rates: z.boolean().default(true),
     },
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {
@@ -229,7 +183,6 @@ export function registerDailyReportTools(server: McpServer): void {
           date: params.date as string | undefined,
           includeShipments: params.include_shipments as boolean,
           includeContracts: params.include_contracts as boolean,
-          includeRates: params.include_rates as boolean,
         });
         return formatResponse({ report });
       } catch (error) {

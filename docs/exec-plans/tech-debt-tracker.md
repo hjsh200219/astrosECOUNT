@@ -19,8 +19,8 @@
 | TD-003 | Utils / logger | No unit tests for log level filtering; LOG_LEVEL env var read directly | Logger bugs undetected | S |
 | TD-004 | Category B tools | Some tools define in-memory data structures without Zod validation (e.g., business-rules) | Invalid data accepted | M |
 | TD-005 | Coverage metrics | Vitest V8 coverage configured but not enforced in CI | Coverage regression risk | S |
-| TD-010 | Services | `process.env` direct access in exchange-rate.ts (2 vars) and unipass/client.ts (1 var) -- config.ts monopoly violated | Config isolation breach | M |
-| TD-011 | Services / unipass | 12 service modules but only client.test.ts exists (8% coverage) | Unipass bugs undetected | M |
+| TD-010 | ~~Services~~ | ~~`process.env` direct access in exchange-rate.ts and unipass/client.ts~~ | ~~해소 — 서비스 제거~~ | - |
+| TD-011 | ~~Services / unipass~~ | ~~12 service modules but only client.test.ts exists~~ | ~~해소 — korea-public-data-mcp 이전~~ | - |
 
 ### P3 -- Low Impact
 
@@ -30,13 +30,14 @@
 | TD-007 | Utils / error-handler | Cross-layer import from client/circuit-breaker (exception to layer rules) | Architectural purity | M |
 | TD-008 | API coverage | V3 Legacy endpoints (supplier lists, production intake) not covered (~20% gap) | Feature gap | XL |
 | TD-012 | Utils / renderers | dashboard-renderers.ts test missing; logger.ts test missing | Test gap | S |
-| TD-013 | Tools | board.ts and unipass.ts test files missing | Test gap | S |
+| TD-013 | Tools | board.ts test file missing | Test gap | S |
 
 ## Resolved Tech Debt
 
 | ID | Area | Resolution | Date |
 |----|------|-----------|------|
-| *(none yet)* | - | - | - |
+| TD-010 | Services | exchange-rate, unipass 서비스 제거 (korea-public-data-mcp 이전) | 2026-04-05 |
+| TD-011 | Services / unipass | 12개 모듈 전체 제거 (korea-public-data-mcp 이전) | 2026-04-05 |
 
 ## Effort Scale
 
