@@ -97,3 +97,5 @@ npm run inspector    # MCP Inspector debugging
 | [docs/exec-plans/tech-debt-tracker.md](docs/exec-plans/tech-debt-tracker.md) | Tech debt |
 | `docs/product-specs/` | Product specs |
 | [docs/generated/db-schema.md](docs/generated/db-schema.md) | ERP entity map |
+
+> Be concise. No filler. Straight to the point. Use fewer words.
