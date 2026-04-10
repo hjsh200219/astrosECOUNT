@@ -156,11 +156,22 @@ if (testCountMatch) {
 
 // ── 3c. No stale module references ──
 const staleTerms = ["persistence"];
+const docsForStaleCheck = [
+  { name: "AGENTS.md", content: agentsContent },
+  { name: "ARCHITECTURE.md", content: archContent },
+  {
+    name: "docs/QUALITY_SCORE.md",
+    content: existsSync(join(ROOT, "docs/QUALITY_SCORE.md"))
+      ? readFile("docs/QUALITY_SCORE.md")
+      : "",
+  },
+];
 for (const term of staleTerms) {
-  const agentsHasTerm = agentsContent.includes(term);
-  check(`AGENTS.md no stale ref: "${term}"`, "false", String(agentsHasTerm));
-  const archHasTerm = archContent.includes(term);
-  check(`ARCHITECTURE.md no stale ref: "${term}"`, "false", String(archHasTerm));
+  for (const doc of docsForStaleCheck) {
+    if (!doc.content) continue;
+    const hasTerm = doc.content.includes(term);
+    check(`${doc.name} no stale ref: "${term}"`, "false", String(hasTerm));
+  }
 }
 
 // ── 4. FACT markers in docs (if present) ──

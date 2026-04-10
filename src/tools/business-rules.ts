@@ -130,22 +130,38 @@ export function listBusinessRules(category?: string): BusinessRule[] {
   return BUSINESS_RULES.filter((r) => r.category === category);
 }
 
+async function handleGetCustomsBroker(params: Record<string, unknown>) {
+  try {
+    return formatResponse(getCustomsBroker(params.product_name as string));
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
+async function handleGetWarehouseMapping() {
+  try {
+    return formatResponse(getWarehouseMapping());
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
+async function handleListBusinessRules(params: Record<string, unknown>) {
+  try {
+    const rules = listBusinessRules(params.category as string | undefined);
+    return formatResponse({ count: rules.length, rules });
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
 export function registerBusinessRuleTools(server: McpServer): void {
   server.tool(
     "ecount_get_customs_broker",
     "품목명을 입력하면 해당 품목의 관세법인 배정 결과를 반환합니다. 전지벌크→원스탑, 그 외→정운 규칙을 적용합니다.",
-    {
-      product_name: z.string().describe("품목명 (예: 전지벌크, 돈육 목살)"),
-    },
+    { product_name: z.string().describe("품목명 (예: 전지벌크, 돈육 목살)") },
     { readOnlyHint: true },
-    async (params: Record<string, unknown>) => {
-      try {
-        const result = getCustomsBroker(params.product_name as string);
-        return formatResponse(result);
-      } catch (error) {
-        return handleToolError(error);
-      }
-    }
+    handleGetCustomsBroker,
   );
 
   server.tool(
@@ -153,32 +169,14 @@ export function registerBusinessRuleTools(server: McpServer): void {
     "수입육 3단계 재고 파이프라인(미착→미통관→상품)의 창고 매핑 정보를 반환합니다.",
     {},
     { readOnlyHint: true },
-    async () => {
-      try {
-        return formatResponse(getWarehouseMapping());
-      } catch (error) {
-        return handleToolError(error);
-      }
-    }
+    handleGetWarehouseMapping,
   );
 
   server.tool(
     "ecount_list_business_rules",
     "수입육 업무 비즈니스 룰 목록을 조회합니다. 카테고리(customs/warehouse/logistics/general)로 필터링 가능합니다.",
-    {
-      category: z
-        .enum(["customs", "warehouse", "logistics", "general"])
-        .optional()
-        .describe("카테고리 필터"),
-    },
+    { category: z.enum(["customs", "warehouse", "logistics", "general"]).optional().describe("카테고리 필터") },
     { readOnlyHint: true },
-    async (params: Record<string, unknown>) => {
-      try {
-        const rules = listBusinessRules(params.category as string | undefined);
-        return formatResponse({ count: rules.length, rules });
-      } catch (error) {
-        return handleToolError(error);
-      }
-    }
+    handleListBusinessRules,
   );
 }

@@ -168,6 +168,39 @@ function getPopbillFaxService(): FaxServiceInstance {
 
 // ── Tool registration ─────────────────────────────────────────────────────────
 
+async function handleSendFax(params: {
+  corpNum: string; sender: string; receiver: string;
+  receiverName: string; filePaths: string[]; title: string;
+}) {
+  try {
+    const faxService = getPopbillFaxService();
+    const receiptNum = await promisifySendFax(faxService, params);
+    return formatResponse({ receiptNum });
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
+async function handleGetFaxStatus(params: { corpNum: string; receiptNum: string }) {
+  try {
+    const faxService = getPopbillFaxService();
+    const results = await promisifyGetFaxResult(faxService, params.corpNum, params.receiptNum);
+    return formatResponse(results);
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
+async function handleListFaxHistory(params: { corpNum: string; startDate: string; endDate: string }) {
+  try {
+    const faxService = getPopbillFaxService();
+    const response = await promisifySearch(faxService, params);
+    return formatResponse(response);
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
 export function registerFaxTools(server: McpServer): void {
   server.tool(
     "ecount_send_fax",
@@ -180,64 +213,22 @@ export function registerFaxTools(server: McpServer): void {
       filePaths: z.array(z.string()).describe("전송할 파일 경로 목록"),
       title: z.string().optional().default("").describe("팩스 제목"),
     },
-    async (params) => {
-      try {
-        const faxService = getPopbillFaxService();
-        const receiptNum = await promisifySendFax(faxService, {
-          corpNum: params.corpNum,
-          sender: params.sender,
-          receiver: params.receiver,
-          receiverName: params.receiverName,
-          filePaths: params.filePaths,
-          title: params.title,
-        });
-        return formatResponse({ receiptNum });
-      } catch (error) {
-        return handleToolError(error);
-      }
-    },
+    handleSendFax,
   );
 
   server.tool(
     "ecount_get_fax_status",
     "팩스 전송 결과를 조회합니다",
-    {
-      corpNum: z.string().describe("사업자번호 (10자리 숫자)"),
-      receiptNum: z.string().describe("팩스 접수 번호"),
-    },
+    { corpNum: z.string().describe("사업자번호 (10자리 숫자)"), receiptNum: z.string().describe("팩스 접수 번호") },
     { readOnlyHint: true },
-    async (params) => {
-      try {
-        const faxService = getPopbillFaxService();
-        const results = await promisifyGetFaxResult(faxService, params.corpNum, params.receiptNum);
-        return formatResponse(results);
-      } catch (error) {
-        return handleToolError(error);
-      }
-    },
+    handleGetFaxStatus,
   );
 
   server.tool(
     "ecount_list_fax_history",
     "팩스 전송 내역을 조회합니다",
-    {
-      corpNum: z.string().describe("사업자번호 (10자리 숫자)"),
-      startDate: z.string().describe("조회 시작일 (YYYYMMDD)"),
-      endDate: z.string().describe("조회 종료일 (YYYYMMDD)"),
-    },
+    { corpNum: z.string().describe("사업자번호 (10자리 숫자)"), startDate: z.string().describe("조회 시작일 (YYYYMMDD)"), endDate: z.string().describe("조회 종료일 (YYYYMMDD)") },
     { readOnlyHint: true },
-    async (params) => {
-      try {
-        const faxService = getPopbillFaxService();
-        const response = await promisifySearch(faxService, {
-          corpNum: params.corpNum,
-          startDate: params.startDate,
-          endDate: params.endDate,
-        });
-        return formatResponse(response);
-      } catch (error) {
-        return handleToolError(error);
-      }
-    },
+    handleListFaxHistory,
   );
 }

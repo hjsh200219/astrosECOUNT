@@ -143,26 +143,46 @@ export function analyzeCashflow(params: { asOfDate?: string }): CashflowResult {
   return { advancePayments, onTimePayments, overdueReceivables, outstandingPayables, asOfDate };
 }
 
+async function handleGenerateSubuibu(params: Record<string, unknown>) {
+  try {
+    return formatResponse(generateSubuibu({
+      period: params.period as string,
+      products: params.products as string[] | undefined,
+    }));
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
+async function handleGeneratePnl(params: Record<string, unknown>) {
+  try {
+    return formatResponse(generatePnl({
+      periodFrom: params.periodFrom as string,
+      periodTo: params.periodTo as string,
+      revenue: params.revenue as number,
+      sgaExpenses: params.sgaExpenses as number | undefined,
+      financialExpenses: params.financialExpenses as number | undefined,
+    }));
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
+async function handleAnalyzeCashflow(params: Record<string, unknown>) {
+  try {
+    return formatResponse(analyzeCashflow({ asOfDate: params.asOfDate as string | undefined }));
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
 export function registerFinancialStatementsTools(server: McpServer): void {
   server.tool(
     "ecount_generate_subuibu",
     "수불부를 자동 생성합니다 (기초미착품/입고/기말미착품/상품재고/매출원가).",
-    {
-      period: z.string().describe("대상 기간 (YYYY-MM 형식)"),
-      products: z.array(z.string()).optional().describe("품목 필터 (비워두면 전체)"),
-    },
+    { period: z.string().describe("대상 기간 (YYYY-MM 형식)"), products: z.array(z.string()).optional().describe("품목 필터 (비워두면 전체)") },
     { readOnlyHint: true },
-    async (params: Record<string, unknown>) => {
-      try {
-        const result = generateSubuibu({
-          period: params.period as string,
-          products: params.products as string[] | undefined,
-        });
-        return formatResponse(result);
-      } catch (error) {
-        return handleToolError(error);
-      }
-    }
+    handleGenerateSubuibu,
   );
 
   server.tool(
@@ -176,38 +196,14 @@ export function registerFinancialStatementsTools(server: McpServer): void {
       financialExpenses: z.number().nonnegative().optional().describe("금융비용 (기본값: 0)"),
     },
     { readOnlyHint: true },
-    async (params: Record<string, unknown>) => {
-      try {
-        const result = generatePnl({
-          periodFrom: params.periodFrom as string,
-          periodTo: params.periodTo as string,
-          revenue: params.revenue as number,
-          sgaExpenses: params.sgaExpenses as number | undefined,
-          financialExpenses: params.financialExpenses as number | undefined,
-        });
-        return formatResponse(result);
-      } catch (error) {
-        return handleToolError(error);
-      }
-    }
+    handleGeneratePnl,
   );
 
   server.tool(
     "ecount_analyze_cashflow",
     "현금흐름을 분석합니다 (선금/기한내수금/연체미수금/미지급금).",
-    {
-      asOfDate: z.string().optional().describe("기준일 (YYYY-MM-DD)"),
-    },
+    { asOfDate: z.string().optional().describe("기준일 (YYYY-MM-DD)") },
     { readOnlyHint: true },
-    async (params: Record<string, unknown>) => {
-      try {
-        const result = analyzeCashflow({
-          asOfDate: params.asOfDate as string | undefined,
-        });
-        return formatResponse(result);
-      } catch (error) {
-        return handleToolError(error);
-      }
-    }
+    handleAnalyzeCashflow,
   );
 }

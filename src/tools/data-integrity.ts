@@ -240,19 +240,21 @@ export function registerDataIntegrityTools(server: McpServer): void {
         .describe("원가 기록 목록"),
     },
     { readOnlyHint: true },
-    async (params: Record<string, unknown>) => {
-      try {
-        const report = validateAll({
-          contracts: (params.contracts ?? []) as ContractRecord[],
-          shipments: (params.shipments ?? []) as ShipmentRecord[],
-          openingInventory: (params.openingInventory ?? []) as InventoryBalance[],
-          priorClosing: (params.priorClosing ?? []) as InventoryBalance[],
-          costRecords: (params.costRecords ?? []) as CostRecord[],
-        });
-        return formatResponse(report);
-      } catch (error) {
-        return handleToolError(error);
-      }
-    }
+    handleValidateDataIntegrity,
   );
+}
+
+async function handleValidateDataIntegrity(params: Record<string, unknown>) {
+  try {
+    const report = validateAll({
+      contracts: (params.contracts ?? []) as ContractRecord[],
+      shipments: (params.shipments ?? []) as ShipmentRecord[],
+      openingInventory: (params.openingInventory ?? []) as InventoryBalance[],
+      priorClosing: (params.priorClosing ?? []) as InventoryBalance[],
+      costRecords: (params.costRecords ?? []) as CostRecord[],
+    });
+    return formatResponse(report);
+  } catch (error) {
+    return handleToolError(error);
+  }
 }

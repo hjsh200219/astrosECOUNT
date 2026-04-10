@@ -137,60 +137,45 @@ export function generateProcessReport(
   };
 }
 
+async function handleCheckDocumentStatus(params: Record<string, unknown>) {
+  try {
+    const shipments = (params.shipments as ShipmentDoc[]) ?? [];
+    const sales = (params.sales as SaleRecord[]) ?? [];
+    const requiredDocs = (params.required_docs as string[] | undefined) ?? DEFAULT_REQUIRED_DOCS;
+
+    const documentChecks = checkDocuments(shipments, requiredDocs);
+    const overdueDeliveries = findOverdueDeliveries(sales, (params.max_delivery_days as number) ?? 3);
+    const overdueCustoms = findOverdueCustomsClearance(shipments, (params.max_customs_days as number) ?? 7);
+
+    const shipmentsWithMissingDocs = documentChecks.filter((d) => d.missingDocuments.length > 0).length;
+    const totalIssues = shipmentsWithMissingDocs + overdueDeliveries.length + overdueCustoms.length;
+
+    return formatResponse({
+      documentChecks, overdueDeliveries, overdueCustoms, totalIssues, checkedAt: new Date().toISOString(),
+    } satisfies ProcessReport);
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
 export function registerDocumentStatusTools(server: McpServer): void {
   server.tool(
     "ecount_check_document_status",
     "L3 프로세스 모니터링 — 선적 서류 체크리스트 완료 여부 및 지연 배송/통관 감지",
     {
-      shipments: z.array(
-        z.object({
-          shipmentId: z.string(),
-          blNumber: z.string(),
-          documents: z.array(z.string()),
-          status: z.string(),
-          arrivedAt: z.string().optional(),
-        })
-      ).describe("선적 목록"),
-      sales: z.array(
-        z.object({
-          id: z.string(),
-          product: z.string(),
-          customer: z.string(),
-          saleDate: z.string(),
-          delivered: z.boolean(),
-          deliveryDate: z.string().optional(),
-        })
-      ).optional().describe("판매 목록 (배송 지연 감지용)"),
-      required_docs: z.array(z.string()).optional().describe("필수 서류 목록 (기본: B/L, Invoice, Packing List, Certificate of Origin, Health Certificate)"),
+      shipments: z.array(z.object({
+        shipmentId: z.string(), blNumber: z.string(), documents: z.array(z.string()),
+        status: z.string(), arrivedAt: z.string().optional(),
+      })).describe("선적 목록"),
+      sales: z.array(z.object({
+        id: z.string(), product: z.string(), customer: z.string(),
+        saleDate: z.string(), delivered: z.boolean(), deliveryDate: z.string().optional(),
+      })).optional().describe("판매 목록 (배송 지연 감지용)"),
+      required_docs: z.array(z.string()).optional().describe("필수 서류 목록"),
       max_delivery_days: z.number().default(3).describe("배송 지연 기준 일수 (기본 3일)"),
       max_customs_days: z.number().default(7).describe("통관 지연 기준 일수 (기본 7일)"),
     },
     { readOnlyHint: true },
-    async (params: Record<string, unknown>) => {
-      try {
-        const shipments = (params.shipments as ShipmentDoc[]) ?? [];
-        const sales = (params.sales as SaleRecord[]) ?? [];
-        const requiredDocs = (params.required_docs as string[] | undefined) ?? DEFAULT_REQUIRED_DOCS;
-
-        const documentChecks = checkDocuments(shipments, requiredDocs);
-        const overdueDeliveries = findOverdueDeliveries(sales, (params.max_delivery_days as number) ?? 3);
-        const overdueCustoms = findOverdueCustomsClearance(shipments, (params.max_customs_days as number) ?? 7);
-
-        const shipmentsWithMissingDocs = documentChecks.filter((d) => d.missingDocuments.length > 0).length;
-        const totalIssues = shipmentsWithMissingDocs + overdueDeliveries.length + overdueCustoms.length;
-
-        const report: ProcessReport = {
-          documentChecks,
-          overdueDeliveries,
-          overdueCustoms,
-          totalIssues,
-          checkedAt: new Date().toISOString(),
-        };
-
-        return formatResponse(report);
-      } catch (error) {
-        return handleToolError(error);
-      }
-    }
+    handleCheckDocumentStatus,
   );
 }

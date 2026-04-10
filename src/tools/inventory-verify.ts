@@ -175,70 +175,59 @@ export function validateContractShipmentCross(
   };
 }
 
+async function handleVerifyInventory(params: Record<string, unknown>) {
+  try {
+    return formatResponse(verifyInventory(params.stages as InventoryStage[]));
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
+async function handleValidateContractShipment(params: Record<string, unknown>) {
+  try {
+    return formatResponse(
+      validateContractShipmentCross(params.contracts as ContractEntry[], params.shipments as ShipmentEntry[]),
+    );
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
 export function registerInventoryVerifyTools(server: McpServer): void {
   server.tool(
     "ecount_verify_inventory",
     "재고 3단계(미착/미통관/상품) 데이터의 정합성을 교차 검증합니다.",
     {
-      stages: z
-        .array(
-          z.object({
-            stage: z.string().describe("재고 단계 (미착/미통관/상품)"),
-            product: z.string().describe("품목명"),
-            quantity: z.number().describe("수량"),
-            warehouse: z.string().optional().describe("창고코드"),
-          })
-        )
-        .describe("검증할 재고 단계 데이터 목록"),
+      stages: z.array(z.object({
+        stage: z.string().describe("재고 단계 (미착/미통관/상품)"),
+        product: z.string().describe("품목명"),
+        quantity: z.number().describe("수량"),
+        warehouse: z.string().optional().describe("창고코드"),
+      })).describe("검증할 재고 단계 데이터 목록"),
     },
     { readOnlyHint: true },
-    async (params: Record<string, unknown>) => {
-      try {
-        const stages = params.stages as InventoryStage[];
-        const result = verifyInventory(stages);
-        return formatResponse(result);
-      } catch (error) {
-        return handleToolError(error);
-      }
-    }
+    handleVerifyInventory,
   );
 
   server.tool(
     "ecount_validate_contract_shipment",
     "계약 데이터와 선적(BL) 데이터를 교차 검증하여 미매칭 및 수량 불일치를 탐지합니다.",
     {
-      contracts: z
-        .array(
-          z.object({
-            contractId: z.string().describe("계약 ID"),
-            blNumber: z.string().optional().describe("BL 번호"),
-            product: z.string().describe("품목명"),
-            quantity: z.number().describe("계약 수량"),
-          })
-        )
-        .describe("교차 검증할 계약 데이터 목록"),
-      shipments: z
-        .array(
-          z.object({
-            shipmentId: z.string().describe("선적 ID"),
-            blNumber: z.string().describe("BL 번호"),
-            product: z.string().describe("품목명"),
-            quantity: z.number().describe("선적 수량"),
-            status: z.string().describe("선적 상태"),
-          })
-        )
-        .describe("교차 검증할 선적 데이터 목록"),
+      contracts: z.array(z.object({
+        contractId: z.string().describe("계약 ID"),
+        blNumber: z.string().optional().describe("BL 번호"),
+        product: z.string().describe("품목명"),
+        quantity: z.number().describe("계약 수량"),
+      })).describe("교차 검증할 계약 데이터 목록"),
+      shipments: z.array(z.object({
+        shipmentId: z.string().describe("선적 ID"),
+        blNumber: z.string().describe("BL 번호"),
+        product: z.string().describe("품목명"),
+        quantity: z.number().describe("선적 수량"),
+        status: z.string().describe("선적 상태"),
+      })).describe("교차 검증할 선적 데이터 목록"),
     },
     { readOnlyHint: true },
-    async (params: Record<string, unknown>) => {
-      try {
-        const contracts = params.contracts as ContractEntry[];
-        const shipments = params.shipments as ShipmentEntry[];
-        const result = validateContractShipmentCross(contracts, shipments);
-        return formatResponse(result);
-      } catch (error) {
-        return handleToolError(error);
-      }
-    }
+    handleValidateContractShipment,
   );
 }

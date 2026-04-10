@@ -201,68 +201,57 @@ export function renderTemplate(
   };
 }
 
+async function handleListEmailTemplates(params: Record<string, unknown>) {
+  try {
+    const templates = listTemplates(params.category as string | undefined);
+    return formatResponse({ count: templates.length, templates });
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
+async function handleGetEmailTemplate(params: Record<string, unknown>) {
+  try {
+    const tpl = getTemplate(params.id as string);
+    if (!tpl) return formatResponse({ found: false, message: `템플릿 '${params.id}'을(를) 찾을 수 없습니다.` });
+    return formatResponse({ found: true, template: tpl });
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
+async function handleRenderEmail(params: Record<string, unknown>) {
+  try {
+    const result = renderTemplate(params.id as string, params.data as Record<string, string>);
+    if (!result) return formatResponse({ found: false, message: `템플릿 '${params.id}'을(를) 찾을 수 없습니다.` });
+    return formatResponse({ found: true, ...result });
+  } catch (error) {
+    return handleToolError(error);
+  }
+}
+
 export function registerEmailTemplateTools(server: McpServer): void {
   server.tool(
     "ecount_list_email_templates",
     "이메일 템플릿 목록을 조회합니다. 카테고리(shipping/contract/docs/customs/alert/delivery/schedule)로 필터링 가능합니다.",
-    {
-      category: z
-        .enum(["shipping", "contract", "docs", "customs", "alert", "delivery", "schedule"])
-        .optional()
-        .describe("카테고리 필터"),
-    },
+    { category: z.enum(["shipping", "contract", "docs", "customs", "alert", "delivery", "schedule"]).optional().describe("카테고리 필터") },
     { readOnlyHint: true },
-    async (params: Record<string, unknown>) => {
-      try {
-        const templates = listTemplates(params.category as string | undefined);
-        return formatResponse({ count: templates.length, templates });
-      } catch (error) {
-        return handleToolError(error);
-      }
-    }
+    handleListEmailTemplates,
   );
 
   server.tool(
     "ecount_get_email_template",
     "이메일 템플릿 ID로 템플릿 상세 정보를 조회합니다. (예: TPL-SHIP-01, TPL-CONTRACT-01)",
-    {
-      id: z.string().describe("템플릿 ID (예: TPL-SHIP-01)"),
-    },
+    { id: z.string().describe("템플릿 ID (예: TPL-SHIP-01)") },
     { readOnlyHint: true },
-    async (params: Record<string, unknown>) => {
-      try {
-        const tpl = getTemplate(params.id as string);
-        if (!tpl) {
-          return formatResponse({ found: false, message: `템플릿 '${params.id}'을(를) 찾을 수 없습니다.` });
-        }
-        return formatResponse({ found: true, template: tpl });
-      } catch (error) {
-        return handleToolError(error);
-      }
-    }
+    handleGetEmailTemplate,
   );
 
   server.tool(
     "ecount_render_email",
     "이메일 템플릿에 변수를 치환하여 완성된 제목과 본문을 반환합니다. variables 필드의 변수명을 data에 전달하세요.",
-    {
-      id: z.string().describe("템플릿 ID (예: TPL-SHIP-01)"),
-      data: z.record(z.string(), z.string()).describe("치환할 변수 값 (예: {BL_NUMBER: 'MAEU123', PRODUCT_NAME: '돈육'})"),
-    },
+    { id: z.string().describe("템플릿 ID (예: TPL-SHIP-01)"), data: z.record(z.string(), z.string()).describe("치환할 변수 값 (예: {BL_NUMBER: 'MAEU123', PRODUCT_NAME: '돈육'})") },
     { readOnlyHint: true },
-    async (params: Record<string, unknown>) => {
-      try {
-        const result = renderTemplate(
-          params.id as string,
-          params.data as Record<string, string>
-        );
-        if (!result) {
-          return formatResponse({ found: false, message: `템플릿 '${params.id}'을(를) 찾을 수 없습니다.` });
-        }
-        return formatResponse({ found: true, ...result });
-      } catch (error) {
-        return handleToolError(error);
-      }
-    }
+    handleRenderEmail,
   );
 }
