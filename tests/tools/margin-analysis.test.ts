@@ -133,7 +133,7 @@ describe("analyzeMargin", () => {
 });
 
 describe("registerMarginAnalysisTools", () => {
-  it("should register ecount_analyze_margin without throwing", async () => {
+  it("should register ecount_margin_analyze_margin without throwing", async () => {
     const { McpServer } = await import("@modelcontextprotocol/sdk/server/mcp.js");
     const { registerMarginAnalysisTools } = await import("../../src/tools/margin-analysis.js");
     const server = new McpServer({ name: "test", version: "0.1" });

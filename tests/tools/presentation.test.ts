@@ -41,13 +41,13 @@ describe("Presentation Tools", () => {
   });
 
   describe("registerPresentationTools", () => {
-    it("should register ecount_render_presentation tool", async () => {
+    it("should register ecount_presentation_render_presentation tool", async () => {
       const server = new McpServer({ name: "pres-test", version: "0.1" });
       const toolSpy = vi.spyOn(server, "tool");
       const { registerPresentationTools } = await import("../../src/tools/presentation.js");
       registerPresentationTools(server);
       expect(toolSpy).toHaveBeenCalledTimes(1);
-      expect(toolSpy.mock.calls[0][0]).toBe("ecount_render_presentation");
+      expect(toolSpy.mock.calls[0][0]).toBe("ecount_presentation_render_presentation");
       toolSpy.mockRestore();
     });
   });

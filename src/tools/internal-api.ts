@@ -34,7 +34,7 @@ interface InternalToolDef {
 
 const TOOL_DEFS: InternalToolDef[] = [
   {
-    name: "ecount_list_sales_internal",
+    name: "ecount_internal_list_sales_internal",
     description: "ECOUNT 내부 API를 통해 판매(매출) 전표 목록을 조회합니다. Open API로 접근 불가능한 상세 판매 데이터(622건+)를 조회할 때 사용합니다.",
     endpoint: INTERNAL_ENDPOINTS.SALES,
     extraParams: {
@@ -44,7 +44,7 @@ const TOOL_DEFS: InternalToolDef[] = [
     mapParams: (p) => ({ CUST_CD: p.cust_cd ?? "", PROD_CD: p.prod_cd ?? "" }),
   },
   {
-    name: "ecount_list_purchases_internal",
+    name: "ecount_internal_list_purchases_internal",
     description: "ECOUNT 내부 API를 통해 구매(매입) 전표 목록을 조회합니다. Open API로 접근 불가능한 상세 구매 데이터를 조회할 때 사용합니다.",
     endpoint: INTERNAL_ENDPOINTS.PURCHASES,
     extraParams: {
@@ -54,7 +54,7 @@ const TOOL_DEFS: InternalToolDef[] = [
     mapParams: (p) => ({ CUST_CD: p.cust_cd ?? "", PROD_CD: p.prod_cd ?? "" }),
   },
   {
-    name: "ecount_list_vatslips",
+    name: "ecount_internal_list_vatslips",
     description: "ECOUNT 내부 API를 통해 부가세 전표(세금계산서) 목록을 조회합니다. 매출/매입 세금계산서 발행 현황을 확인할 때 사용합니다.",
     endpoint: INTERNAL_ENDPOINTS.VAT_SLIPS,
     extraParams: {
@@ -64,7 +64,7 @@ const TOOL_DEFS: InternalToolDef[] = [
     mapParams: (p) => ({ SLIP_TYPE: p.slip_type ?? "", CUST_CD: p.cust_cd ?? "" }),
   },
   {
-    name: "ecount_list_account_slips",
+    name: "ecount_internal_list_account_slips",
     description: "ECOUNT 내부 API를 통해 계정별 전표 목록을 조회합니다. 특정 계정과목의 전표 내역을 확인할 때 사용합니다.",
     endpoint: INTERNAL_ENDPOINTS.ACCOUNT_SLIPS,
     extraParams: {
@@ -78,8 +78,8 @@ const TOOL_DEFS: InternalToolDef[] = [
 const BASE_SCHEMA = {
   from_date: z.string().describe("조회 시작일 (YYYYMMDD)"),
   to_date: z.string().describe("조회 종료일 (YYYYMMDD)"),
-  page: z.number().default(1).describe("페이지 번호"),
-  per_page: z.number().default(20).describe("페이지당 건수"),
+  page: z.number().default(1),
+  per_page: z.number().default(20),
 };
 
 export function registerInternalApiTools(

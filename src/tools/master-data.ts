@@ -5,7 +5,7 @@ import { registerTools, type ToolDefinition } from "./tool-factory.js";
 
 const masterDataTools: ToolDefinition[] = [
   {
-    name: "ecount_save_customer",
+    name: "ecount_master_save_customer",
     description:
       "ECOUNT ERP에 거래처를 등록하거나 수정합니다. 새 거래처를 추가하거나 기존 거래처 정보를 변경할 때 사용합니다.",
     endpoint: "AccountBasic/SaveBasicCust",
@@ -17,18 +17,18 @@ const masterDataTools: ToolDefinition[] = [
       BOSS_NAME: z.string().optional().describe("대표자명"),
       UPTAE: z.string().optional().describe("업태"),
       JONGMOK: z.string().optional().describe("종목"),
-      TEL: z.string().optional().describe("전화번호"),
-      EMAIL: z.string().optional().describe("이메일"),
+      TEL: z.string().optional(),
+      EMAIL: z.string().optional(),
       POST_NO: z.string().optional().describe("우편번호"),
-      ADDR: z.string().optional().describe("주소"),
-      REMARKS: z.string().optional().describe("비고"),
+      ADDR: z.string().optional(),
+      REMARKS: z.string().optional(),
       GUBUN: z.string().optional().describe("구분"),
       EMP_CD: z.string().optional().describe("담당사원코드"),
       G_GUBUN: z.string().optional().describe("거래처코드구분 (01:사업자등록번호, 02:주민등록번호, 03:외국인)"),
       G_BUSINESS_TYPE: z.string().optional().describe("세무신고거래처구분 (1:거래처동일, 2:검색입력, 3:직접입력)"),
       G_BUSINESS_CD: z.string().optional().describe("세무신고거래처코드"),
       TAX_REG_ID: z.string().optional().describe("종사업장번호"),
-      FAX: z.string().optional().describe("Fax"),
+      FAX: z.string().optional(),
       HP_NO: z.string().optional().describe("모바일"),
       DM_POST: z.string().optional().describe("DM우편번호"),
       DM_ADDR: z.string().optional().describe("DM주소"),
@@ -53,7 +53,7 @@ const masterDataTools: ToolDefinition[] = [
     annotations: { readOnlyHint: false, destructiveHint: false },
   },
   {
-    name: "ecount_save_product",
+    name: "ecount_master_save_product",
     description:
       "ECOUNT ERP에 품목을 등록하거나 수정합니다. 새 품목을 추가하거나 기존 품목 정보를 변경할 때 사용합니다.",
     endpoint: "InventoryBasic/SaveBasicProduct",
@@ -68,7 +68,7 @@ const masterDataTools: ToolDefinition[] = [
       BAL_FLAG: z.string().optional().describe("재고관리여부"),
       IN_PRICE: z.string().optional().describe("입고단가"),
       OUT_PRICE: z.string().optional().describe("출고단가"),
-      BAR_CODE: z.string().optional().describe("바코드"),
+      BAR_CODE: z.string().optional(),
       CLASS_CD: z.string().optional().describe("분류코드"),
       REMARKS: z.string().optional().describe("비고"),
       OUT_PRICE_VAT: z.string().optional().describe("출고단가VAT포함여부 (0:미포함, 1:포함)"),
@@ -87,7 +87,7 @@ const masterDataTools: ToolDefinition[] = [
     annotations: { readOnlyHint: false, destructiveHint: false },
   },
   {
-    name: "ecount_view_product",
+    name: "ecount_master_view_product",
     description:
       "ECOUNT ERP 특정 품목의 상세 정보를 조회합니다. 품목 코드로 단일 품목의 전체 정보를 확인할 때 사용합니다.",
     endpoint: "InventoryBasic/ViewBasicProduct",
@@ -100,7 +100,7 @@ const masterDataTools: ToolDefinition[] = [
     annotations: { readOnlyHint: true },
   },
   {
-    name: "ecount_list_products",
+    name: "ecount_master_list_products",
     description:
       "ECOUNT ERP 품목 목록을 조회합니다. 전체 품목 목록이나 특정 조건의 품목을 검색할 때 사용합니다.",
     endpoint: "InventoryBasic/GetBasicProductsList",

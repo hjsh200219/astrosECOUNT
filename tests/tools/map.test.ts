@@ -35,13 +35,13 @@ describe("Map Tools", () => {
   });
 
   describe("registerMapTools", () => {
-    it("should register ecount_render_map tool", async () => {
+    it("should register ecount_map_render_map tool", async () => {
       const server = new McpServer({ name: "map-test", version: "0.1" });
       const toolSpy = vi.spyOn(server, "tool");
       const { registerMapTools } = await import("../../src/tools/map.js");
       registerMapTools(server);
       expect(toolSpy).toHaveBeenCalledTimes(1);
-      expect(toolSpy.mock.calls[0][0]).toBe("ecount_render_map");
+      expect(toolSpy.mock.calls[0][0]).toBe("ecount_map_render_map");
       toolSpy.mockRestore();
     });
   });

@@ -51,7 +51,7 @@ function checkShipments(): SubsystemHealth {
     return {
       name: "shipments",
       status: "degraded",
-      message: "선적 데이터 없음 — ecount_add_shipment로 등록 필요",
+      message: "선적 데이터 없음 — ecount_shipment_add_shipment로 등록 필요",
       checkedAt: nowIso(),
     };
   }
@@ -86,7 +86,7 @@ export function checkHealth(): HealthReport {
 
 export function registerHealthCheckTools(server: McpServer): void {
   server.tool(
-    "ecount_health_check",
+    "ecount_health_health_check",
     "L1 인프라 헬스 체크 — API 연결성, 세션 상태, 서킷 브레이커, 선적 데이터 가용성을 확인합니다.",
     {},
     { readOnlyHint: true },

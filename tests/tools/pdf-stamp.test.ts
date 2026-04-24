@@ -76,7 +76,7 @@ describe("stampPdf", () => {
 });
 
 describe("registerPdfStampTool", () => {
-  it("should register ecount_stamp_pdf tool without throwing", async () => {
+  it("should register ecount_pdf_stamp_pdf tool without throwing", async () => {
     const { McpServer } = await import("@modelcontextprotocol/sdk/server/mcp.js");
     const { registerPdfStampTool } = await import("../../src/tools/pdf-stamp.js");
     const server = new McpServer({ name: "test", version: "0.1" });

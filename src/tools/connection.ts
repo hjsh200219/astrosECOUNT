@@ -28,7 +28,7 @@ async function fetchZoneInfo(comCode: string, config: EcountConfig) {
 
 export function registerConnectionTools(server: McpServer, client: EcountClient, config: EcountConfig): void {
   server.tool(
-    "ecount_zone", "ECOUNT ERP Zone 정보를 조회합니다. 회사코드로 해당 회사의 Zone과 도메인 정보를 확인할 때 사용합니다.",
+    "ecount_connection_zone", "ECOUNT ERP Zone 정보를 조회합니다. 회사코드로 해당 회사의 Zone과 도메인 정보를 확인할 때 사용합니다.",
     { COM_CODE: z.string().describe("회사코드 (6자리)") },
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {
@@ -42,7 +42,7 @@ export function registerConnectionTools(server: McpServer, client: EcountClient,
   );
 
   server.tool(
-    "ecount_login", "ECOUNT ERP에 수동으로 로그인합니다. 세션 상태를 확인하거나 강제 재로그인할 때 사용합니다.",
+    "ecount_connection_login", "ECOUNT ERP에 수동으로 로그인합니다. 세션 상태를 확인하거나 강제 재로그인할 때 사용합니다.",
     {},
     async () => {
       try {
@@ -55,7 +55,7 @@ export function registerConnectionTools(server: McpServer, client: EcountClient,
   );
 
   server.tool(
-    "ecount_status", "현재 ECOUNT ERP 세션 상태를 조회합니다. 세션이 유효한지 확인할 때 사용합니다.",
+    "ecount_connection_status", "현재 ECOUNT ERP 세션 상태를 조회합니다. 세션이 유효한지 확인할 때 사용합니다.",
     {},
     async () => {
       try {

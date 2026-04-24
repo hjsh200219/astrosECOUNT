@@ -39,10 +39,10 @@ describe("registerInternalApiTools", () => {
 
     registerInternalApiTools(server, client);
 
-    expect(toolNames).toContain("ecount_list_sales_internal");
-    expect(toolNames).toContain("ecount_list_purchases_internal");
-    expect(toolNames).toContain("ecount_list_vatslips");
-    expect(toolNames).toContain("ecount_list_account_slips");
+    expect(toolNames).toContain("ecount_internal_list_sales_internal");
+    expect(toolNames).toContain("ecount_internal_list_purchases_internal");
+    expect(toolNames).toContain("ecount_internal_list_vatslips");
+    expect(toolNames).toContain("ecount_internal_list_account_slips");
   });
 
   it("should have all tools as read-only", () => {
@@ -71,7 +71,7 @@ describe("registerInternalApiTools", () => {
     expect(INTERNAL_ENDPOINTS.ACCOUNT_SLIPS).toBe("/Account/GetAccountSlipList");
   });
 
-  it("should call client.postRaw when ecount_list_sales_internal is invoked", async () => {
+  it("should call client.postRaw when ecount_internal_list_sales_internal is invoked", async () => {
     const server = new McpServer({ name: "test", version: "0.1" });
     const client = new EcountClient(mockConfig);
     const postRawSpy = vi
@@ -80,7 +80,7 @@ describe("registerInternalApiTools", () => {
 
     registerInternalApiTools(server, client);
 
-    // Extract the handler registered for ecount_list_sales_internal
+    // Extract the handler registered for ecount_internal_list_sales_internal
     const handlers: Array<{ name: string; handler: (p: Record<string, unknown>) => Promise<unknown> }> = [];
     const captureServer = new McpServer({ name: "capture", version: "0.1" });
     vi.spyOn(captureServer, "tool").mockImplementation((...args: unknown[]) => {
@@ -92,7 +92,7 @@ describe("registerInternalApiTools", () => {
     });
     registerInternalApiTools(captureServer, client);
 
-    const salesHandler = handlers.find((h) => h.name === "ecount_list_sales_internal");
+    const salesHandler = handlers.find((h) => h.name === "ecount_internal_list_sales_internal");
     expect(salesHandler).toBeDefined();
 
     await salesHandler!.handler({
@@ -113,7 +113,7 @@ describe("registerInternalApiTools", () => {
     );
   });
 
-  it("should call client.postRaw with correct endpoint for ecount_list_purchases_internal", async () => {
+  it("should call client.postRaw with correct endpoint for ecount_internal_list_purchases_internal", async () => {
     const client = new EcountClient(mockConfig);
     const postRawSpy = vi
       .spyOn(client, "postRaw")
@@ -130,7 +130,7 @@ describe("registerInternalApiTools", () => {
     });
     registerInternalApiTools(server, client);
 
-    const handler = handlers.find((h) => h.name === "ecount_list_purchases_internal");
+    const handler = handlers.find((h) => h.name === "ecount_internal_list_purchases_internal");
     expect(handler).toBeDefined();
 
     await handler!.handler({
@@ -146,7 +146,7 @@ describe("registerInternalApiTools", () => {
     );
   });
 
-  it("should call client.postRaw with correct endpoint for ecount_list_vatslips", async () => {
+  it("should call client.postRaw with correct endpoint for ecount_internal_list_vatslips", async () => {
     const client = new EcountClient(mockConfig);
     const postRawSpy = vi
       .spyOn(client, "postRaw")
@@ -163,7 +163,7 @@ describe("registerInternalApiTools", () => {
     });
     registerInternalApiTools(server, client);
 
-    const handler = handlers.find((h) => h.name === "ecount_list_vatslips");
+    const handler = handlers.find((h) => h.name === "ecount_internal_list_vatslips");
     expect(handler).toBeDefined();
 
     await handler!.handler({
@@ -180,7 +180,7 @@ describe("registerInternalApiTools", () => {
     );
   });
 
-  it("should call client.postRaw with correct endpoint for ecount_list_account_slips", async () => {
+  it("should call client.postRaw with correct endpoint for ecount_internal_list_account_slips", async () => {
     const client = new EcountClient(mockConfig);
     const postRawSpy = vi
       .spyOn(client, "postRaw")
@@ -197,7 +197,7 @@ describe("registerInternalApiTools", () => {
     });
     registerInternalApiTools(server, client);
 
-    const handler = handlers.find((h) => h.name === "ecount_list_account_slips");
+    const handler = handlers.find((h) => h.name === "ecount_internal_list_account_slips");
     expect(handler).toBeDefined();
 
     await handler!.handler({
@@ -228,7 +228,7 @@ describe("registerInternalApiTools", () => {
     });
     registerInternalApiTools(server, client);
 
-    const handler = handlers.find((h) => h.name === "ecount_list_sales_internal");
+    const handler = handlers.find((h) => h.name === "ecount_internal_list_sales_internal");
     const result = await handler!.handler({
       from_date: "20240101",
       to_date: "20240131",

@@ -155,7 +155,7 @@ describe("listCostOverrides", () => {
 });
 
 describe("registerCustomsCostTools", () => {
-  it("should register ecount_override_customs_cost and ecount_get_landed_cost without throwing", async () => {
+  it("should register ecount_customs_override_customs_cost and ecount_customs_get_landed_cost without throwing", async () => {
     const { McpServer } = await import("@modelcontextprotocol/sdk/server/mcp.js");
     const { registerCustomsCostTools } = await import("../../src/tools/customs-cost.js");
     const server = new McpServer({ name: "test", version: "0.1" });

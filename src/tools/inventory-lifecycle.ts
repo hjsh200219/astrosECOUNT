@@ -57,15 +57,15 @@ export function registerInventoryLifecycleTools(server: McpServer): void {
   const stageEnum = z.enum(STAGES as unknown as [string, ...string[]]);
 
   server.tool(
-    "ecount_track_inventory_stage",
+    "ecount_inventory_track_inventory_stage",
     "재고 5단계 상태 전환을 기록합니다 (계약→미착→도착→상품→판매완료).",
     {
-      shipmentId: z.string().describe("선적 ID"),
-      product: z.string().describe("품목명"),
+      shipmentId: z.string(),
+      product: z.string(),
       fromStage: stageEnum.describe("현재 단계 (계약/미착/도착/상품/판매완료)"),
       toStage: stageEnum.describe("전환할 단계 (계약/미착/도착/상품/판매완료)"),
       quantity: z.number().positive().describe("수량 (kg)"),
-      warehouse: z.string().optional().describe("창고명 (선택)"),
+      warehouse: z.string().optional(),
     },
     { readOnlyHint: false, destructiveHint: false },
     async (params: Record<string, unknown>) => {
@@ -86,11 +86,11 @@ export function registerInventoryLifecycleTools(server: McpServer): void {
   );
 
   server.tool(
-    "ecount_get_inventory_pipeline",
+    "ecount_inventory_get_inventory_pipeline",
     "품목별 재고 5단계 파이프라인 현황을 조회합니다.",
     {
       product: z.string().optional().describe("품목명 필터"),
-      stage: stageEnum.optional().describe("단계 필터"),
+      stage: stageEnum.optional(),
     },
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {

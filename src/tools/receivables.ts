@@ -67,13 +67,13 @@ export function agingReceivables(params: {
 
 export function registerReceivablesTools(server: McpServer): void {
   server.tool(
-    "ecount_record_payment", "수금 기록을 생성합니다 (부분수금/완납).",
+    "ecount_receivable_record_payment", "수금 기록을 생성합니다 (부분수금/완납).",
     {
-      contractId: z.string().describe("계약 ID"),
-      amount: z.number().positive().describe("수금 금액"),
+      contractId: z.string(),
+      amount: z.number().positive(),
       currency: z.string().describe("통화 코드 (예: KRW, USD)"),
       paymentDate: z.string().describe("수금일 (YYYY-MM-DD)"),
-      method: z.enum(["bank_transfer", "check", "cash"]).optional().describe("수금 방법"),
+      method: z.enum(["bank_transfer", "check", "cash"]).optional(),
     },
     { readOnlyHint: false, destructiveHint: false },
     async (params: Record<string, unknown>) => {
@@ -93,10 +93,10 @@ export function registerReceivablesTools(server: McpServer): void {
   );
 
   server.tool(
-    "ecount_list_receivables", "미수금 현황을 조회합니다 (거래처별/상태별 필터).",
+    "ecount_receivable_list_receivables", "미수금 현황을 조회합니다 (거래처별/상태별 필터).",
     {
       buyer: z.string().optional().describe("거래처/고객명 필터"),
-      status: z.enum(["overdue", "partial", "paid", "all"]).optional().describe("상태 필터"),
+      status: z.enum(["overdue", "partial", "paid", "all"]).optional(),
       asOfDate: z.string().optional().describe("기준일 (YYYY-MM-DD)"),
     },
     { readOnlyHint: true },
@@ -115,10 +115,10 @@ export function registerReceivablesTools(server: McpServer): void {
   );
 
   server.tool(
-    "ecount_aging_receivables", "미수금 에이징 분석을 수행합니다 (연령별 구간 분류 및 D+30일 경고).",
+    "ecount_receivable_aging_receivables", "미수금 에이징 분석을 수행합니다 (연령별 구간 분류 및 D+30일 경고).",
     {
       asOfDate: z.string().optional().describe("기준일 (YYYY-MM-DD)"),
-      warningDays: z.number().optional().describe("경고 기준 일수 (기본값: 30일)"),
+      warningDays: z.number().optional().describe("기본값: 30일"),
     },
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {

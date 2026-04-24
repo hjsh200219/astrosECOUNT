@@ -1,6 +1,6 @@
 [
   {
-    "name": "ecount_zone",
+    "name": "ecount_connection_zone",
     "description": "ECOUNT ERP Zone 정보를 조회합니다. 회사코드로 해당 회사의 Zone과 도메인 정보를 확인할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -24,7 +24,7 @@
     }
   },
   {
-    "name": "ecount_login",
+    "name": "ecount_connection_login",
     "description": "ECOUNT ERP에 수동으로 로그인합니다. 세션 상태를 확인하거나 강제 재로그인할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -36,7 +36,7 @@
     }
   },
   {
-    "name": "ecount_status",
+    "name": "ecount_connection_status",
     "description": "현재 ECOUNT ERP 세션 상태를 조회합니다. 세션이 유효한지 확인할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -48,7 +48,7 @@
     }
   },
   {
-    "name": "ecount_save_customer",
+    "name": "ecount_master_save_customer",
     "description": "ECOUNT ERP에 거래처를 등록하거나 수정합니다. 새 거래처를 추가하거나 기존 거래처 정보를 변경할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -218,7 +218,7 @@
     }
   },
   {
-    "name": "ecount_save_product",
+    "name": "ecount_master_save_product",
     "description": "ECOUNT ERP에 품목을 등록하거나 수정합니다. 새 품목을 추가하거나 기존 품목 정보를 변경할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -332,7 +332,7 @@
     }
   },
   {
-    "name": "ecount_view_product",
+    "name": "ecount_master_view_product",
     "description": "ECOUNT ERP 특정 품목의 상세 정보를 조회합니다. 품목 코드로 단일 품목의 전체 정보를 확인할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -364,7 +364,7 @@
     }
   },
   {
-    "name": "ecount_list_products",
+    "name": "ecount_master_list_products",
     "description": "ECOUNT ERP 품목 목록을 조회합니다. 전체 품목 목록이나 특정 조건의 품목을 검색할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -401,7 +401,7 @@
     }
   },
   {
-    "name": "ecount_save_quotation",
+    "name": "ecount_sales_save_quotation",
     "description": "ECOUNT ERP 견적서를 저장합니다. 거래처에게 제품 견적을 등록하거나 수정할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -531,7 +531,7 @@
     }
   },
   {
-    "name": "ecount_save_sale_order",
+    "name": "ecount_sales_save_sale_order",
     "description": "ECOUNT ERP 수주(판매 주문)를 저장합니다. 고객으로부터 받은 주문을 등록하거나 수정할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -649,7 +649,7 @@
     }
   },
   {
-    "name": "ecount_save_sale",
+    "name": "ecount_sales_save_sale",
     "description": "ECOUNT ERP 매출전표를 저장합니다. 실제 판매(출하) 거래를 등록하거나 수정할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -760,7 +760,7 @@
     }
   },
   {
-    "name": "ecount_save_purchase",
+    "name": "ecount_purchase_save_purchase",
     "description": "ECOUNT ERP 구매(매입) 전표를 저장합니다. 실제 구매 거래를 등록하거나 수정할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -871,7 +871,7 @@
     }
   },
   {
-    "name": "ecount_list_purchase_orders",
+    "name": "ecount_purchase_list_purchase_orders",
     "description": "ECOUNT ERP 발주 목록을 조회합니다. 특정 기간의 발주(구매 주문) 내역을 확인할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -926,7 +926,7 @@
     }
   },
   {
-    "name": "ecount_view_inventory_balance",
+    "name": "ecount_inventory_view_inventory_balance",
     "description": "ECOUNT ERP 특정 품목의 재고 잔량을 조회합니다. 품목코드와 기준일자를 지정하여 해당 시점의 재고 현황을 확인할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -971,7 +971,7 @@
     }
   },
   {
-    "name": "ecount_list_inventory_balance",
+    "name": "ecount_inventory_list_inventory_balance",
     "description": "ECOUNT ERP 재고 잔량 목록을 조회합니다. 기준일자 기준으로 전체 또는 특정 품목의 재고 현황을 확인할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -1015,7 +1015,7 @@
     }
   },
   {
-    "name": "ecount_view_inventory_by_location",
+    "name": "ecount_inventory_view_inventory_by_location",
     "description": "ECOUNT ERP 특정 품목의 로케이션별 재고 잔량을 조회합니다. 창고 내 로케이션 단위로 재고 위치와 수량을 확인할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -1060,7 +1060,7 @@
     }
   },
   {
-    "name": "ecount_list_inventory_by_location",
+    "name": "ecount_inventory_list_inventory_by_location",
     "description": "ECOUNT ERP 로케이션별 재고 잔량 목록을 조회합니다. 기준일자 기준으로 창고 내 로케이션별 재고 현황을 확인할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -1104,7 +1104,7 @@
     }
   },
   {
-    "name": "ecount_save_job_order",
+    "name": "ecount_production_save_job_order",
     "description": "ECOUNT ERP 작업지시를 저장합니다. 생산을 위한 작업지시를 등록하거나 수정할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -1174,7 +1174,7 @@
     }
   },
   {
-    "name": "ecount_save_goods_issued",
+    "name": "ecount_production_save_goods_issued",
     "description": "ECOUNT ERP 생산 자재 출고(불출)를 저장합니다. 생산에 사용할 자재를 창고에서 출고 처리할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -1244,7 +1244,7 @@
     }
   },
   {
-    "name": "ecount_save_goods_receipt",
+    "name": "ecount_production_save_goods_receipt",
     "description": "ECOUNT ERP 생산 완료 입고를 저장합니다. 생산이 완료된 제품을 창고에 입고 처리할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -1314,7 +1314,7 @@
     }
   },
   {
-    "name": "ecount_save_invoice_auto",
+    "name": "ecount_accounting_save_invoice_auto",
     "description": "ECOUNT ERP 자동 세금계산서(청구서)를 저장합니다. 매출 또는 매입 거래에 대한 전표를 자동으로 생성하고 등록할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -1381,7 +1381,7 @@
     }
   },
   {
-    "name": "ecount_save_open_market_order",
+    "name": "ecount_other_save_open_market_order",
     "description": "ECOUNT ERP 오픈마켓 주문을 저장합니다. 쇼핑몰이나 오픈마켓에서 발생한 주문 데이터를 등록하거나 수정할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -1459,7 +1459,7 @@
     }
   },
   {
-    "name": "ecount_save_clock_in_out",
+    "name": "ecount_other_save_clock_in_out",
     "description": "ECOUNT ERP 출퇴근 기록을 저장합니다. 사원의 출근 또는 퇴근 시간을 등록할 때 사용합니다.",
     "inputSchema": {
       "type": "object",
@@ -1509,7 +1509,7 @@
     }
   },
   {
-    "name": "ecount_create_board",
+    "name": "ecount_board_create_board",
     "description": "ECOUNT ERP 게시판에 글을 등록합니다. 게시판ID를 지정하여 새 글을 작성할 때 사용합니다. (V3 API)",
     "inputSchema": {
       "type": "object",

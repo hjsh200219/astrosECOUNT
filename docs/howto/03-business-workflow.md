@@ -73,7 +73,7 @@ sequenceDiagram
     participant 결재 as 전자결재(EDMS)
     participant 공급사 as 오로라/비브라
 
-    담당자->>ERP: 발주서 작성 (ecount_list_purchase_orders)
+    담당자->>ERP: 발주서 작성 (ecount_purchase_list_purchase_orders)
     Note right of ERP: PJT_CD: 돈육/계육/CJ-벌크<br/>통화: USD, 인코텀즈: CFR/CIF
     ERP->>결재: 전자결재 요청
     Note right of 결재: EDMS_APP_TYPE=9 (결재완료)
@@ -208,7 +208,7 @@ flowchart LR
 
 ## 4. 생산 프로세스 `[INFERRED]`
 
-> Save 도구(ecount_save_job_order, ecount_save_goods_issued, ecount_save_goods_receipt) 스키마에서 추론
+> Save 도구(ecount_production_save_job_order, ecount_production_save_goods_issued, ecount_production_save_goods_receipt) 스키마에서 추론
 
 ```mermaid
 flowchart LR

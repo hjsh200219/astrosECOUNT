@@ -67,13 +67,13 @@ export function agingPayables(params: {
 
 export function registerPayablesTools(server: McpServer): void {
   server.tool(
-    "ecount_record_payment_out", "지급 기록을 생성합니다 (선금/중도금/잔금).",
+    "ecount_payable_record_payment_out", "지급 기록을 생성합니다 (선금/중도금/잔금).",
     {
-      contractId: z.string().describe("계약 ID"),
-      amount: z.number().positive().describe("지급 금액"),
+      contractId: z.string(),
+      amount: z.number().positive(),
       currency: z.string().describe("통화 코드 (예: KRW, USD)"),
       paymentDate: z.string().describe("지급일 (YYYY-MM-DD)"),
-      type: z.enum(["advance", "interim", "final"]).describe("지급 유형 (advance: 선금, interim: 중도금, final: 잔금)"),
+      type: z.enum(["advance", "interim", "final"]).describe("advance: 선금, interim: 중도금, final: 잔금"),
     },
     { readOnlyHint: false, destructiveHint: false },
     async (params: Record<string, unknown>) => {
@@ -93,10 +93,10 @@ export function registerPayablesTools(server: McpServer): void {
   );
 
   server.tool(
-    "ecount_list_payables", "미지급금 현황을 조회합니다 (공급사별/상태별 필터).",
+    "ecount_payable_list_payables", "미지급금 현황을 조회합니다 (공급사별/상태별 필터).",
     {
-      supplier: z.string().optional().describe("공급사명 필터"),
-      status: z.enum(["overdue", "partial", "paid", "all"]).optional().describe("상태 필터"),
+      supplier: z.string().optional(),
+      status: z.enum(["overdue", "partial", "paid", "all"]).optional(),
       asOfDate: z.string().optional().describe("기준일 (YYYY-MM-DD)"),
     },
     { readOnlyHint: true },
@@ -115,10 +115,10 @@ export function registerPayablesTools(server: McpServer): void {
   );
 
   server.tool(
-    "ecount_aging_payables", "미지급금 에이징 분석을 수행합니다 (연령별 구간 분류 및 경고).",
+    "ecount_payable_aging_payables", "미지급금 에이징 분석을 수행합니다 (연령별 구간 분류 및 경고).",
     {
       asOfDate: z.string().optional().describe("기준일 (YYYY-MM-DD)"),
-      warningDays: z.number().optional().describe("경고 기준 일수 (기본값: 45일)"),
+      warningDays: z.number().optional().describe("기본값: 45일"),
     },
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {

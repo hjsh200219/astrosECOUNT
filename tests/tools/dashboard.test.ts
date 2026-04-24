@@ -203,7 +203,7 @@ describe("Dashboard Tools", () => {
       const { registerDashboardTools } = await import("../../src/tools/dashboard.js");
       registerDashboardTools(server);
       expect(toolSpy).toHaveBeenCalledTimes(1);
-      expect(toolSpy.mock.calls[0][0]).toBe("ecount_render_dashboard");
+      expect(toolSpy.mock.calls[0][0]).toBe("ecount_dashboard_render_dashboard");
       toolSpy.mockRestore();
     });
   });

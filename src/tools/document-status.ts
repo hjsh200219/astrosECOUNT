@@ -160,7 +160,7 @@ async function handleCheckDocumentStatus(params: Record<string, unknown>) {
 
 export function registerDocumentStatusTools(server: McpServer): void {
   server.tool(
-    "ecount_check_document_status",
+    "ecount_document_check_document_status",
     "L3 프로세스 모니터링 — 선적 서류 체크리스트 완료 여부 및 지연 배송/통관 감지",
     {
       shipments: z.array(z.object({
@@ -171,9 +171,9 @@ export function registerDocumentStatusTools(server: McpServer): void {
         id: z.string(), product: z.string(), customer: z.string(),
         saleDate: z.string(), delivered: z.boolean(), deliveryDate: z.string().optional(),
       })).optional().describe("판매 목록 (배송 지연 감지용)"),
-      required_docs: z.array(z.string()).optional().describe("필수 서류 목록"),
-      max_delivery_days: z.number().default(3).describe("배송 지연 기준 일수 (기본 3일)"),
-      max_customs_days: z.number().default(7).describe("통관 지연 기준 일수 (기본 7일)"),
+      required_docs: z.array(z.string()).optional(),
+      max_delivery_days: z.number().default(3).describe("배송 지연 기준 일수 (기본 3)"),
+      max_customs_days: z.number().default(7).describe("통관 지연 기준 일수 (기본 7)"),
     },
     { readOnlyHint: true },
     handleCheckDocumentStatus,

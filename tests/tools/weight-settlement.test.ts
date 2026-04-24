@@ -88,7 +88,7 @@ describe("calcWeightSettlement", () => {
 });
 
 describe("registerWeightSettlementTools", () => {
-  it("should register ecount_calc_weight_settlement without throwing", async () => {
+  it("should register ecount_weight_calc_weight_settlement without throwing", async () => {
     const { McpServer } = await import("@modelcontextprotocol/sdk/server/mcp.js");
     const { registerWeightSettlementTools } = await import("../../src/tools/weight-settlement.js");
     const server = new McpServer({ name: "test", version: "0.1" });

@@ -37,6 +37,7 @@ function createTestServer(): McpServer {
     ECOUNT_ZONE: "AU1",
     ECOUNT_LAN_TYPE: "ko-KR",
     ECOUNT_API_MODE: "production",
+    ECOUNT_ENABLE_EXTRAS: "all",
   });
   return server;
 }
@@ -106,10 +107,10 @@ describe("MCP Server E2E", () => {
 
   // ── Category B tools: real callTool ──
 
-  describe("BL Parser (ecount_parse_bl)", () => {
+  describe("BL Parser (ecount_bl_parse_bl)", () => {
     it("should parse a COSCO BL number", async () => {
       const result = await client.callTool({
-        name: "ecount_parse_bl",
+        name: "ecount_bl_parse_bl",
         arguments: { bl_number: "COSU6123456780" },
       });
       expect(result.isError).toBeFalsy();
@@ -121,7 +122,7 @@ describe("MCP Server E2E", () => {
 
     it("should return valid=false for unknown carrier BL", async () => {
       const result = await client.callTool({
-        name: "ecount_parse_bl",
+        name: "ecount_bl_parse_bl",
         arguments: { bl_number: "XXXX12345" },
       });
       expect(result.isError).toBeFalsy();
@@ -131,10 +132,10 @@ describe("MCP Server E2E", () => {
     });
   });
 
-  describe("Contacts (ecount_lookup_contact / ecount_list_contacts)", () => {
+  describe("Contacts (ecount_contact_lookup_contact / ecount_contact_list_contacts)", () => {
     it("should list all contacts with count wrapper", async () => {
       const result = await client.callTool({
-        name: "ecount_list_contacts",
+        name: "ecount_contact_list_contacts",
         arguments: {},
       });
       expect(result.isError).toBeFalsy();
@@ -145,7 +146,7 @@ describe("MCP Server E2E", () => {
 
     it("should lookup a contact by name", async () => {
       const result = await client.callTool({
-        name: "ecount_lookup_contact",
+        name: "ecount_contact_lookup_contact",
         arguments: { name: "김민수" },
       });
       expect(result.isError).toBeFalsy();
@@ -157,7 +158,7 @@ describe("MCP Server E2E", () => {
 
     it("should return found=false for unknown contact", async () => {
       const result = await client.callTool({
-        name: "ecount_lookup_contact",
+        name: "ecount_contact_lookup_contact",
         arguments: { name: "존재하지않는사람" },
       });
       expect(result.isError).toBeFalsy();
@@ -169,7 +170,7 @@ describe("MCP Server E2E", () => {
   describe("Business Rules", () => {
     it("should return 원스탑 customs broker for 전지벌크", async () => {
       const result = await client.callTool({
-        name: "ecount_get_customs_broker",
+        name: "ecount_rule_get_customs_broker",
         arguments: { product_name: "전지벌크" },
       });
       expect(result.isError).toBeFalsy();
@@ -179,7 +180,7 @@ describe("MCP Server E2E", () => {
 
     it("should return 정운 for non-전지벌크 product", async () => {
       const result = await client.callTool({
-        name: "ecount_get_customs_broker",
+        name: "ecount_rule_get_customs_broker",
         arguments: { product_name: "LA갈비" },
       });
       expect(result.isError).toBeFalsy();
@@ -189,7 +190,7 @@ describe("MCP Server E2E", () => {
 
     it("should return warehouse mapping (no params)", async () => {
       const result = await client.callTool({
-        name: "ecount_get_warehouse_mapping",
+        name: "ecount_rule_get_warehouse_mapping",
         arguments: {},
       });
       expect(result.isError).toBeFalsy();
@@ -200,7 +201,7 @@ describe("MCP Server E2E", () => {
 
     it("should list all business rules with count wrapper", async () => {
       const result = await client.callTool({
-        name: "ecount_list_business_rules",
+        name: "ecount_rule_list_business_rules",
         arguments: {},
       });
       expect(result.isError).toBeFalsy();
@@ -213,7 +214,7 @@ describe("MCP Server E2E", () => {
   describe("Email Templates", () => {
     it("should list all 15 templates with count wrapper", async () => {
       const result = await client.callTool({
-        name: "ecount_list_email_templates",
+        name: "ecount_email_list_email_templates",
         arguments: {},
       });
       expect(result.isError).toBeFalsy();
@@ -224,7 +225,7 @@ describe("MCP Server E2E", () => {
 
     it("should get a specific template by id", async () => {
       const result = await client.callTool({
-        name: "ecount_get_email_template",
+        name: "ecount_email_get_email_template",
         arguments: { id: "TPL-CUSTOMS-01" },
       });
       expect(result.isError).toBeFalsy();
@@ -235,7 +236,7 @@ describe("MCP Server E2E", () => {
 
     it("should render a customs request email with data substitution", async () => {
       const result = await client.callTool({
-        name: "ecount_render_email",
+        name: "ecount_email_render_email",
         arguments: {
           id: "TPL-CUSTOMS-01",
           data: {
@@ -254,7 +255,7 @@ describe("MCP Server E2E", () => {
 
     it("should return found=false for unknown template", async () => {
       const result = await client.callTool({
-        name: "ecount_render_email",
+        name: "ecount_email_render_email",
         arguments: { id: "NONEXISTENT", data: {} },
       });
       expect(result.isError).toBeFalsy();
@@ -268,7 +269,7 @@ describe("MCP Server E2E", () => {
 
     it("should add a shipment and list it", async () => {
       const addResult = await client.callTool({
-        name: "ecount_add_shipment",
+        name: "ecount_shipment_add_shipment",
         arguments: {
           blNumber: "COSU9999999990",
           carrier: "COSCO",
@@ -286,7 +287,7 @@ describe("MCP Server E2E", () => {
       expect(shipmentId).toBeTruthy();
 
       const listResult = await client.callTool({
-        name: "ecount_list_shipments",
+        name: "ecount_shipment_list_shipments",
         arguments: {},
       });
       expect(listResult.isError).toBeFalsy();
@@ -297,7 +298,7 @@ describe("MCP Server E2E", () => {
 
     it("should update ETA and get history", async () => {
       const updateResult = await client.callTool({
-        name: "ecount_update_eta",
+        name: "ecount_shipment_update_eta",
         arguments: {
           id: shipmentId,
           eta: "2026-04-20",
@@ -310,7 +311,7 @@ describe("MCP Server E2E", () => {
       expect(updateData.shipment.eta).toBe("2026-04-20");
 
       const historyResult = await client.callTool({
-        name: "ecount_get_eta_history",
+        name: "ecount_shipment_get_eta_history",
         arguments: { id: shipmentId },
       });
       expect(historyResult.isError).toBeFalsy();
@@ -321,7 +322,7 @@ describe("MCP Server E2E", () => {
 
     it("should update shipment status", async () => {
       const result = await client.callTool({
-        name: "ecount_update_shipment_status",
+        name: "ecount_shipment_update_shipment_status",
         arguments: { id: shipmentId, status: "in_transit" },
       });
       expect(result.isError).toBeFalsy();
@@ -334,7 +335,7 @@ describe("MCP Server E2E", () => {
   describe("Contracts", () => {
     it("should add a contract and list contracts", async () => {
       const addResult = await client.callTool({
-        name: "ecount_add_contract",
+        name: "ecount_contract_add_contract",
         arguments: {
           contractNumber: "E2E-CONTRACT-001",
           supplier: "JBS",
@@ -353,7 +354,7 @@ describe("MCP Server E2E", () => {
       expect(addData.contract.contractNumber).toBe("E2E-CONTRACT-001");
 
       const listResult = await client.callTool({
-        name: "ecount_list_contracts",
+        name: "ecount_contract_list_contracts",
         arguments: {},
       });
       expect(listResult.isError).toBeFalsy();
@@ -363,10 +364,10 @@ describe("MCP Server E2E", () => {
     });
   });
 
-  describe("Health Check (ecount_health_check)", () => {
+  describe("Health Check (ecount_health_health_check)", () => {
     it("should return a health report with subsystem statuses", async () => {
       const result = await client.callTool({
-        name: "ecount_health_check",
+        name: "ecount_health_health_check",
         arguments: {},
       });
       expect(result.isError).toBeFalsy();
@@ -382,7 +383,7 @@ describe("MCP Server E2E", () => {
   describe("Inventory Adjustment", () => {
     it("should adjust inventory and list adjustments", async () => {
       const adjustResult = await client.callTool({
-        name: "ecount_adjust_inventory",
+        name: "ecount_inventory_adjust_inventory",
         arguments: {
           product: "E2E-PROD-001",
           warehouse: "WH-01",
@@ -397,7 +398,7 @@ describe("MCP Server E2E", () => {
       expect(adjustData.adjustment.id).toBeTruthy();
 
       const listResult = await client.callTool({
-        name: "ecount_list_adjustments",
+        name: "ecount_inventory_list_adjustments",
         arguments: {},
       });
       expect(listResult.isError).toBeFalsy();
@@ -407,7 +408,7 @@ describe("MCP Server E2E", () => {
 
     it("should return error for zero quantity adjustment", async () => {
       const result = await client.callTool({
-        name: "ecount_adjust_inventory",
+        name: "ecount_inventory_adjust_inventory",
         arguments: {
           product: "X",
           warehouse: "W",
@@ -424,7 +425,7 @@ describe("MCP Server E2E", () => {
   describe("Customs Cost Override & Landed Cost", () => {
     it("should override customs cost and calculate landed cost", async () => {
       const overrideResult = await client.callTool({
-        name: "ecount_override_customs_cost",
+        name: "ecount_customs_override_customs_cost",
         arguments: {
           shipmentId: "E2E-SHIP-001",
           customsDuty: 500000,
@@ -441,7 +442,7 @@ describe("MCP Server E2E", () => {
       expect(overrideData.success).toBe(true);
 
       const landedResult = await client.callTool({
-        name: "ecount_get_landed_cost",
+        name: "ecount_customs_get_landed_cost",
         arguments: {
           shipmentId: "E2E-SHIP-001",
           basePrice: 10000,
@@ -457,7 +458,7 @@ describe("MCP Server E2E", () => {
 
     it("should return found=false for unknown shipment landed cost", async () => {
       const result = await client.callTool({
-        name: "ecount_get_landed_cost",
+        name: "ecount_customs_get_landed_cost",
         arguments: {
           shipmentId: "NONEXISTENT",
           basePrice: 100,
@@ -470,10 +471,10 @@ describe("MCP Server E2E", () => {
     });
   });
 
-  describe("CSV Export (ecount_export_csv)", () => {
+  describe("CSV Export (ecount_csv_export_csv)", () => {
     it("should export data array as CSV", async () => {
       const result = await client.callTool({
-        name: "ecount_export_csv",
+        name: "ecount_csv_export_csv",
         arguments: {
           data: [
             { name: "LA갈비", quantity: 100, price: 5.5 },
@@ -489,10 +490,10 @@ describe("MCP Server E2E", () => {
     });
   });
 
-  describe("Logistics KPI (ecount_calc_logistics_kpi)", () => {
+  describe("Logistics KPI (ecount_logistics_calc_logistics_kpi)", () => {
     it("should calculate logistics KPI", async () => {
       const result = await client.callTool({
-        name: "ecount_calc_logistics_kpi",
+        name: "ecount_logistics_calc_logistics_kpi",
         arguments: {},
       });
       expect(result.isError).toBeFalsy();
@@ -502,10 +503,10 @@ describe("MCP Server E2E", () => {
     });
   });
 
-  describe("Daily Report (ecount_daily_report)", () => {
+  describe("Daily Report (ecount_report_daily_report)", () => {
     it("should generate a daily report", async () => {
       const result = await client.callTool({
-        name: "ecount_daily_report",
+        name: "ecount_report_daily_report",
         arguments: {},
       });
       expect(result.isError).toBeFalsy();
@@ -516,10 +517,10 @@ describe("MCP Server E2E", () => {
     });
   });
 
-  describe("Diagnostic Report (ecount_diagnostic_report)", () => {
+  describe("Diagnostic Report (ecount_report_diagnostic_report)", () => {
     it("should generate L1-L3 diagnostic report", async () => {
       const result = await client.callTool({
-        name: "ecount_diagnostic_report",
+        name: "ecount_report_diagnostic_report",
         arguments: {},
       });
       expect(result.isError).toBeFalsy();
@@ -544,10 +545,10 @@ describe("MCP Server E2E", () => {
     });
   });
 
-  describe("Data Integrity (ecount_validate_data_integrity)", () => {
+  describe("Data Integrity (ecount_integrity_validate_data_integrity)", () => {
     it("should validate data integrity with matching data", async () => {
       const result = await client.callTool({
-        name: "ecount_validate_data_integrity",
+        name: "ecount_integrity_validate_data_integrity",
         arguments: {
           contracts: [
             { id: "CTR-001", blNumber: "COSU1111", product: "LA갈비" },
@@ -571,7 +572,7 @@ describe("MCP Server E2E", () => {
 
     it("should detect mismatched contracts and shipments", async () => {
       const result = await client.callTool({
-        name: "ecount_validate_data_integrity",
+        name: "ecount_integrity_validate_data_integrity",
         arguments: {
           contracts: [
             { id: "CTR-001", blNumber: "COSU1111", product: "LA갈비" },
@@ -588,10 +589,10 @@ describe("MCP Server E2E", () => {
     });
   });
 
-  describe("Document Status (ecount_check_document_status)", () => {
+  describe("Document Status (ecount_document_check_document_status)", () => {
     it("should check document status for shipments", async () => {
       const result = await client.callTool({
-        name: "ecount_check_document_status",
+        name: "ecount_document_check_document_status",
         arguments: {
           shipments: [
             {
@@ -619,7 +620,7 @@ describe("MCP Server E2E", () => {
   describe("Stale Shipments", () => {
     it("should find stale shipments (returns empty if all recently updated)", async () => {
       const result = await client.callTool({
-        name: "ecount_stale_shipments",
+        name: "ecount_shipment_stale_shipments",
         arguments: {},
       });
       expect(result.isError).toBeFalsy();
@@ -630,7 +631,7 @@ describe("MCP Server E2E", () => {
 
     it("should check customs delays", async () => {
       const result = await client.callTool({
-        name: "ecount_customs_delays",
+        name: "ecount_shipment_customs_delays",
         arguments: {},
       });
       expect(result.isError).toBeFalsy();
@@ -640,7 +641,7 @@ describe("MCP Server E2E", () => {
 
     it("should check delivery delays", async () => {
       const result = await client.callTool({
-        name: "ecount_delivery_delays",
+        name: "ecount_shipment_delivery_delays",
         arguments: {},
       });
       expect(result.isError).toBeFalsy();
@@ -649,10 +650,10 @@ describe("MCP Server E2E", () => {
     });
   });
 
-  describe("PDF Stamp (ecount_stamp_pdf)", () => {
+  describe("PDF Stamp (ecount_pdf_stamp_pdf)", () => {
     it("should return error for non-existent PDF file", async () => {
       const result = await client.callTool({
-        name: "ecount_stamp_pdf",
+        name: "ecount_pdf_stamp_pdf",
         arguments: {
           pdf_path: "/tmp/nonexistent-e2e-test.pdf",
           output_path: "/tmp/nonexistent-e2e-output.pdf",
@@ -679,7 +680,7 @@ describe("MCP Server E2E", () => {
 
       try {
         const result = await client.callTool({
-          name: "ecount_stamp_pdf",
+          name: "ecount_pdf_stamp_pdf",
           arguments: {
             pdf_path: inputPdf,
             output_path: outputPdf,
@@ -710,7 +711,7 @@ describe("MCP Server E2E", () => {
     it("should return error for missing required argument (Zod validation)", async () => {
       // BL parser with missing required bl_number
       const result = await client.callTool({
-        name: "ecount_parse_bl",
+        name: "ecount_bl_parse_bl",
         arguments: {},
       });
       // MCP SDK returns validation error

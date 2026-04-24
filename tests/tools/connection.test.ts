@@ -13,7 +13,7 @@ const mockConfig: EcountConfig = {
 };
 
 describe("registerConnectionTools", () => {
-  it("should register ecount_login and ecount_status tools without throwing", () => {
+  it("should register ecount_connection_login and ecount_connection_status tools without throwing", () => {
     const server = new McpServer({ name: "test", version: "0.1" });
     const client = new EcountClient(mockConfig);
 
@@ -30,27 +30,27 @@ describe("registerConnectionTools", () => {
 
     expect(toolSpy).toHaveBeenCalledTimes(3);
     expect(toolSpy).toHaveBeenCalledWith(
-      "ecount_zone",
+      "ecount_connection_zone",
       expect.any(String),
       expect.any(Object),
       expect.any(Object),
       expect.any(Function)
     );
     expect(toolSpy).toHaveBeenCalledWith(
-      "ecount_login",
+      "ecount_connection_login",
       expect.any(String),
       {},
       expect.any(Function)
     );
     expect(toolSpy).toHaveBeenCalledWith(
-      "ecount_status",
+      "ecount_connection_status",
       expect.any(String),
       {},
       expect.any(Function)
     );
   });
 
-  describe("ecount_login tool handler", () => {
+  describe("ecount_connection_login tool handler", () => {
     let originalFetch: typeof globalThis.fetch;
 
     beforeEach(() => {
@@ -79,7 +79,7 @@ describe("registerConnectionTools", () => {
       let loginHandler: (() => Promise<unknown>) | null = null;
       const toolSpy = vi.spyOn(server, "tool").mockImplementation(
         (name: string, _desc: unknown, _schema: unknown, handler: unknown) => {
-          if (name === "ecount_login") {
+          if (name === "ecount_connection_login") {
             loginHandler = handler as () => Promise<unknown>;
           }
           return {} as ReturnType<typeof server.tool>;
@@ -111,7 +111,7 @@ describe("registerConnectionTools", () => {
       let loginHandler: (() => Promise<unknown>) | null = null;
       const toolSpy = vi.spyOn(server, "tool").mockImplementation(
         (name: string, _desc: unknown, _schema: unknown, handler: unknown) => {
-          if (name === "ecount_login") {
+          if (name === "ecount_connection_login") {
             loginHandler = handler as () => Promise<unknown>;
           }
           return {} as ReturnType<typeof server.tool>;
@@ -131,7 +131,7 @@ describe("registerConnectionTools", () => {
     });
   });
 
-  describe("ecount_status tool handler", () => {
+  describe("ecount_connection_status tool handler", () => {
     it("should return no-session status when not logged in", async () => {
       const server = new McpServer({ name: "test", version: "0.1" });
       const client = new EcountClient(mockConfig);
@@ -139,7 +139,7 @@ describe("registerConnectionTools", () => {
       let statusHandler: (() => Promise<unknown>) | null = null;
       const toolSpy = vi.spyOn(server, "tool").mockImplementation(
         (name: string, _desc: unknown, _schema: unknown, handler: unknown) => {
-          if (name === "ecount_status") {
+          if (name === "ecount_connection_status") {
             statusHandler = handler as () => Promise<unknown>;
           }
           return {} as ReturnType<typeof server.tool>;

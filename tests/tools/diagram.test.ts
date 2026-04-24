@@ -43,13 +43,13 @@ describe("Diagram Tools", () => {
   });
 
   describe("registerDiagramTools", () => {
-    it("should register ecount_render_diagram tool", async () => {
+    it("should register ecount_diagram_render_diagram tool", async () => {
       const server = new McpServer({ name: "diag-test", version: "0.1" });
       const toolSpy = vi.spyOn(server, "tool");
       const { registerDiagramTools } = await import("../../src/tools/diagram.js");
       registerDiagramTools(server);
       expect(toolSpy).toHaveBeenCalledTimes(1);
-      expect(toolSpy.mock.calls[0][0]).toBe("ecount_render_diagram");
+      expect(toolSpy.mock.calls[0][0]).toBe("ecount_diagram_render_diagram");
       toolSpy.mockRestore();
     });
   });

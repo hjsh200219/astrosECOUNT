@@ -5,7 +5,7 @@ import { registerTools, type ToolDefinition } from "./tool-factory.js";
 
 const inventoryTools: ToolDefinition[] = [
   {
-    name: "ecount_view_inventory_balance",
+    name: "ecount_inventory_view_inventory_balance",
     description:
       "ECOUNT ERP 특정 품목의 재고 잔량을 조회합니다. 품목코드와 기준일자를 지정하여 해당 시점의 재고 현황을 확인할 때 사용합니다.",
     endpoint: "InventoryBalance/ViewInventoryBalanceStatus",
@@ -21,7 +21,7 @@ const inventoryTools: ToolDefinition[] = [
     annotations: { readOnlyHint: true },
   },
   {
-    name: "ecount_list_inventory_balance",
+    name: "ecount_inventory_list_inventory_balance",
     description:
       "ECOUNT ERP 재고 잔량 목록을 조회합니다. 기준일자 기준으로 전체 또는 특정 품목의 재고 현황을 확인할 때 사용합니다.",
     endpoint: "InventoryBalance/GetListInventoryBalanceStatus",
@@ -37,7 +37,7 @@ const inventoryTools: ToolDefinition[] = [
     annotations: { readOnlyHint: true },
   },
   {
-    name: "ecount_view_inventory_by_location",
+    name: "ecount_inventory_view_inventory_by_location",
     description:
       "ECOUNT ERP 특정 품목의 로케이션별 재고 잔량을 조회합니다. 창고 내 로케이션 단위로 재고 위치와 수량을 확인할 때 사용합니다.",
     endpoint: "InventoryBalance/ViewInventoryBalanceStatusByLocation",
@@ -53,7 +53,7 @@ const inventoryTools: ToolDefinition[] = [
     annotations: { readOnlyHint: true },
   },
   {
-    name: "ecount_list_inventory_by_location",
+    name: "ecount_inventory_list_inventory_by_location",
     description:
       "ECOUNT ERP 로케이션별 재고 잔량 목록을 조회합니다. 기준일자 기준으로 창고 내 로케이션별 재고 현황을 확인할 때 사용합니다.",
     endpoint: "InventoryBalance/GetListInventoryBalanceStatusByLocation",

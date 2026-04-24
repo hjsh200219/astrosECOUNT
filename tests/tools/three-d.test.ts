@@ -33,13 +33,13 @@ describe("3D Tools", () => {
   });
 
   describe("register3dTools", () => {
-    it("should register ecount_render_3d tool", async () => {
+    it("should register ecount_viz3d_render_3d tool", async () => {
       const server = new McpServer({ name: "3d-test", version: "0.1" });
       const toolSpy = vi.spyOn(server, "tool");
       const { register3dTools } = await import("../../src/tools/three-d.js");
       register3dTools(server);
       expect(toolSpy).toHaveBeenCalledTimes(1);
-      expect(toolSpy.mock.calls[0][0]).toBe("ecount_render_3d");
+      expect(toolSpy.mock.calls[0][0]).toBe("ecount_viz3d_render_3d");
       toolSpy.mockRestore();
     });
   });

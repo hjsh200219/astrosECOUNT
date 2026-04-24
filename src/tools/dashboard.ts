@@ -51,20 +51,19 @@ const DASHBOARD_TYPES = [
 
 export function registerDashboardTools(server: McpServer): void {
   server.tool(
-    "ecount_render_dashboard",
+    "ecount_dashboard_render_dashboard",
     "데이터를 시각화하는 HTML 대시보드를 생성합니다. Chart.js 인터랙티브 차트, D3.js 트리맵/히트맵/생키 다이어그램을 지원합니다.",
     {
-      data: z.record(z.string(), z.unknown()).describe("대시보드에 표시할 데이터"),
+      data: z.record(z.string(), z.unknown()),
       dashboardType: z
-        .enum(DASHBOARD_TYPES)
-        .describe("대시보드 유형"),
-      title: z.string().optional().describe("대시보드 제목 (선택)"),
-      language: z.enum(["ko", "en"]).optional().default("ko").describe("언어 설정"),
+        .enum(DASHBOARD_TYPES),
+      title: z.string().optional(),
+      language: z.enum(["ko", "en"]).optional().default("ko"),
       outputFormat: z
         .enum(["html", "html_interactive"])
         .optional()
         .default("html")
-        .describe("출력 형식: html (정적 SVG), html_interactive (Chart.js 인터랙티브)"),
+        .describe("html: 정적 SVG, html_interactive: Chart.js"),
     },
     { readOnlyHint: true },
     async (args) => {

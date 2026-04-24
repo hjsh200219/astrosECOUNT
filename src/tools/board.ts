@@ -6,7 +6,7 @@ import { handleToolError } from "../utils/error-handler.js";
 
 export function registerBoardTools(server: McpServer, client: EcountClient): void {
   server.tool(
-    "ecount_create_board",
+    "ecount_board_create_board",
     "ECOUNT ERP 게시판에 글을 등록합니다. 게시판ID를 지정하여 새 글을 작성할 때 사용합니다. (V3 API)",
     {
       bizz_sid: z.string().describe("게시판 ID (예: B_000000E072000)"),

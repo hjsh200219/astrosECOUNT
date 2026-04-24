@@ -92,7 +92,7 @@ describe("checkHealth", () => {
 });
 
 describe("registerHealthCheckTools", () => {
-  it("should register ecount_health_check tool without throwing", async () => {
+  it("should register ecount_health_health_check tool without throwing", async () => {
     const { McpServer } = await import("@modelcontextprotocol/sdk/server/mcp.js");
     const { registerHealthCheckTools } = await import("../../src/tools/health-check.js");
     const server = new McpServer({ name: "test", version: "0.1" });

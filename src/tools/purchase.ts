@@ -7,7 +7,7 @@ import { handleToolError } from "../utils/error-handler.js";
 
 const purchaseTools: ToolDefinition[] = [
   {
-    name: "ecount_save_purchase",
+    name: "ecount_purchase_save_purchase",
     description:
       "ECOUNT ERP 구매(매입) 전표를 저장합니다. 실제 구매 거래를 등록하거나 수정할 때 사용합니다.",
     endpoint: "Purchases/SavePurchases",
@@ -22,13 +22,13 @@ const purchaseTools: ToolDefinition[] = [
       CUST: z.string().optional().describe("거래처코드"),
       CUST_DES: z.string().optional().describe("거래처명"),
       EMP_CD: z.string().optional().describe("담당사원코드"),
-      PRICE: z.string().optional().describe("단가"),
+      PRICE: z.string().optional(),
       SUPPLY_AMT: z.string().optional().describe("공급가액"),
-      VAT_AMT: z.string().optional().describe("부가세액"),
-      REMARKS: z.string().optional().describe("비고"),
+      VAT_AMT: z.string().optional(),
+      REMARKS: z.string().optional(),
       IO_TYPE: z.string().optional().describe("구분(거래유형) 부가세유형코드"),
       EXCHANGE_TYPE: z.string().optional().describe("외화종류 코드"),
-      EXCHANGE_RATE: z.string().optional().describe("환율"),
+      EXCHANGE_RATE: z.string().optional(),
       PJT_CD: z.string().optional().describe("프로젝트코드"),
       PROD_DES: z.string().optional().describe("품목명"),
       SIZE_DES: z.string().optional().describe("규격"),
@@ -46,7 +46,7 @@ export function registerPurchaseTools(server: McpServer, client: EcountClient): 
 
   // Custom handler for purchase order list - uses special ListParam body structure
   server.tool(
-    "ecount_list_purchase_orders",
+    "ecount_purchase_list_purchase_orders",
     "ECOUNT ERP 발주 목록을 조회합니다. 특정 기간의 발주(구매 주문) 내역을 확인할 때 사용합니다.",
     {
       BASE_DATE_FROM: z.string().describe("조회 시작일 (YYYYMMDD)"),
@@ -55,8 +55,8 @@ export function registerPurchaseTools(server: McpServer, client: EcountClient): 
       CUST_CD: z.string().optional().describe("거래처코드"),
       EMP_CD: z.string().optional().describe("담당자코드"),
       WH_CD: z.string().optional().describe("창고코드"),
-      PAGE_CURRENT: z.number().optional().default(1).describe("현재 페이지 번호"),
-      PAGE_SIZE: z.number().optional().default(26).describe("페이지당 건수"),
+      PAGE_CURRENT: z.number().optional().default(1),
+      PAGE_SIZE: z.number().optional().default(26),
     },
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {

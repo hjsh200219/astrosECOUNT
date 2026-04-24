@@ -52,7 +52,7 @@ export function calculateKPI(shipments: Shipment[]): LogisticsKPI {
 
 export function registerLogisticsKpiTools(server: McpServer): void {
   server.tool(
-    "ecount_calc_logistics_kpi",
+    "ecount_logistics_calc_logistics_kpi",
     "현재 선적 데이터를 기반으로 물류 KPI를 계산합니다. (총 선적 수, 상태별 집계, 평균 운송 일수, 정시 도착률)",
     {},
     { readOnlyHint: true },

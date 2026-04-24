@@ -110,20 +110,20 @@ export async function stampPdf(
 
 export function registerPdfStampTool(server: McpServer): void {
   server.tool(
-    "ecount_stamp_pdf",
+    "ecount_pdf_stamp_pdf",
     "PDF 문서에 법인 직인 이미지를 삽입합니다. 계약서 등 PDF 파일 경로와 직인 위치를 지정하면 직인이 찍힌 PDF를 생성합니다.",
     {
       pdf_path: z.string().describe("원본 PDF 파일 경로"),
       output_path: z.string().describe("직인 삽입된 PDF 저장 경로"),
-      x: z.number().default(400).describe("직인 X 좌표 (좌측 기준, pt)"),
-      y: z.number().default(100).describe("직인 Y 좌표 (하단 기준, pt)"),
-      width: z.number().default(80).describe("직인 너비 (pt)"),
-      height: z.number().default(80).describe("직인 높이 (pt)"),
-      page: z.number().default(0).describe("직인 삽입 페이지 (0부터 시작)"),
+      x: z.number().default(400).describe("X 좌표 (좌측 기준, pt)"),
+      y: z.number().default(100).describe("Y 좌표 (하단 기준, pt)"),
+      width: z.number().default(80).describe("pt"),
+      height: z.number().default(80).describe("pt"),
+      page: z.number().default(0).describe("페이지 (0부터 시작)"),
       stamp_image_path: z
         .string()
         .optional()
-        .describe("직인 이미지 경로 (PNG/JPG). 미지정 시 기본 직인 사용"),
+        .describe("PNG/JPG. 미지정 시 기본 직인 사용"),
     },
     { readOnlyHint: false, destructiveHint: false },
     async (params: Record<string, unknown>) => {

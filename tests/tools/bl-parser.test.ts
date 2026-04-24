@@ -147,7 +147,7 @@ describe("parseBL", () => {
 });
 
 describe("registerBLParserTool", () => {
-  it("should register ecount_parse_bl tool without throwing", async () => {
+  it("should register ecount_bl_parse_bl tool without throwing", async () => {
     const { McpServer } = await import("@modelcontextprotocol/sdk/server/mcp.js");
     const { registerBLParserTool } = await import("../../src/tools/bl-parser.js");
     const server = new McpServer({ name: "test", version: "0.1" });

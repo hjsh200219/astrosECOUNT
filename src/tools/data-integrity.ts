@@ -186,33 +186,33 @@ export function validateAll(input: ValidateAllInput): IntegrityReport {
 
 export function registerDataIntegrityTools(server: McpServer): void {
   server.tool(
-    "ecount_validate_data_integrity",
+    "ecount_integrity_validate_data_integrity",
     "계약↔선적 매칭, 기초재고 vs 전기 마감재고, 통관완료 원가 누락 등 L2 데이터 정합성을 검증합니다.",
     {
       contracts: z
         .array(
           z.object({
-            id: z.string().describe("계약 ID"),
-            blNumber: z.string().optional().describe("BL 번호"),
-            product: z.string().describe("품목명"),
+            id: z.string(),
+            blNumber: z.string().optional(),
+            product: z.string(),
           })
         )
         .describe("계약 레코드 목록"),
       shipments: z
         .array(
           z.object({
-            id: z.string().describe("선적 ID"),
-            blNumber: z.string().describe("BL 번호"),
-            product: z.string().describe("품목명"),
-            status: z.string().describe("선적 상태"),
+            id: z.string(),
+            blNumber: z.string(),
+            product: z.string(),
+            status: z.string(),
           })
         )
         .describe("선적 레코드 목록"),
       openingInventory: z
         .array(
           z.object({
-            product: z.string().describe("품목명"),
-            quantity: z.number().describe("기초재고 수량"),
+            product: z.string(),
+            quantity: z.number(),
             period: z.string().describe("기간 (예: 2024-02)"),
           })
         )
@@ -221,8 +221,8 @@ export function registerDataIntegrityTools(server: McpServer): void {
       priorClosing: z
         .array(
           z.object({
-            product: z.string().describe("품목명"),
-            quantity: z.number().describe("마감재고 수량"),
+            product: z.string(),
+            quantity: z.number(),
             period: z.string().describe("기간 (예: 2024-01)"),
           })
         )
@@ -231,9 +231,9 @@ export function registerDataIntegrityTools(server: McpServer): void {
       costRecords: z
         .array(
           z.object({
-            shipmentId: z.string().describe("선적 ID"),
-            customsCost: z.number().describe("관세 비용"),
-            additionalCosts: z.number().optional().describe("기타 추가 비용"),
+            shipmentId: z.string(),
+            customsCost: z.number(),
+            additionalCosts: z.number().optional(),
           })
         )
         .optional()

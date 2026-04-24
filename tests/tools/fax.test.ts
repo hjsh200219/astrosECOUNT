@@ -85,9 +85,9 @@ describe("Fax Tools", () => {
       });
       const { registerFaxTools } = await import("../../src/tools/fax.js");
       registerFaxTools(server);
-      expect(toolNames).toContain("ecount_send_fax");
-      expect(toolNames).toContain("ecount_get_fax_status");
-      expect(toolNames).toContain("ecount_list_fax_history");
+      expect(toolNames).toContain("ecount_fax_send_fax");
+      expect(toolNames).toContain("ecount_fax_get_fax_status");
+      expect(toolNames).toContain("ecount_fax_list_fax_history");
       expect(toolNames).toHaveLength(3);
     });
 

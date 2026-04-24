@@ -184,17 +184,17 @@
                         <td>업무 흐름도 (14단계)</td>
                         <td><span class="st-full">80%</span></td>
                         <td>
-                            <span class="tool-tag">ecount_add_contract</span>
-                            <span class="tool-tag">ecount_add_shipment</span>
-                            <span class="tool-tag">ecount_parse_bl</span>
-                            <span class="tool-tag">ecount_save_sale</span>
-                            <span class="tool-tag">ecount_save_purchase</span>
-                            <span class="tool-tag">ecount_list_inventory_balance</span>
-                            <span class="tool-tag new">ecount_record_payment</span>
-                            <span class="tool-tag new">ecount_list_receivables</span>
-                            <span class="tool-tag new">ecount_record_payment_out</span>
-                            <span class="tool-tag new">ecount_calc_weight_settlement</span>
-                            <span class="tool-tag new">ecount_render_diagram</span>
+                            <span class="tool-tag">ecount_contract_add_contract</span>
+                            <span class="tool-tag">ecount_shipment_add_shipment</span>
+                            <span class="tool-tag">ecount_bl_parse_bl</span>
+                            <span class="tool-tag">ecount_sales_save_sale</span>
+                            <span class="tool-tag">ecount_purchase_save_purchase</span>
+                            <span class="tool-tag">ecount_inventory_list_inventory_balance</span>
+                            <span class="tool-tag new">ecount_receivable_record_payment</span>
+                            <span class="tool-tag new">ecount_receivable_list_receivables</span>
+                            <span class="tool-tag new">ecount_payable_record_payment_out</span>
+                            <span class="tool-tag new">ecount_weight_calc_weight_settlement</span>
+                            <span class="tool-tag new">ecount_diagram_render_diagram</span>
                         </td>
                         <td>계약→선적→통관→판매→출고→수금/지급 데이터 처리 가능. <strong>v7: Mermaid 워크플로우/상태 다이어그램으로 14단계 시각화 가능</strong>. 전자결재는 미지원</td>
                     </tr>
@@ -217,16 +217,16 @@
                         <td>재고관리 (5단계)</td>
                         <td><span class="st-full">95%</span></td>
                         <td>
-                            <span class="tool-tag">ecount_view_inventory_balance</span>
-                            <span class="tool-tag">ecount_list_inventory_balance</span>
-                            <span class="tool-tag">ecount_view_inventory_by_location</span>
-                            <span class="tool-tag">ecount_list_inventory_by_location</span>
-                            <span class="tool-tag">ecount_verify_inventory</span>
-                            <span class="tool-tag">ecount_adjust_inventory</span>
-                            <span class="tool-tag">ecount_list_adjustments</span>
-                            <span class="tool-tag new">ecount_track_inventory_stage</span>
-                            <span class="tool-tag new">ecount_get_inventory_pipeline</span>
-                            <span class="tool-tag new">ecount_calc_weight_settlement</span>
+                            <span class="tool-tag">ecount_inventory_view_inventory_balance</span>
+                            <span class="tool-tag">ecount_inventory_list_inventory_balance</span>
+                            <span class="tool-tag">ecount_inventory_view_inventory_by_location</span>
+                            <span class="tool-tag">ecount_inventory_list_inventory_by_location</span>
+                            <span class="tool-tag">ecount_inventory_verify_inventory</span>
+                            <span class="tool-tag">ecount_inventory_adjust_inventory</span>
+                            <span class="tool-tag">ecount_inventory_list_adjustments</span>
+                            <span class="tool-tag new">ecount_inventory_track_inventory_stage</span>
+                            <span class="tool-tag new">ecount_inventory_get_inventory_pipeline</span>
+                            <span class="tool-tag new">ecount_weight_calc_weight_settlement</span>
                         </td>
                         <td>5단계 재고 조회 + 정합성 검증 + 조정 + <strong>5단계 상태 전환 추적 + 파이프라인 현황 + 중량차이 정산 신규 추가</strong>. 칸반 UI만 미지원</td>
                     </tr>
@@ -235,16 +235,16 @@
                         <td>회계 & 자금관리</td>
                         <td><span class="st-full">70%</span></td>
                         <td>
-                            <span class="tool-tag">ecount_save_invoice_auto</span>
-                            <span class="tool-tag">ecount_save_purchase</span>
-                            <span class="tool-tag">ecount_save_sale</span>
-                            <span class="tool-tag">ecount_list_account_slips</span>
-                            <span class="tool-tag">ecount_override_customs_cost</span>
-                            <span class="tool-tag">ecount_get_landed_cost</span>
-                            <span class="tool-tag new">ecount_generate_subuibu</span>
-                            <span class="tool-tag new">ecount_generate_pnl</span>
-                            <span class="tool-tag new">ecount_analyze_cashflow</span>
-                            <span class="tool-tag new">ecount_analyze_margin</span>
+                            <span class="tool-tag">ecount_accounting_save_invoice_auto</span>
+                            <span class="tool-tag">ecount_purchase_save_purchase</span>
+                            <span class="tool-tag">ecount_sales_save_sale</span>
+                            <span class="tool-tag">ecount_internal_list_account_slips</span>
+                            <span class="tool-tag">ecount_customs_override_customs_cost</span>
+                            <span class="tool-tag">ecount_customs_get_landed_cost</span>
+                            <span class="tool-tag new">ecount_financial_generate_subuibu</span>
+                            <span class="tool-tag new">ecount_financial_generate_pnl</span>
+                            <span class="tool-tag new">ecount_financial_analyze_cashflow</span>
+                            <span class="tool-tag new">ecount_margin_analyze_margin</span>
                         </td>
                         <td>전표 등록/조회 + <strong>수불부 자동생성 + 손익계산서 + 현금흐름 분석 + 마진 분석 신규 추가</strong>. 잔여 갭: 자금 일보 UI</td>
                     </tr>
@@ -260,18 +260,18 @@
                         <td>비주얼 모니터링</td>
                         <td><span class="st-full">80%</span></td>
                         <td>
-                            <span class="tool-tag">ecount_calc_logistics_kpi</span>
-                            <span class="tool-tag">ecount_daily_report</span>
-                            <span class="tool-tag">ecount_diagnostic_report</span>
-                            <span class="tool-tag">ecount_health_check</span>
-                            <span class="tool-tag">ecount_list_inventory_balance</span>
-                            <span class="tool-tag new">ecount_list_receivables</span>
-                            <span class="tool-tag new">ecount_list_payables</span>
-                            <span class="tool-tag new">ecount_analyze_cashflow</span>
-                            <span class="tool-tag new">ecount_render_dashboard</span>
-                            <span class="tool-tag new">ecount_render_diagram</span>
-                            <span class="tool-tag new">ecount_render_map</span>
-                            <span class="tool-tag new">ecount_render_3d</span>
+                            <span class="tool-tag">ecount_logistics_calc_logistics_kpi</span>
+                            <span class="tool-tag">ecount_report_daily_report</span>
+                            <span class="tool-tag">ecount_report_diagnostic_report</span>
+                            <span class="tool-tag">ecount_health_health_check</span>
+                            <span class="tool-tag">ecount_inventory_list_inventory_balance</span>
+                            <span class="tool-tag new">ecount_receivable_list_receivables</span>
+                            <span class="tool-tag new">ecount_payable_list_payables</span>
+                            <span class="tool-tag new">ecount_financial_analyze_cashflow</span>
+                            <span class="tool-tag new">ecount_dashboard_render_dashboard</span>
+                            <span class="tool-tag new">ecount_diagram_render_diagram</span>
+                            <span class="tool-tag new">ecount_map_render_map</span>
+                            <span class="tool-tag new">ecount_viz3d_render_3d</span>
                         </td>
                         <td>KPI 수치 + 텍스트 리포트 + 미수금/미지급금/현금흐름 + <strong>v7: Chart.js/D3.js 인터랙티브 대시보드 + Mermaid 상태 다이어그램 + Leaflet 물류 지도 + Three.js 3D 창고 뷰</strong>. 실시간 WebSocket 업데이트만 미지원</td>
                     </tr>
@@ -280,10 +280,10 @@
                         <td>원클릭 처리</td>
                         <td><span class="st-partial">55%</span></td>
                         <td>
-                            <span class="tool-tag">ecount_parse_bl</span>
-                            <span class="tool-tag">ecount_save_sale</span>
-                            <span class="tool-tag">ecount_export_csv</span>
-                            <span class="tool-tag new">ecount_send_fax</span>
+                            <span class="tool-tag">ecount_bl_parse_bl</span>
+                            <span class="tool-tag">ecount_sales_save_sale</span>
+                            <span class="tool-tag">ecount_csv_export_csv</span>
+                            <span class="tool-tag new">ecount_fax_send_fax</span>
                         </td>
                         <td>BL 자동 파싱 + ERP 전표 등록 + <strong>FAX 발송(v6)</strong>. 수입축산물 이력조회/유니패스는 <strong>public-data MCP</strong>로 분리. 일괄 승인은 결재 시스템 필요</td>
                     </tr>
@@ -292,9 +292,9 @@
                         <td>메일 템플릿</td>
                         <td><span class="st-full">100%</span></td>
                         <td>
-                            <span class="tool-tag">ecount_list_email_templates</span>
-                            <span class="tool-tag">ecount_get_email_template</span>
-                            <span class="tool-tag">ecount_render_email</span>
+                            <span class="tool-tag">ecount_email_list_email_templates</span>
+                            <span class="tool-tag">ecount_email_get_email_template</span>
+                            <span class="tool-tag">ecount_email_render_email</span>
                         </td>
                         <td>15종 템플릿 (ko/en/pt), 변수 치환 렌더링 완전 지원. 실제 발송은 SMTP 필요</td>
                     </tr>
@@ -303,16 +303,16 @@
                         <td>자가진단 엔진</td>
                         <td><span class="st-full">85%</span></td>
                         <td>
-                            <span class="tool-tag">ecount_health_check</span>
-                            <span class="tool-tag">ecount_validate_data_integrity</span>
-                            <span class="tool-tag">ecount_stale_shipments</span>
-                            <span class="tool-tag">ecount_customs_delays</span>
-                            <span class="tool-tag">ecount_delivery_delays</span>
+                            <span class="tool-tag">ecount_health_health_check</span>
+                            <span class="tool-tag">ecount_integrity_validate_data_integrity</span>
+                            <span class="tool-tag">ecount_shipment_stale_shipments</span>
+                            <span class="tool-tag">ecount_shipment_customs_delays</span>
+                            <span class="tool-tag">ecount_shipment_delivery_delays</span>
                             <span class="tool-tag">ecount_validate_shipment_rates</span>
-                            <span class="tool-tag">ecount_verify_inventory</span>
-                            <span class="tool-tag">ecount_validate_contract_shipment</span>
-                            <span class="tool-tag new">ecount_aging_receivables</span>
-                            <span class="tool-tag new">ecount_aging_payables</span>
+                            <span class="tool-tag">ecount_inventory_verify_inventory</span>
+                            <span class="tool-tag">ecount_inventory_validate_contract_shipment</span>
+                            <span class="tool-tag new">ecount_receivable_aging_receivables</span>
+                            <span class="tool-tag new">ecount_payable_aging_payables</span>
                         </td>
                         <td>미지급금/미착재고/환율 변동/재고 정합성 진단 + <strong>미수금 에이징(D+30) + 미지급금 에이징(D+45) 경고 신규 추가</strong>. 상시 헬스체크 데몬/자동 알림은 미지원</td>
                     </tr>
@@ -321,14 +321,14 @@
                         <td>BI 대시보드</td>
                         <td><span class="st-full">75%</span></td>
                         <td>
-                            <span class="tool-tag">ecount_calc_logistics_kpi</span>
-                            <span class="tool-tag">ecount_daily_report</span>
-                            <span class="tool-tag">ecount_export_csv</span>
-                            <span class="tool-tag new">ecount_analyze_cashflow</span>
-                            <span class="tool-tag new">ecount_analyze_margin</span>
-                            <span class="tool-tag new">ecount_generate_pnl</span>
-                            <span class="tool-tag new">ecount_render_dashboard</span>
-                            <span class="tool-tag new">ecount_render_presentation</span>
+                            <span class="tool-tag">ecount_logistics_calc_logistics_kpi</span>
+                            <span class="tool-tag">ecount_report_daily_report</span>
+                            <span class="tool-tag">ecount_csv_export_csv</span>
+                            <span class="tool-tag new">ecount_financial_analyze_cashflow</span>
+                            <span class="tool-tag new">ecount_margin_analyze_margin</span>
+                            <span class="tool-tag new">ecount_financial_generate_pnl</span>
+                            <span class="tool-tag new">ecount_dashboard_render_dashboard</span>
+                            <span class="tool-tag new">ecount_presentation_render_presentation</span>
                         </td>
                         <td>KPI 수치 + CSV + 현금흐름/마진/손익 분석 + <strong>v7: Chart.js/D3.js 인터랙티브 대시보드(bar/line/pie/treemap/heatmap/sankey) + Reveal.js 경영 보고 프레젠테이션</strong>. 실시간 WebSocket만 미지원</td>
                     </tr>
@@ -337,13 +337,13 @@
                         <td>기초 데이터 관리</td>
                         <td><span class="st-full">85%</span></td>
                         <td>
-                            <span class="tool-tag">ecount_save_customer</span>
-                            <span class="tool-tag">ecount_save_product</span>
-                            <span class="tool-tag">ecount_view_product</span>
-                            <span class="tool-tag">ecount_list_products</span>
-                            <span class="tool-tag">ecount_lookup_contact</span>
-                            <span class="tool-tag">ecount_list_contacts</span>
-                            <span class="tool-tag">ecount_get_warehouse_mapping</span>
+                            <span class="tool-tag">ecount_master_save_customer</span>
+                            <span class="tool-tag">ecount_master_save_product</span>
+                            <span class="tool-tag">ecount_master_view_product</span>
+                            <span class="tool-tag">ecount_master_list_products</span>
+                            <span class="tool-tag">ecount_contact_lookup_contact</span>
+                            <span class="tool-tag">ecount_contact_list_contacts</span>
+                            <span class="tool-tag">ecount_rule_get_warehouse_mapping</span>
                         </td>
                         <td>거래처/품목/창고 CRUD 완전 지원. 미트와치 부위코드 매핑은 업무 규칙으로 내장</td>
                     </tr>
@@ -386,9 +386,9 @@
                         <td>계약정보 등록 ✓</td>
                         <td><span class="st-full">●</span></td>
                         <td>
-                            <span class="tool-tag">ecount_add_contract</span>
-                            <span class="tool-tag">ecount_list_contracts</span>
-                            <span class="tool-tag">ecount_update_contract_status</span>
+                            <span class="tool-tag">ecount_contract_add_contract</span>
+                            <span class="tool-tag">ecount_contract_list_contracts</span>
+                            <span class="tool-tag">ecount_contract_update_contract_status</span>
                         </td>
                         <td>시스템 자동기안</td>
                         <td>전자결재 워크플로우 미지원</td>
@@ -398,7 +398,7 @@
                         <td>선적서류 수신</td>
                         <td><span class="st-full">●</span></td>
                         <td>
-                            <span class="tool-tag">ecount_parse_bl</span>
+                            <span class="tool-tag">ecount_bl_parse_bl</span>
                         </td>
                         <td>—</td>
                         <td>BL 파싱 완전 지원 (10개 선사)</td>
@@ -408,11 +408,11 @@
                         <td>선적정보 입력 ✓</td>
                         <td><span class="st-full">●</span></td>
                         <td>
-                            <span class="tool-tag">ecount_add_shipment</span>
+                            <span class="tool-tag">ecount_shipment_add_shipment</span>
                             <span class="tool-tag">ecount_convert_currency</span>
                             <span class="tool-tag">ecount_get_exchange_rate</span>
-                            <span class="tool-tag">ecount_save_purchase</span>
-                            <span class="tool-tag new">ecount_track_inventory_stage</span>
+                            <span class="tool-tag">ecount_purchase_save_purchase</span>
+                            <span class="tool-tag new">ecount_inventory_track_inventory_stage</span>
                         </td>
                         <td>시스템 자동기안</td>
                         <td>환율 자동 계산 + <strong>재고 5단계 전환</strong> 지원. 결재 흐름 미지원</td>
@@ -422,10 +422,10 @@
                         <td>선박 트래킹</td>
                         <td><span class="st-full">●</span></td>
                         <td>
-                            <span class="tool-tag">ecount_get_shipment</span>
-                            <span class="tool-tag">ecount_update_eta</span>
-                            <span class="tool-tag">ecount_get_eta_history</span>
-                            <span class="tool-tag">ecount_stale_shipments</span>
+                            <span class="tool-tag">ecount_shipment_get_shipment</span>
+                            <span class="tool-tag">ecount_shipment_update_eta</span>
+                            <span class="tool-tag">ecount_shipment_get_eta_history</span>
+                            <span class="tool-tag">ecount_shipment_stale_shipments</span>
                         </td>
                         <td>—</td>
                         <td>ETA 추적 + 미갱신 감지 완전 지원</td>
@@ -435,8 +435,8 @@
                         <td>서류 알림</td>
                         <td><span class="st-partial">△</span></td>
                         <td>
-                            <span class="tool-tag">ecount_render_email</span>
-                            <span class="tool-tag">ecount_stale_shipments</span>
+                            <span class="tool-tag">ecount_email_render_email</span>
+                            <span class="tool-tag">ecount_shipment_stale_shipments</span>
                         </td>
                         <td>—</td>
                         <td>알림 컨텐츠 생성 가능. 자동 발송은 SMTP 필요</td>
@@ -446,8 +446,8 @@
                         <td>입항</td>
                         <td><span class="st-full">●</span></td>
                         <td>
-                            <span class="tool-tag">ecount_update_shipment_status</span>
-                            <span class="tool-tag new">ecount_track_inventory_stage</span>
+                            <span class="tool-tag">ecount_shipment_update_shipment_status</span>
+                            <span class="tool-tag new">ecount_inventory_track_inventory_stage</span>
                         </td>
                         <td>—</td>
                         <td>상태 변경 (in_transit → arrived) + <strong>미착→도착 전환</strong> 지원</td>
@@ -457,10 +457,10 @@
                         <td>입고</td>
                         <td><span class="st-partial">△</span></td>
                         <td>
-                            <span class="tool-tag">ecount_update_shipment_status</span>
-                            <span class="tool-tag">ecount_get_warehouse_mapping</span>
-                            <span class="tool-tag new">ecount_track_inventory_stage</span>
-                            <span class="tool-tag new">ecount_calc_weight_settlement</span>
+                            <span class="tool-tag">ecount_shipment_update_shipment_status</span>
+                            <span class="tool-tag">ecount_rule_get_warehouse_mapping</span>
+                            <span class="tool-tag new">ecount_inventory_track_inventory_stage</span>
+                            <span class="tool-tag new">ecount_weight_calc_weight_settlement</span>
                         </td>
                         <td>—</td>
                         <td>창고 매핑 + <strong>도착→상품 전환 + 중량차이 정산</strong>. 입고 전표 자동 등록은 ERP 내부 로직</td>
@@ -470,7 +470,7 @@
                         <td>검역</td>
                         <td><span class="st-partial">△</span></td>
                         <td>
-                            <span class="tool-tag">ecount_check_document_status</span>
+                            <span class="tool-tag">ecount_document_check_document_status</span>
                         </td>
                         <td>—</td>
                         <td>서류 상태 추적 가능. 보건증 검증은 외부 시스템</td>
@@ -480,10 +480,10 @@
                         <td>통관 ✓</td>
                         <td><span class="st-partial">△</span></td>
                         <td>
-                            <span class="tool-tag">ecount_update_shipment_status</span>
-                            <span class="tool-tag">ecount_override_customs_cost</span>
-                            <span class="tool-tag">ecount_get_landed_cost</span>
-                            <span class="tool-tag">ecount_customs_delays</span>
+                            <span class="tool-tag">ecount_shipment_update_shipment_status</span>
+                            <span class="tool-tag">ecount_customs_override_customs_cost</span>
+                            <span class="tool-tag">ecount_customs_get_landed_cost</span>
+                            <span class="tool-tag">ecount_shipment_customs_delays</span>
                         </td>
                         <td>담당자 기안</td>
                         <td>관세 비용 + 지연 감지 지원. 상품재고 전환은 ERP 내부</td>
@@ -493,9 +493,9 @@
                         <td>판매 ✓</td>
                         <td><span class="st-full">●</span></td>
                         <td>
-                            <span class="tool-tag">ecount_save_quotation</span>
-                            <span class="tool-tag">ecount_save_sale_order</span>
-                            <span class="tool-tag">ecount_save_sale</span>
+                            <span class="tool-tag">ecount_sales_save_quotation</span>
+                            <span class="tool-tag">ecount_sales_save_sale_order</span>
+                            <span class="tool-tag">ecount_sales_save_sale</span>
                         </td>
                         <td>담당자 기안</td>
                         <td>견적→수주→매출 3단계 완전 지원. 결재 흐름 미지원</td>
@@ -505,9 +505,9 @@
                         <td>수금 관리</td>
                         <td><span class="st-full">●</span></td>
                         <td>
-                            <span class="tool-tag new">ecount_record_payment</span>
-                            <span class="tool-tag new">ecount_list_receivables</span>
-                            <span class="tool-tag new">ecount_aging_receivables</span>
+                            <span class="tool-tag new">ecount_receivable_record_payment</span>
+                            <span class="tool-tag new">ecount_receivable_list_receivables</span>
+                            <span class="tool-tag new">ecount_receivable_aging_receivables</span>
                         </td>
                         <td>실시간 모니터링</td>
                         <td><strong>수금 기록 + 미수금 현황 + D+30일 에이징 경고 완전 지원</strong>. 실시간 대시보드 UI는 웹앱 영역</td>
@@ -517,11 +517,11 @@
                         <td>출고 ✓</td>
                         <td><span class="st-full">●</span></td>
                         <td>
-                            <span class="tool-tag">ecount_save_sale</span>
-                            <span class="tool-tag">ecount_stamp_pdf</span>
-                            <span class="tool-tag">ecount_delivery_delays</span>
-                            <span class="tool-tag new">ecount_track_inventory_stage</span>
-                            <span class="tool-tag new">ecount_send_fax</span>
+                            <span class="tool-tag">ecount_sales_save_sale</span>
+                            <span class="tool-tag">ecount_pdf_stamp_pdf</span>
+                            <span class="tool-tag">ecount_shipment_delivery_delays</span>
+                            <span class="tool-tag new">ecount_inventory_track_inventory_stage</span>
+                            <span class="tool-tag new">ecount_fax_send_fax</span>
                         </td>
                         <td>담당자 기안</td>
                         <td>판매 전표 + PDF 직인 + <strong>상품→판매완료 전환 + FAX 발송(v6)</strong>. 수입축산물 이력조회는 <strong>public-data MCP</strong></td>
@@ -531,12 +531,12 @@
                         <td>회계 마감 ✓</td>
                         <td><span class="st-full">●</span></td>
                         <td>
-                            <span class="tool-tag">ecount_save_invoice_auto</span>
-                            <span class="tool-tag">ecount_list_account_slips</span>
-                            <span class="tool-tag">ecount_daily_report</span>
-                            <span class="tool-tag new">ecount_generate_subuibu</span>
-                            <span class="tool-tag new">ecount_generate_pnl</span>
-                            <span class="tool-tag new">ecount_analyze_cashflow</span>
+                            <span class="tool-tag">ecount_accounting_save_invoice_auto</span>
+                            <span class="tool-tag">ecount_internal_list_account_slips</span>
+                            <span class="tool-tag">ecount_report_daily_report</span>
+                            <span class="tool-tag new">ecount_financial_generate_subuibu</span>
+                            <span class="tool-tag new">ecount_financial_generate_pnl</span>
+                            <span class="tool-tag new">ecount_financial_analyze_cashflow</span>
                         </td>
                         <td>—</td>
                         <td>전표 조회/리포트 + <strong>수불부 자동생성 + 손익계산서 + 현금흐름 분석 완전 지원</strong></td>
@@ -563,29 +563,29 @@
                         <th>기능</th>
                         <th>v5 매핑</th>
                     </tr>
-                    <tr><td><code>ecount_zone</code></td><td>API 존 URL 조회</td><td>연결</td></tr>
-                    <tr><td><code>ecount_login</code></td><td>세션 로그인</td><td>연결</td></tr>
-                    <tr><td><code>ecount_status</code></td><td>세션 상태 확인</td><td>연결</td></tr>
-                    <tr><td><code>ecount_save_customer</code></td><td>거래처 등록</td><td>TAB 13 거래처 관리</td></tr>
-                    <tr><td><code>ecount_save_product</code></td><td>품목 등록</td><td>TAB 13 품목 관리</td></tr>
-                    <tr><td><code>ecount_view_product</code></td><td>품목 상세 조회</td><td>TAB 13 품목 관리</td></tr>
-                    <tr><td><code>ecount_list_products</code></td><td>품목 목록 조회</td><td>TAB 13 품목 관리</td></tr>
-                    <tr><td><code>ecount_save_quotation</code></td><td>견적서 등록</td><td>TAB 2 판매 단계</td></tr>
-                    <tr><td><code>ecount_save_sale_order</code></td><td>수주 등록</td><td>TAB 2 판매 단계</td></tr>
-                    <tr><td><code>ecount_save_sale</code></td><td>매출 전표 등록</td><td>TAB 2 판매/출고</td></tr>
-                    <tr><td><code>ecount_save_purchase</code></td><td>매입 전표 등록</td><td>TAB 2 선적정보 입력</td></tr>
-                    <tr><td><code>ecount_list_purchase_orders</code></td><td>구매 발주 조회</td><td>TAB 2 계약 단계</td></tr>
-                    <tr><td><code>ecount_view_inventory_balance</code></td><td>재고 잔고 상세</td><td>TAB 5 재고관리</td></tr>
-                    <tr><td><code>ecount_list_inventory_balance</code></td><td>재고 잔고 목록</td><td>TAB 5 재고관리</td></tr>
-                    <tr><td><code>ecount_view_inventory_by_location</code></td><td>창고별 재고 상세</td><td>TAB 5 재고관리</td></tr>
-                    <tr><td><code>ecount_list_inventory_by_location</code></td><td>창고별 재고 목록</td><td>TAB 5/8 재고/모니터링</td></tr>
-                    <tr><td><code>ecount_save_job_order</code></td><td>작업 지시서 등록</td><td>TAB 2 생산</td></tr>
-                    <tr><td><code>ecount_save_goods_issued</code></td><td>자재 출고 등록</td><td>TAB 2 출고</td></tr>
-                    <tr><td><code>ecount_save_goods_receipt</code></td><td>생산 입고 등록</td><td>TAB 2 입고</td></tr>
-                    <tr><td><code>ecount_save_invoice_auto</code></td><td>세금계산서 자동 발행</td><td>TAB 6 회계</td></tr>
-                    <tr><td><code>ecount_save_open_market_order</code></td><td>오픈마켓 주문</td><td>—</td></tr>
-                    <tr><td><code>ecount_save_clock_in_out</code></td><td>출퇴근 기록</td><td>—</td></tr>
-                    <tr><td><code>ecount_create_board</code></td><td>게시판 글 작성</td><td>—</td></tr>
+                    <tr><td><code>ecount_connection_zone</code></td><td>API 존 URL 조회</td><td>연결</td></tr>
+                    <tr><td><code>ecount_connection_login</code></td><td>세션 로그인</td><td>연결</td></tr>
+                    <tr><td><code>ecount_connection_status</code></td><td>세션 상태 확인</td><td>연결</td></tr>
+                    <tr><td><code>ecount_master_save_customer</code></td><td>거래처 등록</td><td>TAB 13 거래처 관리</td></tr>
+                    <tr><td><code>ecount_master_save_product</code></td><td>품목 등록</td><td>TAB 13 품목 관리</td></tr>
+                    <tr><td><code>ecount_master_view_product</code></td><td>품목 상세 조회</td><td>TAB 13 품목 관리</td></tr>
+                    <tr><td><code>ecount_master_list_products</code></td><td>품목 목록 조회</td><td>TAB 13 품목 관리</td></tr>
+                    <tr><td><code>ecount_sales_save_quotation</code></td><td>견적서 등록</td><td>TAB 2 판매 단계</td></tr>
+                    <tr><td><code>ecount_sales_save_sale_order</code></td><td>수주 등록</td><td>TAB 2 판매 단계</td></tr>
+                    <tr><td><code>ecount_sales_save_sale</code></td><td>매출 전표 등록</td><td>TAB 2 판매/출고</td></tr>
+                    <tr><td><code>ecount_purchase_save_purchase</code></td><td>매입 전표 등록</td><td>TAB 2 선적정보 입력</td></tr>
+                    <tr><td><code>ecount_purchase_list_purchase_orders</code></td><td>구매 발주 조회</td><td>TAB 2 계약 단계</td></tr>
+                    <tr><td><code>ecount_inventory_view_inventory_balance</code></td><td>재고 잔고 상세</td><td>TAB 5 재고관리</td></tr>
+                    <tr><td><code>ecount_inventory_list_inventory_balance</code></td><td>재고 잔고 목록</td><td>TAB 5 재고관리</td></tr>
+                    <tr><td><code>ecount_inventory_view_inventory_by_location</code></td><td>창고별 재고 상세</td><td>TAB 5 재고관리</td></tr>
+                    <tr><td><code>ecount_inventory_list_inventory_by_location</code></td><td>창고별 재고 목록</td><td>TAB 5/8 재고/모니터링</td></tr>
+                    <tr><td><code>ecount_production_save_job_order</code></td><td>작업 지시서 등록</td><td>TAB 2 생산</td></tr>
+                    <tr><td><code>ecount_production_save_goods_issued</code></td><td>자재 출고 등록</td><td>TAB 2 출고</td></tr>
+                    <tr><td><code>ecount_production_save_goods_receipt</code></td><td>생산 입고 등록</td><td>TAB 2 입고</td></tr>
+                    <tr><td><code>ecount_accounting_save_invoice_auto</code></td><td>세금계산서 자동 발행</td><td>TAB 6 회계</td></tr>
+                    <tr><td><code>ecount_other_save_open_market_order</code></td><td>오픈마켓 주문</td><td>—</td></tr>
+                    <tr><td><code>ecount_other_save_clock_in_out</code></td><td>출퇴근 기록</td><td>—</td></tr>
+                    <tr><td><code>ecount_board_create_board</code></td><td>게시판 글 작성</td><td>—</td></tr>
                 </table>
 
                 <h3>Category B — 자체 도구 (Internal API 포함, 47개)</h3>
@@ -596,20 +596,20 @@
                         <th>v5 매핑</th>
                     </tr>
                     <!-- BL Parser -->
-                    <tr><td><code>ecount_parse_bl</code></td><td>BL 번호 파싱 (10개 선사)</td><td>TAB 2 선적서류 수신</td></tr>
+                    <tr><td><code>ecount_bl_parse_bl</code></td><td>BL 번호 파싱 (10개 선사)</td><td>TAB 2 선적서류 수신</td></tr>
                     <!-- Contacts -->
-                    <tr><td><code>ecount_lookup_contact</code></td><td>담당자 조회 (13명)</td><td>TAB 4 인원 권한</td></tr>
-                    <tr><td><code>ecount_list_contacts</code></td><td>담당자 목록</td><td>TAB 4 인원 권한</td></tr>
+                    <tr><td><code>ecount_contact_lookup_contact</code></td><td>담당자 조회 (13명)</td><td>TAB 4 인원 권한</td></tr>
+                    <tr><td><code>ecount_contact_list_contacts</code></td><td>담당자 목록</td><td>TAB 4 인원 권한</td></tr>
                     <!-- Business Rules -->
-                    <tr><td><code>ecount_get_customs_broker</code></td><td>관세법인 자동 배정</td><td>TAB 2 통관</td></tr>
-                    <tr><td><code>ecount_get_warehouse_mapping</code></td><td>창고 매핑 규칙</td><td>TAB 5/13 창고관리</td></tr>
-                    <tr><td><code>ecount_list_business_rules</code></td><td>업무 규칙 목록</td><td>전체</td></tr>
+                    <tr><td><code>ecount_rule_get_customs_broker</code></td><td>관세법인 자동 배정</td><td>TAB 2 통관</td></tr>
+                    <tr><td><code>ecount_rule_get_warehouse_mapping</code></td><td>창고 매핑 규칙</td><td>TAB 5/13 창고관리</td></tr>
+                    <tr><td><code>ecount_rule_list_business_rules</code></td><td>업무 규칙 목록</td><td>전체</td></tr>
                     <!-- PDF -->
-                    <tr><td><code>ecount_stamp_pdf</code></td><td>PDF 직인 삽입</td><td>TAB 2 출고/서류</td></tr>
+                    <tr><td><code>ecount_pdf_stamp_pdf</code></td><td>PDF 직인 삽입</td><td>TAB 2 출고/서류</td></tr>
                     <!-- Email Templates -->
-                    <tr><td><code>ecount_list_email_templates</code></td><td>이메일 템플릿 목록</td><td>TAB 10 메일 템플릿</td></tr>
-                    <tr><td><code>ecount_get_email_template</code></td><td>이메일 템플릿 상세</td><td>TAB 10 메일 템플릿</td></tr>
-                    <tr><td><code>ecount_render_email</code></td><td>이메일 렌더링</td><td>TAB 10 메일 템플릿</td></tr>
+                    <tr><td><code>ecount_email_list_email_templates</code></td><td>이메일 템플릿 목록</td><td>TAB 10 메일 템플릿</td></tr>
+                    <tr><td><code>ecount_email_get_email_template</code></td><td>이메일 템플릿 상세</td><td>TAB 10 메일 템플릿</td></tr>
+                    <tr><td><code>ecount_email_render_email</code></td><td>이메일 렌더링</td><td>TAB 10 메일 템플릿</td></tr>
                     <!-- Exchange Rate -->
                     <tr><td><code>ecount_get_exchange_rate</code></td><td>환율 조회</td><td>TAB 6 환율 관리</td></tr>
                     <tr><td><code>ecount_set_exchange_rate</code></td><td>환율 설정</td><td>TAB 6 환율 관리</td></tr>
@@ -617,48 +617,48 @@
                     <tr><td><code>ecount_convert_currency</code></td><td>통화 환산</td><td>TAB 2 선적정보 입력</td></tr>
                     <tr><td><code>ecount_validate_shipment_rates</code></td><td>선적 환율 검증</td><td>TAB 11 자가진단</td></tr>
                     <!-- Shipment Tracking -->
-                    <tr><td><code>ecount_add_shipment</code></td><td>선적 등록</td><td>TAB 2 선적정보</td></tr>
-                    <tr><td><code>ecount_get_shipment</code></td><td>선적 상세</td><td>TAB 2 선박 트래킹</td></tr>
-                    <tr><td><code>ecount_list_shipments</code></td><td>선적 목록</td><td>TAB 2/8 트래킹/모니터링</td></tr>
-                    <tr><td><code>ecount_update_shipment_status</code></td><td>선적 상태 변경</td><td>TAB 2 전단계</td></tr>
-                    <tr><td><code>ecount_update_eta</code></td><td>ETA 갱신</td><td>TAB 2 선박 트래킹</td></tr>
-                    <tr><td><code>ecount_get_eta_history</code></td><td>ETA 이력</td><td>TAB 2 선박 트래킹</td></tr>
+                    <tr><td><code>ecount_shipment_add_shipment</code></td><td>선적 등록</td><td>TAB 2 선적정보</td></tr>
+                    <tr><td><code>ecount_shipment_get_shipment</code></td><td>선적 상세</td><td>TAB 2 선박 트래킹</td></tr>
+                    <tr><td><code>ecount_shipment_list_shipments</code></td><td>선적 목록</td><td>TAB 2/8 트래킹/모니터링</td></tr>
+                    <tr><td><code>ecount_shipment_update_shipment_status</code></td><td>선적 상태 변경</td><td>TAB 2 전단계</td></tr>
+                    <tr><td><code>ecount_shipment_update_eta</code></td><td>ETA 갱신</td><td>TAB 2 선박 트래킹</td></tr>
+                    <tr><td><code>ecount_shipment_get_eta_history</code></td><td>ETA 이력</td><td>TAB 2 선박 트래킹</td></tr>
                     <!-- Logistics KPI -->
-                    <tr><td><code>ecount_calc_logistics_kpi</code></td><td>물류 KPI 계산</td><td>TAB 8/12 모니터링/BI</td></tr>
+                    <tr><td><code>ecount_logistics_calc_logistics_kpi</code></td><td>물류 KPI 계산</td><td>TAB 8/12 모니터링/BI</td></tr>
                     <!-- Contracts -->
-                    <tr><td><code>ecount_add_contract</code></td><td>계약 등록</td><td>TAB 2 계약정보</td></tr>
-                    <tr><td><code>ecount_get_contract</code></td><td>계약 상세</td><td>TAB 2 계약정보</td></tr>
-                    <tr><td><code>ecount_list_contracts</code></td><td>계약 목록</td><td>TAB 2/8 계약/모니터링</td></tr>
-                    <tr><td><code>ecount_update_contract_status</code></td><td>계약 상태 변경</td><td>TAB 2 계약정보</td></tr>
+                    <tr><td><code>ecount_contract_add_contract</code></td><td>계약 등록</td><td>TAB 2 계약정보</td></tr>
+                    <tr><td><code>ecount_contract_get_contract</code></td><td>계약 상세</td><td>TAB 2 계약정보</td></tr>
+                    <tr><td><code>ecount_contract_list_contracts</code></td><td>계약 목록</td><td>TAB 2/8 계약/모니터링</td></tr>
+                    <tr><td><code>ecount_contract_update_contract_status</code></td><td>계약 상태 변경</td><td>TAB 2 계약정보</td></tr>
                     <!-- Inventory Verify -->
-                    <tr><td><code>ecount_verify_inventory</code></td><td>재고 3단계 정합성 검증</td><td>TAB 5/11 재고/자가진단</td></tr>
-                    <tr><td><code>ecount_validate_contract_shipment</code></td><td>계약-선적 교차 검증</td><td>TAB 11 자가진단</td></tr>
+                    <tr><td><code>ecount_inventory_verify_inventory</code></td><td>재고 3단계 정합성 검증</td><td>TAB 5/11 재고/자가진단</td></tr>
+                    <tr><td><code>ecount_inventory_validate_contract_shipment</code></td><td>계약-선적 교차 검증</td><td>TAB 11 자가진단</td></tr>
                     <!-- Stale Shipments -->
-                    <tr><td><code>ecount_stale_shipments</code></td><td>미갱신 선적 감지</td><td>TAB 11 자가진단</td></tr>
-                    <tr><td><code>ecount_customs_delays</code></td><td>통관 지연 감지</td><td>TAB 11 자가진단</td></tr>
-                    <tr><td><code>ecount_delivery_delays</code></td><td>배송 지연 감지</td><td>TAB 11 자가진단</td></tr>
+                    <tr><td><code>ecount_shipment_stale_shipments</code></td><td>미갱신 선적 감지</td><td>TAB 11 자가진단</td></tr>
+                    <tr><td><code>ecount_shipment_customs_delays</code></td><td>통관 지연 감지</td><td>TAB 11 자가진단</td></tr>
+                    <tr><td><code>ecount_shipment_delivery_delays</code></td><td>배송 지연 감지</td><td>TAB 11 자가진단</td></tr>
                     <!-- CSV Export -->
-                    <tr><td><code>ecount_export_csv</code></td><td>CSV 내보내기</td><td>TAB 9/12 원클릭/BI</td></tr>
+                    <tr><td><code>ecount_csv_export_csv</code></td><td>CSV 내보내기</td><td>TAB 9/12 원클릭/BI</td></tr>
                     <!-- Daily Report -->
-                    <tr><td><code>ecount_daily_report</code></td><td>일일 리포트 생성</td><td>TAB 8/12 모니터링/BI</td></tr>
-                    <tr><td><code>ecount_diagnostic_report</code></td><td>진단 리포트 생성</td><td>TAB 11 자가진단</td></tr>
+                    <tr><td><code>ecount_report_daily_report</code></td><td>일일 리포트 생성</td><td>TAB 8/12 모니터링/BI</td></tr>
+                    <tr><td><code>ecount_report_diagnostic_report</code></td><td>진단 리포트 생성</td><td>TAB 11 자가진단</td></tr>
                     <!-- Health Check -->
-                    <tr><td><code>ecount_health_check</code></td><td>시스템 헬스 체크</td><td>TAB 11 자가진단</td></tr>
+                    <tr><td><code>ecount_health_health_check</code></td><td>시스템 헬스 체크</td><td>TAB 11 자가진단</td></tr>
                     <!-- Data Integrity -->
-                    <tr><td><code>ecount_validate_data_integrity</code></td><td>데이터 무결성 검증</td><td>TAB 11 자가진단</td></tr>
+                    <tr><td><code>ecount_integrity_validate_data_integrity</code></td><td>데이터 무결성 검증</td><td>TAB 11 자가진단</td></tr>
                     <!-- Document Status -->
-                    <tr><td><code>ecount_check_document_status</code></td><td>서류 상태 추적</td><td>TAB 2 검역/통관</td></tr>
+                    <tr><td><code>ecount_document_check_document_status</code></td><td>서류 상태 추적</td><td>TAB 2 검역/통관</td></tr>
                     <!-- Adjust Inventory -->
-                    <tr><td><code>ecount_adjust_inventory</code></td><td>재고 조정</td><td>TAB 5 재고관리</td></tr>
-                    <tr><td><code>ecount_list_adjustments</code></td><td>재고 조정 이력</td><td>TAB 5 재고관리</td></tr>
+                    <tr><td><code>ecount_inventory_adjust_inventory</code></td><td>재고 조정</td><td>TAB 5 재고관리</td></tr>
+                    <tr><td><code>ecount_inventory_list_adjustments</code></td><td>재고 조정 이력</td><td>TAB 5 재고관리</td></tr>
                     <!-- Customs Cost -->
-                    <tr><td><code>ecount_override_customs_cost</code></td><td>관세 비용 오버라이드</td><td>TAB 6 관세/부대비</td></tr>
-                    <tr><td><code>ecount_get_landed_cost</code></td><td>Landed Cost 계산</td><td>TAB 6 원가 관리</td></tr>
+                    <tr><td><code>ecount_customs_override_customs_cost</code></td><td>관세 비용 오버라이드</td><td>TAB 6 관세/부대비</td></tr>
+                    <tr><td><code>ecount_customs_get_landed_cost</code></td><td>Landed Cost 계산</td><td>TAB 6 원가 관리</td></tr>
                     <!-- Internal API -->
-                    <tr><td><code>ecount_list_sales_internal</code></td><td>내부 API 매출 조회</td><td>TAB 6/12 회계/BI</td></tr>
-                    <tr><td><code>ecount_list_purchases_internal</code></td><td>내부 API 매입 조회</td><td>TAB 6/12 회계/BI</td></tr>
-                    <tr><td><code>ecount_list_vatslips</code></td><td>세금계산서 조회</td><td>TAB 6 회계</td></tr>
-                    <tr><td><code>ecount_list_account_slips</code></td><td>회계 전표 조회</td><td>TAB 6 회계 마감</td></tr>
+                    <tr><td><code>ecount_internal_list_sales_internal</code></td><td>내부 API 매출 조회</td><td>TAB 6/12 회계/BI</td></tr>
+                    <tr><td><code>ecount_internal_list_purchases_internal</code></td><td>내부 API 매입 조회</td><td>TAB 6/12 회계/BI</td></tr>
+                    <tr><td><code>ecount_internal_list_vatslips</code></td><td>세금계산서 조회</td><td>TAB 6 회계</td></tr>
+                    <tr><td><code>ecount_internal_list_account_slips</code></td><td>회계 전표 조회</td><td>TAB 6 회계 마감</td></tr>
                 </table>
 
                 <h3 style="color:#3fb950;">Category B+ — v5 Feature Expansion (신규 13개)</h3>
@@ -670,24 +670,24 @@
                         <th>레이어</th>
                     </tr>
                     <!-- Receivables -->
-                    <tr style="background-color:#23863611;"><td><code>ecount_record_payment</code></td><td>수금 기록 (부분수금/완납)</td><td>TAB 2 수금관리</td><td>leaf</td></tr>
-                    <tr style="background-color:#23863611;"><td><code>ecount_list_receivables</code></td><td>미수금 현황 조회 (거래처별/기간별)</td><td>TAB 2/8 수금/모니터링</td><td>leaf</td></tr>
-                    <tr style="background-color:#23863611;"><td><code>ecount_aging_receivables</code></td><td>미수금 에이징 분석 (D+30일 경고)</td><td>TAB 11 자가진단</td><td>leaf</td></tr>
+                    <tr style="background-color:#23863611;"><td><code>ecount_receivable_record_payment</code></td><td>수금 기록 (부분수금/완납)</td><td>TAB 2 수금관리</td><td>leaf</td></tr>
+                    <tr style="background-color:#23863611;"><td><code>ecount_receivable_list_receivables</code></td><td>미수금 현황 조회 (거래처별/기간별)</td><td>TAB 2/8 수금/모니터링</td><td>leaf</td></tr>
+                    <tr style="background-color:#23863611;"><td><code>ecount_receivable_aging_receivables</code></td><td>미수금 에이징 분석 (D+30일 경고)</td><td>TAB 11 자가진단</td><td>leaf</td></tr>
                     <!-- Payables -->
-                    <tr style="background-color:#23863611;"><td><code>ecount_record_payment_out</code></td><td>지급 기록 (선금/중도금/잔금)</td><td>TAB 2 지급관리</td><td>leaf</td></tr>
-                    <tr style="background-color:#23863611;"><td><code>ecount_list_payables</code></td><td>미지급금 현황 조회</td><td>TAB 8 모니터링</td><td>leaf</td></tr>
-                    <tr style="background-color:#23863611;"><td><code>ecount_aging_payables</code></td><td>미지급금 에이징 분석 (D+45일 경고)</td><td>TAB 11 자가진단</td><td>leaf</td></tr>
+                    <tr style="background-color:#23863611;"><td><code>ecount_payable_record_payment_out</code></td><td>지급 기록 (선금/중도금/잔금)</td><td>TAB 2 지급관리</td><td>leaf</td></tr>
+                    <tr style="background-color:#23863611;"><td><code>ecount_payable_list_payables</code></td><td>미지급금 현황 조회</td><td>TAB 8 모니터링</td><td>leaf</td></tr>
+                    <tr style="background-color:#23863611;"><td><code>ecount_payable_aging_payables</code></td><td>미지급금 에이징 분석 (D+45일 경고)</td><td>TAB 11 자가진단</td><td>leaf</td></tr>
                     <!-- Weight Settlement -->
-                    <tr style="background-color:#23863611;"><td><code>ecount_calc_weight_settlement</code></td><td>가중량 vs 실중량 차이 정산 (잡이익/잡손실)</td><td>TAB 2/5 업무흐름/재고</td><td>leaf</td></tr>
+                    <tr style="background-color:#23863611;"><td><code>ecount_weight_calc_weight_settlement</code></td><td>가중량 vs 실중량 차이 정산 (잡이익/잡손실)</td><td>TAB 2/5 업무흐름/재고</td><td>leaf</td></tr>
                     <!-- Inventory Lifecycle -->
-                    <tr style="background-color:#23863611;"><td><code>ecount_track_inventory_stage</code></td><td>재고 5단계 상태 전환 기록</td><td>TAB 5 재고 5단계</td><td>leaf</td></tr>
-                    <tr style="background-color:#23863611;"><td><code>ecount_get_inventory_pipeline</code></td><td>품목별 5단계 파이프라인 현황</td><td>TAB 5 재고 5단계</td><td>leaf</td></tr>
+                    <tr style="background-color:#23863611;"><td><code>ecount_inventory_track_inventory_stage</code></td><td>재고 5단계 상태 전환 기록</td><td>TAB 5 재고 5단계</td><td>leaf</td></tr>
+                    <tr style="background-color:#23863611;"><td><code>ecount_inventory_get_inventory_pipeline</code></td><td>품목별 5단계 파이프라인 현황</td><td>TAB 5 재고 5단계</td><td>leaf</td></tr>
                     <!-- Financial Statements -->
-                    <tr style="background-color:#23863611;"><td><code>ecount_generate_subuibu</code></td><td>수불부 자동 생성</td><td>TAB 6 회계 마감</td><td>aggregation</td></tr>
-                    <tr style="background-color:#23863611;"><td><code>ecount_generate_pnl</code></td><td>손익계산서 생성</td><td>TAB 6/12 회계/BI</td><td>aggregation</td></tr>
-                    <tr style="background-color:#23863611;"><td><code>ecount_analyze_cashflow</code></td><td>현금흐름 분석</td><td>TAB 6/12 자금관리/BI</td><td>aggregation</td></tr>
+                    <tr style="background-color:#23863611;"><td><code>ecount_financial_generate_subuibu</code></td><td>수불부 자동 생성</td><td>TAB 6 회계 마감</td><td>aggregation</td></tr>
+                    <tr style="background-color:#23863611;"><td><code>ecount_financial_generate_pnl</code></td><td>손익계산서 생성</td><td>TAB 6/12 회계/BI</td><td>aggregation</td></tr>
+                    <tr style="background-color:#23863611;"><td><code>ecount_financial_analyze_cashflow</code></td><td>현금흐름 분석</td><td>TAB 6/12 자금관리/BI</td><td>aggregation</td></tr>
                     <!-- Margin Analysis -->
-                    <tr style="background-color:#23863611;"><td><code>ecount_analyze_margin</code></td><td>계약별/품목별 마진 분석</td><td>TAB 6/12 회계/BI</td><td>aggregation</td></tr>
+                    <tr style="background-color:#23863611;"><td><code>ecount_margin_analyze_margin</code></td><td>계약별/품목별 마진 분석</td><td>TAB 6/12 회계/BI</td><td>aggregation</td></tr>
                 </table>
 
                 <h3 style="color:#58a6ff;">Category B+ — v6 Output Layer (신규 5개)</h3>
@@ -699,13 +699,13 @@
                         <th>레이어</th>
                     </tr>
                     <!-- Dashboard -->
-                    <tr style="background-color:#1f6feb11;"><td><code>ecount_render_dashboard</code></td><td>자체 HTML 대시보드 생성 (재무요약/에이징/파이프라인/마진분석)</td><td>TAB 8/12 대시보드/BI</td><td>output</td></tr>
+                    <tr style="background-color:#1f6feb11;"><td><code>ecount_dashboard_render_dashboard</code></td><td>자체 HTML 대시보드 생성 (재무요약/에이징/파이프라인/마진분석)</td><td>TAB 8/12 대시보드/BI</td><td>output</td></tr>
                     <!-- PDF Export -->
-                    <tr style="background-color:#1f6feb11;"><td><code>ecount_export_pdf</code></td><td>데이터를 PDF 파일로 내보내기 (테이블 형식, A4 세로/가로)</td><td>TAB 3/9 결재문서/출력</td><td>output</td></tr>
+                    <tr style="background-color:#1f6feb11;"><td><code>ecount_pdf_export_pdf</code></td><td>데이터를 PDF 파일로 내보내기 (테이블 형식, A4 세로/가로)</td><td>TAB 3/9 결재문서/출력</td><td>output</td></tr>
                     <!-- Fax -->
-                    <tr style="background-color:#1f6feb11;"><td><code>ecount_send_fax</code></td><td>팝빌 API로 팩스 발송</td><td>TAB 9 팩스 자동발송</td><td>output</td></tr>
-                    <tr style="background-color:#1f6feb11;"><td><code>ecount_get_fax_status</code></td><td>팩스 전송 결과 조회</td><td>TAB 9 팩스 발송현황</td><td>output</td></tr>
-                    <tr style="background-color:#1f6feb11;"><td><code>ecount_list_fax_history</code></td><td>팩스 전송 내역 검색</td><td>TAB 9 팩스 발송내역</td><td>output</td></tr>
+                    <tr style="background-color:#1f6feb11;"><td><code>ecount_fax_send_fax</code></td><td>팝빌 API로 팩스 발송</td><td>TAB 9 팩스 자동발송</td><td>output</td></tr>
+                    <tr style="background-color:#1f6feb11;"><td><code>ecount_fax_get_fax_status</code></td><td>팩스 전송 결과 조회</td><td>TAB 9 팩스 발송현황</td><td>output</td></tr>
+                    <tr style="background-color:#1f6feb11;"><td><code>ecount_fax_list_fax_history</code></td><td>팩스 전송 내역 검색</td><td>TAB 9 팩스 발송내역</td><td>output</td></tr>
                 </table>
 
                 <h3 style="color:#f85149;">외부 MCP — public-data.up.railway.app/mcp (공공 API 전담)</h3>
@@ -742,11 +742,11 @@
                         <th>CDN 라이브러리</th>
                         <th>v5 매핑</th>
                     </tr>
-                    <tr style="background-color:#8957e511;"><td><code>ecount_render_dashboard</code> <span style="color:#d29922;font-size:0.8em;">강화</span></td><td>인터랙티브 대시보드 (bar/line/pie/doughnut/radar + treemap/heatmap/sankey)</td><td>Chart.js + D3.js + html-to-image</td><td>TAB 8/12 대시보드/BI</td></tr>
-                    <tr style="background-color:#8957e511;"><td><code>ecount_render_diagram</code></td><td>워크플로우/상태/시퀀스/ER/간트 다이어그램 생성</td><td>Mermaid</td><td>TAB 2/5 업무흐름/재고상태</td></tr>
-                    <tr style="background-color:#8957e511;"><td><code>ecount_render_map</code></td><td>선적경로/거래처분포/물류허브 인터랙티브 지도</td><td>Leaflet + OpenStreetMap</td><td>TAB 8 물류모니터링</td></tr>
-                    <tr style="background-color:#8957e511;"><td><code>ecount_render_presentation</code></td><td>경영 보고 슬라이드 프레젠테이션 (차트 포함)</td><td>Reveal.js + Chart.js</td><td>TAB 12 BI 보고</td></tr>
-                    <tr style="background-color:#8957e511;"><td><code>ecount_render_3d</code></td><td>3D 창고 점유율/물류 네트워크 시각화</td><td>Three.js + OrbitControls</td><td>TAB 5/8 재고/물류</td></tr>
+                    <tr style="background-color:#8957e511;"><td><code>ecount_dashboard_render_dashboard</code> <span style="color:#d29922;font-size:0.8em;">강화</span></td><td>인터랙티브 대시보드 (bar/line/pie/doughnut/radar + treemap/heatmap/sankey)</td><td>Chart.js + D3.js + html-to-image</td><td>TAB 8/12 대시보드/BI</td></tr>
+                    <tr style="background-color:#8957e511;"><td><code>ecount_diagram_render_diagram</code></td><td>워크플로우/상태/시퀀스/ER/간트 다이어그램 생성</td><td>Mermaid</td><td>TAB 2/5 업무흐름/재고상태</td></tr>
+                    <tr style="background-color:#8957e511;"><td><code>ecount_map_render_map</code></td><td>선적경로/거래처분포/물류허브 인터랙티브 지도</td><td>Leaflet + OpenStreetMap</td><td>TAB 8 물류모니터링</td></tr>
+                    <tr style="background-color:#8957e511;"><td><code>ecount_presentation_render_presentation</code></td><td>경영 보고 슬라이드 프레젠테이션 (차트 포함)</td><td>Reveal.js + Chart.js</td><td>TAB 12 BI 보고</td></tr>
+                    <tr style="background-color:#8957e511;"><td><code>ecount_viz3d_render_3d</code></td><td>3D 창고 점유율/물류 네트워크 시각화</td><td>Three.js + OrbitControls</td><td>TAB 5/8 재고/물류</td></tr>
                 </table>
 
                 <h3>유틸리티 (비도구)</h3>
@@ -786,9 +786,9 @@
                         <tr><th>기능</th><th>v5 탭</th><th>필요 기술</th></tr>
                         <tr><td>전자결재 시스템 (9종 결재 유형)</td><td>TAB 3</td><td>Next.js + 워크플로우 엔진</td></tr>
                         <tr><td>사용자 권한 관리 (RBAC)</td><td>TAB 4</td><td>Auth.js + PostgreSQL</td></tr>
-                        <tr><td style="text-decoration:line-through;color:#484f58;">재고 5단계 칸반 보드</td><td style="color:#484f58;">TAB 5</td><td><span class="st-full">✅ v7 해결</span> — ecount_render_diagram (Mermaid 상태 다이어그램) + ecount_render_3d (Three.js 창고 뷰)</td></tr>
+                        <tr><td style="text-decoration:line-through;color:#484f58;">재고 5단계 칸반 보드</td><td style="color:#484f58;">TAB 5</td><td><span class="st-full">✅ v7 해결</span> — ecount_diagram_render_diagram (Mermaid 상태 다이어그램) + ecount_viz3d_render_3d (Three.js 창고 뷰)</td></tr>
                         <tr><td style="text-decoration:line-through;color:#484f58;">비주얼 대시보드 (차트/그래프)</td><td style="color:#484f58;">TAB 8/12</td><td><span class="st-full">✅ v6+v7 해결</span> — Chart.js/D3.js 인터랙티브 대시보드 + Leaflet 지도 + Three.js 3D</td></tr>
-                        <tr><td style="text-decoration:line-through;color:#484f58;">결재 문서 양식 렌더링</td><td style="color:#484f58;">TAB 3</td><td><span class="st-full">✅ v6 해결</span> — ecount_export_pdf (pdf-lib)</td></tr>
+                        <tr><td style="text-decoration:line-through;color:#484f58;">결재 문서 양식 렌더링</td><td style="color:#484f58;">TAB 3</td><td><span class="st-full">✅ v6 해결</span> — ecount_pdf_export_pdf (pdf-lib)</td></tr>
                         <tr><td>기초데이터 관리 UI (CRUD 폼)</td><td>TAB 13</td><td>Next.js + Form 컴포넌트</td></tr>
                     </table>
                 </div>
@@ -800,7 +800,7 @@
                         <tr><th>기능</th><th>v5 탭</th><th>필요 서비스</th></tr>
                         <tr><td>이메일 자동 수신/분류</td><td>TAB 7</td><td>MS Graph API 웹훅 (Office 365 MCP 예정)</td></tr>
                         <tr><td>이메일 자동 발송</td><td>TAB 7/10</td><td>Office 365 MCP (v7 예정)</td></tr>
-                        <tr><td style="text-decoration:line-through;color:#484f58;">FAX 자동 발송</td><td style="color:#484f58;">TAB 9</td><td><span class="st-full">✅ v6 해결</span> — ecount_send_fax (팝빌 Fax API)</td></tr>
+                        <tr><td style="text-decoration:line-through;color:#484f58;">FAX 자동 발송</td><td style="color:#484f58;">TAB 9</td><td><span class="st-full">✅ v6 해결</span> — ecount_fax_send_fax (팝빌 Fax API)</td></tr>
                         <tr><td style="text-decoration:line-through;color:#484f58;">미트와치 자동 LIST UP</td><td style="color:#484f58;">TAB 9</td><td><span class="st-full">✅ 해결</span> — public-data MCP (MAFRA 축산물 이력추적 API)</td></tr>
                         <tr><td>자가진단 상시 데몬</td><td>TAB 11</td><td>PM2 + cron scheduler</td></tr>
                     </table>
@@ -811,10 +811,10 @@
                     <p style="margin-top:10px;">내부 API 도구가 구현되어 있으나, KeyPack 프로토콜 어댑터가 미완성입니다.</p>
                     <table style="margin-top:15px;">
                         <tr><th>도구</th><th>현재 상태</th><th>해결 조건</th></tr>
-                        <tr><td><code>ecount_list_sales_internal</code></td><td>구조 완성, API 호출 불가</td><td>KeyPack 인코더 + ec_req_sid 세션</td></tr>
-                        <tr><td><code>ecount_list_purchases_internal</code></td><td>구조 완성, API 호출 불가</td><td>동일</td></tr>
-                        <tr><td><code>ecount_list_vatslips</code></td><td>구조 완성, API 호출 불가</td><td>동일</td></tr>
-                        <tr><td><code>ecount_list_account_slips</code></td><td>구조 완성, API 호출 불가</td><td>동일</td></tr>
+                        <tr><td><code>ecount_internal_list_sales_internal</code></td><td>구조 완성, API 호출 불가</td><td>KeyPack 인코더 + ec_req_sid 세션</td></tr>
+                        <tr><td><code>ecount_internal_list_purchases_internal</code></td><td>구조 완성, API 호출 불가</td><td>동일</td></tr>
+                        <tr><td><code>ecount_internal_list_vatslips</code></td><td>구조 완성, API 호출 불가</td><td>동일</td></tr>
+                        <tr><td><code>ecount_internal_list_account_slips</code></td><td>구조 완성, API 호출 불가</td><td>동일</td></tr>
                     </table>
                 </div>
 
@@ -921,37 +921,37 @@
                     </tr>
                     <tr>
                         <td>수금/미수금 관리</td>
-                        <td>ecount_record_payment, ecount_list_receivables, ecount_aging_receivables</td>
+                        <td>ecount_receivable_record_payment, ecount_receivable_list_receivables, ecount_receivable_aging_receivables</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 2 수금관리 완성</td>
                     </tr>
                     <tr>
                         <td>미지급금 관리</td>
-                        <td>ecount_record_payment_out, ecount_list_payables, ecount_aging_payables</td>
+                        <td>ecount_payable_record_payment_out, ecount_payable_list_payables, ecount_payable_aging_payables</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 8/11 모니터링 강화</td>
                     </tr>
                     <tr>
                         <td>중량차이 정산</td>
-                        <td>ecount_calc_weight_settlement</td>
+                        <td>ecount_weight_calc_weight_settlement</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 5 재고 완성</td>
                     </tr>
                     <tr>
                         <td>재고 5단계 추적</td>
-                        <td>ecount_track_inventory_stage, ecount_get_inventory_pipeline</td>
+                        <td>ecount_inventory_track_inventory_stage, ecount_inventory_get_inventory_pipeline</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 5 95% 커버리지</td>
                     </tr>
                     <tr>
                         <td>수불부/손익/현금흐름</td>
-                        <td>ecount_generate_subuibu, ecount_generate_pnl, ecount_analyze_cashflow</td>
+                        <td>ecount_financial_generate_subuibu, ecount_financial_generate_pnl, ecount_financial_analyze_cashflow</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 6 회계 마감 완성</td>
                     </tr>
                     <tr>
                         <td>마진 분석</td>
-                        <td>ecount_analyze_margin</td>
+                        <td>ecount_margin_analyze_margin</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 12 BI 강화</td>
                     </tr>
@@ -971,19 +971,19 @@
                     </tr>
                     <tr>
                         <td>HTML 대시보드 생성</td>
-                        <td>ecount_render_dashboard</td>
+                        <td>ecount_dashboard_render_dashboard</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 8/12 대시보드/BI 해결</td>
                     </tr>
                     <tr>
                         <td>PDF 내보내기</td>
-                        <td>ecount_export_pdf</td>
+                        <td>ecount_pdf_export_pdf</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 3/9 결재문서 렌더링 해결</td>
                     </tr>
                     <tr>
                         <td>팩스 발송/조회</td>
-                        <td>ecount_send_fax, ecount_get_fax_status, ecount_list_fax_history</td>
+                        <td>ecount_fax_send_fax, ecount_fax_get_fax_status, ecount_fax_list_fax_history</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 9 팩스 자동발송 해결</td>
                     </tr>
@@ -1015,31 +1015,31 @@
                     </tr>
                     <tr>
                         <td>인터랙티브 차트 대시보드</td>
-                        <td>ecount_render_dashboard (Chart.js + D3.js)</td>
+                        <td>ecount_dashboard_render_dashboard (Chart.js + D3.js)</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 8/12 차트 시각화 해결 (bar/line/pie/treemap/heatmap/sankey)</td>
                     </tr>
                     <tr>
                         <td>업무 프로세스 다이어그램</td>
-                        <td>ecount_render_diagram (Mermaid)</td>
+                        <td>ecount_diagram_render_diagram (Mermaid)</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 2/5 워크플로우/상태/시퀀스/ER/간트 5종 다이어그램</td>
                     </tr>
                     <tr>
                         <td>물류/거래처 지도 시각화</td>
-                        <td>ecount_render_map (Leaflet)</td>
+                        <td>ecount_map_render_map (Leaflet)</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 8 선적경로/거래처분포/물류허브 인터랙티브 지도</td>
                     </tr>
                     <tr>
                         <td>경영 보고 프레젠테이션</td>
-                        <td>ecount_render_presentation (Reveal.js)</td>
+                        <td>ecount_presentation_render_presentation (Reveal.js)</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 12 BI 데이터를 슬라이드 덱으로 자동 생성</td>
                     </tr>
                     <tr>
                         <td>3D 창고/물류 시각화</td>
-                        <td>ecount_render_3d (Three.js)</td>
+                        <td>ecount_viz3d_render_3d (Three.js)</td>
                         <td><span class="st-full">✅ 완료</span></td>
                         <td>TAB 5/8 창고 점유율 + 물류 네트워크 3D 뷰</td>
                     </tr>
@@ -1055,7 +1055,7 @@
                     </tr>
                     <tr>
                         <td>미수금 독촉 메일 생성</td>
-                        <td>ecount_render_email (템플릿 추가)</td>
+                        <td>ecount_email_render_email (템플릿 추가)</td>
                         <td>소</td>
                         <td>TAB 10 메일 강화</td>
                     </tr>

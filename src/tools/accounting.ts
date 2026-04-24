@@ -5,7 +5,7 @@ import { registerTools, type ToolDefinition } from "./tool-factory.js";
 
 const accountingTools: ToolDefinition[] = [
   {
-    name: "ecount_save_invoice_auto",
+    name: "ecount_accounting_save_invoice_auto",
     description:
       "ECOUNT ERP 자동 세금계산서(청구서)를 저장합니다. 매출 또는 매입 거래에 대한 전표를 자동으로 생성하고 등록할 때 사용합니다.",
     endpoint: "InvoiceAuto/SaveInvoiceAuto",
@@ -16,8 +16,8 @@ const accountingTools: ToolDefinition[] = [
       CUST: z.string().describe("거래처코드"),
       SUPPLY_AMT: z.string().describe("공급가액"),
       SLIP_TYPE: z.string().optional().describe("전표구분 (1: 매출, 2: 매입)"),
-      VAT_AMT: z.string().optional().describe("부가세액"),
-      REMARKS: z.string().optional().describe("비고"),
+      VAT_AMT: z.string().optional(),
+      REMARKS: z.string().optional(),
       CUST_DES: z.string().optional().describe("거래처명"),
       EMP_CD: z.string().optional().describe("담당자코드"),
       PJT_CD: z.string().optional().describe("프로젝트코드"),

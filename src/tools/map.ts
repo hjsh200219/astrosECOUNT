@@ -34,34 +34,33 @@ export function generateMapHtml(
 const markerSchema = z.object({
   lat: z.number().describe("위도"),
   lng: z.number().describe("경도"),
-  label: z.string().describe("마커 레이블"),
-  popup: z.string().optional().describe("팝업 내용"),
-  size: z.number().optional().describe("마커 크기 (기본 6)"),
+  label: z.string(),
+  popup: z.string().optional(),
+  size: z.number().optional().describe("기본 6"),
 });
 
 const routeSchema = z.object({
   points: z
     .array(z.object({ lat: z.number(), lng: z.number() }))
     .describe("경로 좌표 배열"),
-  color: z.string().optional().describe("경로 색상"),
-  label: z.string().optional().describe("경로 레이블"),
+  color: z.string().optional(),
+  label: z.string().optional(),
 });
 
 export function registerMapTools(server: McpServer): void {
   server.tool(
-    "ecount_render_map",
+    "ecount_map_render_map",
     "Leaflet 기반 인터랙티브 지도를 생성합니다. 선적 경로, 거래처 분포, 물류 허브를 시각화합니다.",
     {
-      mapType: z.enum(MAP_TYPES).describe("지도 유형"),
-      markers: z.array(markerSchema).optional().default([]).describe("마커 목록"),
-      routes: z.array(routeSchema).optional().default([]).describe("경로 목록"),
+      mapType: z.enum(MAP_TYPES),
+      markers: z.array(markerSchema).optional().default([]),
+      routes: z.array(routeSchema).optional().default([]),
       center: z
         .object({ lat: z.number(), lng: z.number() })
-        .optional()
-        .describe("지도 중심 좌표"),
-      zoom: z.number().optional().describe("줌 레벨 (기본 5)"),
-      title: z.string().optional().describe("지도 제목"),
-      language: z.enum(["ko", "en"]).optional().default("ko").describe("언어 설정"),
+        .optional(),
+      zoom: z.number().optional().describe("기본 5"),
+      title: z.string().optional(),
+      language: z.enum(["ko", "en"]).optional().default("ko"),
     },
     { readOnlyHint: true },
     async (args) => {

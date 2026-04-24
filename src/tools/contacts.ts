@@ -62,7 +62,7 @@ export function listContacts(filter: {
 
 export function registerContactTools(server: McpServer): void {
   server.tool(
-    "ecount_lookup_contact",
+    "ecount_contact_lookup_contact",
     "담당자 이름으로 연락처/역할/소속 정보를 조회합니다. 아스트로스, 삼현INT, 정운관세법인, 원스탑, 디케이통상, BRF 등 13명의 담당자를 지원합니다.",
     {
       name: z.string().describe("담당자 이름 (예: 김민수, Maria Silva)"),
@@ -82,7 +82,7 @@ export function registerContactTools(server: McpServer): void {
   );
 
   server.tool(
-    "ecount_list_contacts",
+    "ecount_contact_list_contacts",
     "담당자 목록을 조회합니다. 회사명 또는 역할로 필터링할 수 있습니다.",
     {
       company: z.string().optional().describe("회사명 필터 (예: 삼현INT, 정운관세법인)"),

@@ -197,14 +197,14 @@ export async function generatePdfFromData(opts: PdfFromDataOptions): Promise<Uin
 
 export function registerPdfExportTools(server: McpServer): void {
   server.tool(
-    "ecount_export_pdf",
+    "ecount_pdf_export_pdf",
     "데이터를 PDF 파일로 내보냅니다. 테이블 형식의 데이터를 PDF로 저장합니다.",
     {
       output_path: z.string().describe("저장할 PDF 파일 경로 (절대 경로)"),
-      title: z.string().describe("PDF 제목"),
+      title: z.string(),
       data: z.array(z.record(z.string(), z.unknown())).describe("내보낼 데이터 배열"),
       columns: z.array(z.string()).optional().describe("표시할 컬럼 목록 (순서 지정, 미지정시 자동)"),
-      orientation: z.enum(["portrait", "landscape"]).optional().describe("용지 방향 (portrait: 세로, landscape: 가로)"),
+      orientation: z.enum(["portrait", "landscape"]).optional().describe("portrait: 세로, landscape: 가로"),
     },
     async ({ output_path, title, data, columns, orientation }) => {
       try {

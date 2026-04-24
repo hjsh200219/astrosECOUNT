@@ -183,9 +183,9 @@ erDiagram
 
 | 관계 | 추론 근거 |
 |------|----------|
-| JOB_ORDER ↔ GOODS_ISSUED | `ecount_save_goods_issued` 스키마에 동일 필드 구조 |
-| SALE ↔ INVOICE | `ecount_save_invoice_auto` 스키마에 UPLOAD_SER_NO(전표번호) 필드 |
-| EMPLOYEE ↔ CLOCK_IN_OUT | `ecount_save_clock_in_out` 스키마에 EMP_CD 필드 |
+| JOB_ORDER ↔ GOODS_ISSUED | `ecount_production_save_goods_issued` 스키마에 동일 필드 구조 |
+| SALE ↔ INVOICE | `ecount_accounting_save_invoice_auto` 스키마에 UPLOAD_SER_NO(전표번호) 필드 |
+| EMPLOYEE ↔ CLOCK_IN_OUT | `ecount_other_save_clock_in_out` 스키마에 EMP_CD 필드 |
 
 ## 확인된 코드 체계
 

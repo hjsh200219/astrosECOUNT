@@ -152,7 +152,7 @@ export async function generateDailyReport(options?: ReportOptions): Promise<stri
 
 export function registerDailyReportTools(server: McpServer): void {
   server.tool(
-    "ecount_diagnostic_report",
+    "ecount_report_diagnostic_report",
     "L1~L3 자가진단 리포트를 생성합니다. 인프라/데이터/프로세스 상태를 점검합니다.",
     {
       date: z.string().optional().describe("진단 날짜 (기본: 오늘, YYYY-MM-DD)"),
@@ -169,7 +169,7 @@ export function registerDailyReportTools(server: McpServer): void {
   );
 
   server.tool(
-    "ecount_daily_report",
+    "ecount_report_daily_report",
     "현재 선적/계약 데이터를 종합한 일일 업무 리포트를 텍스트로 생성합니다.",
     {
       date: z.string().optional().describe("리포트 날짜 (기본: 오늘, YYYY-MM-DD)"),

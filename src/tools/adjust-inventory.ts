@@ -57,14 +57,14 @@ export function getAdjustmentHistory(product: string): InventoryAdjustment[] {
 
 export function registerAdjustInventoryTools(server: McpServer): void {
   server.tool(
-    "ecount_adjust_inventory",
+    "ecount_inventory_adjust_inventory",
     "재고 수량을 수동으로 조정합니다. 사유와 담당자를 함께 기록하여 감사 추적을 제공합니다.",
     {
-      product: z.string().describe("품목명"),
+      product: z.string(),
       warehouse: z.string().describe("창고 코드 또는 이름"),
-      quantityChange: z.number().describe("수량 변경값 (양수: 증가, 음수: 감소, 0 불가)"),
-      reason: z.string().describe("조정 사유 (필수, 비어있을 수 없음)"),
-      adjustedBy: z.string().describe("조정 담당자"),
+      quantityChange: z.number().describe("양수: 증가, 음수: 감소, 0 불가"),
+      reason: z.string().describe("조정 사유 (비어있을 수 없음)"),
+      adjustedBy: z.string(),
     },
     { readOnlyHint: false, destructiveHint: false },
     async (params: Record<string, unknown>) => {
@@ -84,11 +84,11 @@ export function registerAdjustInventoryTools(server: McpServer): void {
   );
 
   server.tool(
-    "ecount_list_adjustments",
+    "ecount_inventory_list_adjustments",
     "재고 조정 이력을 조회합니다. 품목 또는 창고로 필터링 가능합니다.",
     {
-      product: z.string().optional().describe("품목 필터"),
-      warehouse: z.string().optional().describe("창고 필터"),
+      product: z.string().optional(),
+      warehouse: z.string().optional(),
     },
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {

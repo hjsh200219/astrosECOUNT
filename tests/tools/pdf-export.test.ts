@@ -84,7 +84,7 @@ describe("PDF Export Tools", () => {
       const { registerPdfExportTools } = await import("../../src/tools/pdf-export.js");
       registerPdfExportTools(server);
       expect(toolSpy).toHaveBeenCalledTimes(1);
-      expect(toolSpy.mock.calls[0][0]).toBe("ecount_export_pdf");
+      expect(toolSpy.mock.calls[0][0]).toBe("ecount_pdf_export_pdf");
       toolSpy.mockRestore();
     });
   });

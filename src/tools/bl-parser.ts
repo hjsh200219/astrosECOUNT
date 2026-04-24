@@ -53,7 +53,7 @@ export function parseBL(input: string): BLParseResult {
 
 export function registerBLParserTool(server: McpServer): void {
   server.tool(
-    "ecount_parse_bl",
+    "ecount_bl_parse_bl",
     "BL(선하증권) 번호를 분석하여 선사를 자동 식별합니다. COSCO, ONE, HMM, MSC, Evergreen, PIL 등을 지원합니다.",
     {
       bl_number: z.string().describe("BL 번호 (예: COSU6453445610)"),

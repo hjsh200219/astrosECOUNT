@@ -13,9 +13,25 @@ const envSchema = z.object({
   ECOUNT_ZONE: z.string().min(1, "ECOUNT_ZONE is required").default("AU1"),
   ECOUNT_LAN_TYPE: z.string().default("ko-KR"),
   ECOUNT_API_MODE: z.enum(["production", "sandbox"]).default("production"),
+  /** Comma-separated extra tool groups to enable, or "all". Default: disabled.
+   *  Valid keys: map, presentation, three-d, diagram, pdf-stamp
+   *  Example: ECOUNT_ENABLE_EXTRAS=map,diagram  or  ECOUNT_ENABLE_EXTRAS=all
+   */
+  ECOUNT_ENABLE_EXTRAS: z.string().default(""),
 });
 
 export type EcountConfig = z.infer<typeof envSchema>;
+
+/**
+ * Returns true if the given extra tool group key is enabled via ECOUNT_ENABLE_EXTRAS.
+ * Valid keys: map, presentation, three-d, diagram, pdf-stamp
+ */
+export function isExtraEnabled(config: EcountConfig, key: string): boolean {
+  const raw = (config.ECOUNT_ENABLE_EXTRAS ?? "").trim();
+  if (!raw) return false;
+  if (raw === "all") return true;
+  return raw.split(",").map((s) => s.trim()).includes(key);
+}
 
 /** Returns the API host prefix: "oapi" for production, "sboapi" for sandbox */
 export function apiHostPrefix(config: EcountConfig): string {

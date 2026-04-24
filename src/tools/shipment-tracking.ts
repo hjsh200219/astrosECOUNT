@@ -112,17 +112,17 @@ async function handleGetEtaHistory(params: Record<string, unknown>) {
 
 export function registerShipmentTrackingTools(server: McpServer): void {
   server.tool(
-    "ecount_add_shipment", "새로운 선적(Shipment) 정보를 등록합니다.",
+    "ecount_shipment_add_shipment", "새로운 선적(Shipment) 정보를 등록합니다.",
     {
-      blNumber: z.string().describe("B/L 번호"),
+      blNumber: z.string(),
       carrier: z.string().describe("선사명 (예: Maersk, MSC, Evergreen)"),
-      product: z.string().describe("품목명"),
+      product: z.string(),
       origin: z.string().describe("출발지 (예: Santos, Brazil)"),
       destination: z.string().describe("도착지 (예: Busan, Korea)"),
       etd: z.string().optional().describe("출발 예정일 YYYY-MM-DD"),
       eta: z.string().optional().describe("도착 예정일 YYYY-MM-DD"),
-      status: z.enum(SHIPMENT_STATUS).describe("선적 상태"),
-      containerNo: z.string().optional().describe("컨테이너 번호"),
+      status: z.enum(SHIPMENT_STATUS),
+      containerNo: z.string().optional(),
       weight: z.number().optional().describe("중량 (kg)"),
     },
     { readOnlyHint: false, destructiveHint: false },
@@ -130,36 +130,36 @@ export function registerShipmentTrackingTools(server: McpServer): void {
   );
 
   server.tool(
-    "ecount_get_shipment", "선적 정보를 조회합니다. ID 또는 B/L 번호로 검색 가능합니다.",
-    { id: z.string().optional().describe("선적 ID"), blNumber: z.string().optional().describe("B/L 번호") },
+    "ecount_shipment_get_shipment", "선적 정보를 조회합니다. ID 또는 B/L 번호로 검색 가능합니다.",
+    { id: z.string().optional(), blNumber: z.string().optional() },
     { readOnlyHint: true },
     handleGetShipment,
   );
 
   server.tool(
-    "ecount_list_shipments", "선적 목록을 조회합니다. 상태 또는 선사로 필터링 가능합니다. (로컬 등록 데이터 기준)",
-    { status: z.enum(SHIPMENT_STATUS).optional().describe("상태 필터"), carrier: z.string().optional().describe("선사 필터") },
+    "ecount_shipment_list_shipments", "선적 목록을 조회합니다. 상태 또는 선사로 필터링 가능합니다. (로컬 등록 데이터 기준)",
+    { status: z.enum(SHIPMENT_STATUS).optional(), carrier: z.string().optional() },
     { readOnlyHint: true },
     handleListShipments,
   );
 
   server.tool(
-    "ecount_update_shipment_status", "선적 상태를 업데이트합니다. (로컬 등록 데이터)",
-    { id: z.string().describe("선적 ID"), status: z.enum(SHIPMENT_STATUS).describe("새로운 상태") },
+    "ecount_shipment_update_shipment_status", "선적 상태를 업데이트합니다. (로컬 등록 데이터)",
+    { id: z.string(), status: z.enum(SHIPMENT_STATUS) },
     { readOnlyHint: false, destructiveHint: false },
     handleUpdateStatus,
   );
 
   server.tool(
-    "ecount_update_eta", "선적의 ETA(도착 예정일)를 업데이트하고 변경 이력을 기록합니다.",
-    { id: z.string().describe("선적 ID"), eta: z.string().describe("새로운 ETA (YYYY-MM-DD)"), reason: z.string().optional().describe("ETA 변경 사유") },
+    "ecount_shipment_update_eta", "선적의 ETA(도착 예정일)를 업데이트하고 변경 이력을 기록합니다.",
+    { id: z.string(), eta: z.string().describe("YYYY-MM-DD"), reason: z.string().optional() },
     { readOnlyHint: false, destructiveHint: false },
     handleUpdateEta,
   );
 
   server.tool(
-    "ecount_get_eta_history", "특정 선적의 ETA 변경 이력을 조회합니다.",
-    { id: z.string().describe("선적 ID") },
+    "ecount_shipment_get_eta_history", "특정 선적의 ETA 변경 이력을 조회합니다.",
+    { id: z.string() },
     { readOnlyHint: true },
     handleGetEtaHistory,
   );

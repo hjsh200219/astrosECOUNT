@@ -12,15 +12,14 @@ import type { SlideData } from "../utils/slide-renderer.js";
 
 const slideSchema = z.object({
   type: z
-    .enum(["title", "content", "stat", "chart", "two_column", "closing"])
-    .describe("슬라이드 유형"),
-  title: z.string().describe("슬라이드 제목"),
-  content: z.string().optional().describe("본문 내용"),
-  subtitle: z.string().optional().describe("부제목 (title 유형)"),
-  statValue: z.union([z.number(), z.string()]).optional().describe("통계 값 (stat 유형)"),
-  statLabel: z.string().optional().describe("통계 레이블 (stat 유형)"),
-  leftContent: z.string().optional().describe("왼쪽 열 (two_column 유형)"),
-  rightContent: z.string().optional().describe("오른쪽 열 (two_column 유형)"),
+    .enum(["title", "content", "stat", "chart", "two_column", "closing"]),
+  title: z.string(),
+  content: z.string().optional(),
+  subtitle: z.string().optional().describe("title 유형"),
+  statValue: z.union([z.number(), z.string()]).optional().describe("stat 유형"),
+  statLabel: z.string().optional().describe("stat 유형"),
+  leftContent: z.string().optional().describe("two_column 유형"),
+  rightContent: z.string().optional().describe("two_column 유형"),
   chartData: z
     .object({
       labels: z.array(z.string()),
@@ -28,7 +27,7 @@ const slideSchema = z.object({
       chartType: z.string().optional(),
     })
     .optional()
-    .describe("차트 데이터 (chart 유형)"),
+    .describe("chart 유형"),
 });
 
 export function generatePresentationHtml(
@@ -50,12 +49,12 @@ export function generatePresentationHtml(
 
 export function registerPresentationTools(server: McpServer): void {
   server.tool(
-    "ecount_render_presentation",
+    "ecount_presentation_render_presentation",
     "Reveal.js 기반 프레젠테이션 슬라이드를 생성합니다. 경영 보고서, 일일 브리핑, 자가진단 결과 발표에 사용합니다.",
     {
-      slides: z.array(slideSchema).min(1).describe("슬라이드 목록 (1개 이상)"),
-      title: z.string().optional().describe("프레젠테이션 제목"),
-      language: z.enum(["ko", "en"]).optional().default("ko").describe("언어 설정"),
+      slides: z.array(slideSchema).min(1),
+      title: z.string().optional(),
+      language: z.enum(["ko", "en"]).optional().default("ko"),
     },
     { readOnlyHint: true },
     async (args) => {

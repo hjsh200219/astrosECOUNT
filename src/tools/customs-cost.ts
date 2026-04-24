@@ -77,19 +77,19 @@ export function listCostOverrides(): CostOverride[] {
 
 export function registerCustomsCostTools(server: McpServer): void {
   server.tool(
-    "ecount_override_customs_cost",
+    "ecount_customs_override_customs_cost",
     "선적 건에 대한 관세 및 추가 비용을 수동으로 입력하여 원가를 재계산합니다.",
     {
-      shipmentId: z.string().describe("선적 ID"),
+      shipmentId: z.string(),
       customsDuty: z.number().nonnegative().describe("관세액 (KRW)"),
       additionalCosts: z.array(
         z.object({
-          name: z.string().describe("비용 항목명 (예: 운송비, 보험료, 하역비)"),
-          amount: z.number().nonnegative().describe("금액 (KRW)"),
+          name: z.string().describe("예: 운송비, 보험료, 하역비"),
+          amount: z.number().nonnegative().describe("KRW"),
         })
       ).describe("추가 비용 항목 목록"),
-      reason: z.string().describe("수동 입력 사유"),
-      overriddenBy: z.string().describe("입력자"),
+      reason: z.string(),
+      overriddenBy: z.string(),
     },
     { readOnlyHint: false, destructiveHint: false },
     async (params: Record<string, unknown>) => {
@@ -109,10 +109,10 @@ export function registerCustomsCostTools(server: McpServer): void {
   );
 
   server.tool(
-    "ecount_get_landed_cost",
+    "ecount_customs_get_landed_cost",
     "선적 건의 랜디드 코스트(총 원가)를 계산합니다. 관세 및 추가 비용이 먼저 입력되어 있어야 합니다.",
     {
-      shipmentId: z.string().describe("선적 ID"),
+      shipmentId: z.string(),
       basePrice: z.number().positive().describe("기준 가격 (외화)"),
       exchangeRate: z.number().positive().describe("적용 환율 (KRW/외화 단위)"),
     },
@@ -127,7 +127,7 @@ export function registerCustomsCostTools(server: McpServer): void {
         if (!result) {
           return formatResponse({
             found: false,
-            message: `선적 ID '${params.shipmentId}'에 대한 비용 오버라이드 정보가 없습니다. 먼저 ecount_override_customs_cost를 실행하세요.`,
+            message: `선적 ID '${params.shipmentId}'에 대한 비용 오버라이드 정보가 없습니다. 먼저 ecount_customs_override_customs_cost를 실행하세요.`,
           });
         }
         return formatResponse({ found: true, landedCost: result });

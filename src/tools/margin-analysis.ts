@@ -116,12 +116,12 @@ export function analyzeMargin(params: {
 
 export function registerMarginAnalysisTools(server: McpServer): void {
   server.tool(
-    "ecount_analyze_margin",
+    "ecount_margin_analyze_margin",
     "계약별 또는 품목별 마진을 분석합니다 (매출-원가-마진율 산출).",
     {
-      groupBy: z.enum(["contract", "product"]).describe("그룹 기준 (contract: 계약별, product: 품목별)"),
-      periodFrom: z.string().optional().describe("시작일 필터 (YYYY-MM-DD)"),
-      periodTo: z.string().optional().describe("종료일 필터 (YYYY-MM-DD)"),
+      groupBy: z.enum(["contract", "product"]).describe("contract: 계약별, product: 품목별"),
+      periodFrom: z.string().optional().describe("YYYY-MM-DD"),
+      periodTo: z.string().optional().describe("YYYY-MM-DD"),
     },
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {

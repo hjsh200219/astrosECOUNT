@@ -84,21 +84,19 @@ export function generateDiagramHtml(
 
 export function registerDiagramTools(server: McpServer): void {
   server.tool(
-    "ecount_render_diagram",
+    "ecount_diagram_render_diagram",
     "Mermaid 기반 다이어그램을 생성합니다. 업무 흐름도, 상태 전환도, 시퀀스 다이어그램, ER 다이어그램, 간트 차트를 지원합니다.",
     {
       diagramType: z
-        .enum(DIAGRAM_TYPES)
-        .describe("다이어그램 유형"),
+        .enum(DIAGRAM_TYPES),
       data: z
         .record(z.string(), z.unknown())
         .describe("다이어그램 데이터 (유형별 구조 상이)"),
-      title: z.string().optional().describe("다이어그램 제목 (선택)"),
+      title: z.string().optional(),
       language: z
         .enum(["ko", "en"])
         .optional()
-        .default("ko")
-        .describe("언어 설정"),
+        .default("ko"),
     },
     { readOnlyHint: true },
     async (args) => {

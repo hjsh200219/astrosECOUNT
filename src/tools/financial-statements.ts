@@ -178,20 +178,20 @@ async function handleAnalyzeCashflow(params: Record<string, unknown>) {
 
 export function registerFinancialStatementsTools(server: McpServer): void {
   server.tool(
-    "ecount_generate_subuibu",
+    "ecount_financial_generate_subuibu",
     "수불부를 자동 생성합니다 (기초미착품/입고/기말미착품/상품재고/매출원가).",
-    { period: z.string().describe("대상 기간 (YYYY-MM 형식)"), products: z.array(z.string()).optional().describe("품목 필터 (비워두면 전체)") },
+    { period: z.string().describe("YYYY-MM"), products: z.array(z.string()).optional().describe("품목 필터 (비워두면 전체)") },
     { readOnlyHint: true },
     handleGenerateSubuibu,
   );
 
   server.tool(
-    "ecount_generate_pnl",
+    "ecount_financial_generate_pnl",
     "손익계산서를 생성합니다 (매출/매출원가/판관비/금융비/영업이익).",
     {
-      periodFrom: z.string().describe("시작일 (YYYY-MM-DD)"),
-      periodTo: z.string().describe("종료일 (YYYY-MM-DD)"),
-      revenue: z.number().nonnegative().describe("매출액"),
+      periodFrom: z.string().describe("YYYY-MM-DD"),
+      periodTo: z.string().describe("YYYY-MM-DD"),
+      revenue: z.number().nonnegative(),
       sgaExpenses: z.number().nonnegative().optional().describe("판관비 (기본값: 0)"),
       financialExpenses: z.number().nonnegative().optional().describe("금융비용 (기본값: 0)"),
     },
@@ -200,7 +200,7 @@ export function registerFinancialStatementsTools(server: McpServer): void {
   );
 
   server.tool(
-    "ecount_analyze_cashflow",
+    "ecount_financial_analyze_cashflow",
     "현금흐름을 분석합니다 (선금/기한내수금/연체미수금/미지급금).",
     { asOfDate: z.string().optional().describe("기준일 (YYYY-MM-DD)") },
     { readOnlyHint: true },

@@ -75,42 +75,42 @@ async function handleUpdateContractStatus(params: Record<string, unknown>) {
 
 export function registerContractTools(server: McpServer): void {
   server.tool(
-    "ecount_add_contract", "새로운 수입 계약을 등록합니다.",
+    "ecount_contract_add_contract", "새로운 수입 계약을 등록합니다.",
     {
       contractNumber: z.string().describe("계약 번호 (예: CTR-2026-001)"),
       supplier: z.string().describe("공급사명 (예: BRF S.A., JBS)"),
-      buyer: z.string().describe("구매사명 (예: 아스트로스)"),
-      product: z.string().describe("품목명"),
+      buyer: z.string(),
+      product: z.string(),
       quantity: z.number().positive().describe("수량 (kg)"),
       unitPrice: z.number().positive().describe("단가 (USD/kg)"),
       currency: z.string().describe("통화 코드 (예: USD)"),
       incoterms: z.string().describe("인코텀즈 (예: CIF Busan)"),
-      signedDate: z.string().optional().describe("계약 서명일 YYYY-MM-DD"),
-      expiryDate: z.string().optional().describe("계약 만료일 YYYY-MM-DD"),
-      status: z.enum(CONTRACT_STATUS).describe("계약 상태"),
-      notes: z.string().optional().describe("메모"),
+      signedDate: z.string().optional().describe("YYYY-MM-DD"),
+      expiryDate: z.string().optional().describe("YYYY-MM-DD"),
+      status: z.enum(CONTRACT_STATUS),
+      notes: z.string().optional(),
     },
     { readOnlyHint: false, destructiveHint: false },
     handleAddContract,
   );
 
   server.tool(
-    "ecount_get_contract", "계약 ID로 계약 정보를 조회합니다.",
-    { id: z.string().describe("계약 ID") },
+    "ecount_contract_get_contract", "계약 ID로 계약 정보를 조회합니다.",
+    { id: z.string() },
     { readOnlyHint: true },
     handleGetContract,
   );
 
   server.tool(
-    "ecount_list_contracts", "계약 목록을 조회합니다. 상태 또는 공급사로 필터링 가능합니다.",
-    { status: z.enum(CONTRACT_STATUS).optional().describe("상태 필터"), supplier: z.string().optional().describe("공급사 필터") },
+    "ecount_contract_list_contracts", "계약 목록을 조회합니다. 상태 또는 공급사로 필터링 가능합니다.",
+    { status: z.enum(CONTRACT_STATUS).optional(), supplier: z.string().optional() },
     { readOnlyHint: true },
     handleListContracts,
   );
 
   server.tool(
-    "ecount_update_contract_status", "계약 상태를 업데이트합니다.",
-    { id: z.string().describe("계약 ID"), status: z.enum(CONTRACT_STATUS).describe("새로운 상태") },
+    "ecount_contract_update_contract_status", "계약 상태를 업데이트합니다.",
+    { id: z.string(), status: z.enum(CONTRACT_STATUS) },
     { readOnlyHint: false, destructiveHint: false },
     handleUpdateContractStatus,
   );

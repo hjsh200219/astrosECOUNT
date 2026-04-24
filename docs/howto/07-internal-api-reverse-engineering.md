@@ -402,8 +402,8 @@ const data = await interceptApiResponse(page, 'SelectInventorySearchListAction')
 - [ ] **P0**: 웹 로그인 → `ec_req_sid` 자동 획득 모듈
 - [ ] **P1**: 판매 조회 MCP Tool 구현 (`ecount_list_sales`)
 - [ ] **P1**: 구매 조회 MCP Tool 구현 (`ecount_list_purchases`)
-- [ ] **P1**: 세금계산서 조회 MCP Tool 구현 (`ecount_list_vatslips`)
-- [ ] **P1**: 회계전표 조회 MCP Tool 구현 (`ecount_list_account_slips`)
+- [ ] **P1**: 세금계산서 조회 MCP Tool 구현 (`ecount_internal_list_vatslips`)
+- [ ] **P1**: 회계전표 조회 MCP Tool 구현 (`ecount_internal_list_account_slips`)
 - [ ] **P2**: 채권/채무 조회 MCP Tool 구현
 - [ ] **P2**: 부가세신고서 조회 MCP Tool 구현
 - [ ] **P2**: 세션 관리 및 자동 재로그인

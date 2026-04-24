@@ -41,12 +41,12 @@ export function calcWeightSettlement(params: WeightSettlementParams): WeightSett
 
 export function registerWeightSettlementTools(server: McpServer): void {
   server.tool(
-    "ecount_calc_weight_settlement",
+    "ecount_weight_calc_weight_settlement",
     "가중량 vs 실중량 차이를 계산하여 잡이익/잡손실을 산출합니다.",
     {
-      shipmentId: z.string().describe("선적 ID"),
-      contractWeight: z.number().nonnegative().describe("계약 중량 (kg)"),
-      actualWeight: z.number().nonnegative().describe("실제 중량 (kg)"),
+      shipmentId: z.string(),
+      contractWeight: z.number().nonnegative().describe("kg"),
+      actualWeight: z.number().nonnegative().describe("kg"),
       unitPrice: z.number().positive().describe("단가 (통화 단위)"),
       currency: z.string().describe("통화 코드 (예: KRW, USD)"),
     },

@@ -52,13 +52,13 @@ export function toCsv(data: Record<string, unknown>[], options?: CsvOptions): st
 
 export function registerCsvExportTools(server: McpServer): void {
   server.tool(
-    "ecount_export_csv",
+    "ecount_csv_export_csv",
     "조회 결과를 CSV 형식 텍스트로 변환합니다. 재고, 선적, 계약 등 데이터를 엑셀에서 활용할 수 있는 CSV로 출력합니다.",
     {
-      data: z.array(z.record(z.string(), z.unknown())).describe("CSV로 변환할 데이터 배열"),
-      delimiter: z.string().default(",").describe("구분자 (기본: 쉼표)"),
-      columns: z.array(z.string()).optional().describe("출력할 컬럼 목록 (미지정 시 전체)"),
-      include_header: z.boolean().default(true).describe("헤더 행 포함 여부"),
+      data: z.array(z.record(z.string(), z.unknown())),
+      delimiter: z.string().default(",").describe("기본: 쉼표"),
+      columns: z.array(z.string()).optional().describe("미지정 시 전체"),
+      include_header: z.boolean().default(true),
     },
     { readOnlyHint: true },
     async (params: Record<string, unknown>) => {

@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { EcountClient } from "../client/ecount-client.js";
 import type { EcountConfig } from "../config.js";
+import { isExtraEnabled } from "../config.js";
 import { registerConnectionTools } from "./connection.js";
 import { registerMasterDataTools } from "./master-data.js";
 import { registerSalesTools } from "./sales.js";
@@ -41,8 +42,9 @@ import { registerDiagramTools } from "./diagram.js";
 import { registerMapTools } from "./map.js";
 import { registerPresentationTools } from "./presentation.js";
 import { register3dTools } from "./three-d.js";
-export function registerAllTools(server: McpServer, client: EcountClient, config: EcountConfig): void {
-  registerConnectionTools(server, client, config);
+export function registerAllTools(server: McpServer, client: EcountClient, config?: EcountConfig): void {
+  const _config = config ?? ({} as EcountConfig);
+  registerConnectionTools(server, client, _config);
   registerMasterDataTools(server, client);
   registerSalesTools(server, client);
   registerPurchaseTools(server, client);
@@ -55,7 +57,6 @@ export function registerAllTools(server: McpServer, client: EcountClient, config
   registerBLParserTool(server);
   registerContactTools(server);
   registerBusinessRuleTools(server);
-  registerPdfStampTool(server);
   registerEmailTemplateTools(server);
   registerShipmentTrackingTools(server);
   registerLogisticsKpiTools(server);
@@ -83,11 +84,12 @@ export function registerAllTools(server: McpServer, client: EcountClient, config
   registerDashboardTools(server);
   registerPdfExportTools(server);
   registerFaxTools(server);
-  // Category B+ tools (v6 visualization layer)
-  registerDiagramTools(server);
-  registerMapTools(server);
-  registerPresentationTools(server);
-  register3dTools(server);
+  // Category B+ tools (v6 visualization layer — opt-in via ECOUNT_ENABLE_EXTRAS)
+  if (isExtraEnabled(_config, "pdf-stamp")) registerPdfStampTool(server);
+  if (isExtraEnabled(_config, "diagram")) registerDiagramTools(server);
+  if (isExtraEnabled(_config, "map")) registerMapTools(server);
+  if (isExtraEnabled(_config, "presentation")) registerPresentationTools(server);
+  if (isExtraEnabled(_config, "three-d")) register3dTools(server);
   // Category B tools (EcountClient dependency - internal API)
   registerInternalApiTools(server, client);
 }

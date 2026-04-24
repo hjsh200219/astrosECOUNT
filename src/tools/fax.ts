@@ -203,31 +203,31 @@ async function handleListFaxHistory(params: { corpNum: string; startDate: string
 
 export function registerFaxTools(server: McpServer): void {
   server.tool(
-    "ecount_send_fax",
+    "ecount_fax_send_fax",
     "팝빌 팩스 API를 통해 팩스를 발송합니다",
     {
       corpNum: z.string().describe("사업자번호 (10자리 숫자)"),
       sender: z.string().describe("발신자 번호"),
       receiver: z.string().describe("수신자 번호"),
-      receiverName: z.string().describe("수신자 이름"),
+      receiverName: z.string(),
       filePaths: z.array(z.string()).describe("전송할 파일 경로 목록"),
-      title: z.string().optional().default("").describe("팩스 제목"),
+      title: z.string().optional().default(""),
     },
     handleSendFax,
   );
 
   server.tool(
-    "ecount_get_fax_status",
+    "ecount_fax_get_fax_status",
     "팩스 전송 결과를 조회합니다",
-    { corpNum: z.string().describe("사업자번호 (10자리 숫자)"), receiptNum: z.string().describe("팩스 접수 번호") },
+    { corpNum: z.string().describe("사업자번호 (10자리 숫자)"), receiptNum: z.string() },
     { readOnlyHint: true },
     handleGetFaxStatus,
   );
 
   server.tool(
-    "ecount_list_fax_history",
+    "ecount_fax_list_fax_history",
     "팩스 전송 내역을 조회합니다",
-    { corpNum: z.string().describe("사업자번호 (10자리 숫자)"), startDate: z.string().describe("조회 시작일 (YYYYMMDD)"), endDate: z.string().describe("조회 종료일 (YYYYMMDD)") },
+    { corpNum: z.string().describe("사업자번호 (10자리 숫자)"), startDate: z.string().describe("YYYYMMDD"), endDate: z.string().describe("YYYYMMDD") },
     { readOnlyHint: true },
     handleListFaxHistory,
   );

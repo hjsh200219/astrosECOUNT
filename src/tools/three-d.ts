@@ -50,19 +50,18 @@ export function generate3dHtml(
 
 export function register3dTools(server: McpServer): void {
   server.tool(
-    "ecount_render_3d",
+    "ecount_viz3d_render_3d",
     "Three.js 기반 3D 시각화를 생성합니다. 창고 적재 현황, 물류 네트워크를 3D로 표현합니다.",
     {
-      sceneType: z.enum(SCENE_TYPES).describe("3D 장면 유형"),
+      sceneType: z.enum(SCENE_TYPES),
       data: z
         .record(z.string(), z.unknown())
         .describe("장면 데이터 (유형별 구조 상이)"),
-      title: z.string().optional().describe("시각화 제목"),
+      title: z.string().optional(),
       language: z
         .enum(["ko", "en"])
         .optional()
-        .default("ko")
-        .describe("언어 설정"),
+        .default("ko"),
     },
     { readOnlyHint: true },
     async (args) => {

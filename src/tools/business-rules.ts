@@ -157,7 +157,7 @@ async function handleListBusinessRules(params: Record<string, unknown>) {
 
 export function registerBusinessRuleTools(server: McpServer): void {
   server.tool(
-    "ecount_get_customs_broker",
+    "ecount_rule_get_customs_broker",
     "품목명을 입력하면 해당 품목의 관세법인 배정 결과를 반환합니다. 전지벌크→원스탑, 그 외→정운 규칙을 적용합니다.",
     { product_name: z.string().describe("품목명 (예: 전지벌크, 돈육 목살)") },
     { readOnlyHint: true },
@@ -165,7 +165,7 @@ export function registerBusinessRuleTools(server: McpServer): void {
   );
 
   server.tool(
-    "ecount_get_warehouse_mapping",
+    "ecount_rule_get_warehouse_mapping",
     "수입육 3단계 재고 파이프라인(미착→미통관→상품)의 창고 매핑 정보를 반환합니다.",
     {},
     { readOnlyHint: true },
@@ -173,9 +173,9 @@ export function registerBusinessRuleTools(server: McpServer): void {
   );
 
   server.tool(
-    "ecount_list_business_rules",
+    "ecount_rule_list_business_rules",
     "수입육 업무 비즈니스 룰 목록을 조회합니다. 카테고리(customs/warehouse/logistics/general)로 필터링 가능합니다.",
-    { category: z.enum(["customs", "warehouse", "logistics", "general"]).optional().describe("카테고리 필터") },
+    { category: z.enum(["customs", "warehouse", "logistics", "general"]).optional() },
     { readOnlyHint: true },
     handleListBusinessRules,
   );

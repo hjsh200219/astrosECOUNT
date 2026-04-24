@@ -33,20 +33,20 @@
 
 | API | MCP 도구 | 샌드박스 | 실서버 |
 |-----|----------|---------|--------|
-| Zone | ecount_zone | ✅ | ✅ |
-| OAPILogin | ecount_login | ✅ | ✅ |
-| (세션 상태) | ecount_status | ✅ | ✅ |
+| Zone | ecount_connection_zone | ✅ | ✅ |
+| OAPILogin | ecount_connection_login | ✅ | ✅ |
+| (세션 상태) | ecount_connection_status | ✅ | ✅ |
 
 ### 4장. 기초등록 (거래처/품목)
 
 | API | MCP 도구 | 래퍼키 | 샌드박스 | 실서버 |
 |-----|----------|--------|---------|--------|
-| SaveBasicCust | ecount_save_customer | `CustList` | ✅ | ✅ |
+| SaveBasicCust | ecount_master_save_customer | `CustList` | ✅ | ✅ |
 | ViewBasicCust | - | - | ❌ 404 | ❌ 404 |
 | GetBasicCustList | - | - | ❌ 404 | ❌ 404 |
-| SaveBasicProduct | ecount_save_product | `ProductList` | ✅ | ✅ |
-| ViewBasicProduct | ecount_view_product | - | ✅ | ✅ |
-| GetBasicProductsList | ecount_list_products | - | ✅ | ✅ |
+| SaveBasicProduct | ecount_master_save_product | `ProductList` | ✅ | ✅ |
+| ViewBasicProduct | ecount_master_view_product | - | ✅ | ✅ |
+| GetBasicProductsList | ecount_master_list_products | - | ✅ | ✅ |
 
 > 거래처 조회/목록 API는 V2에 존재하지 않음 (HTTP 404)
 
@@ -54,56 +54,56 @@
 
 | API | MCP 도구 | 래퍼키 | 샌드박스 | 실서버 |
 |-----|----------|--------|---------|--------|
-| SaveQuotation | ecount_save_quotation | `QuotationList` | ✅ | ✅ |
+| SaveQuotation | ecount_sales_save_quotation | `QuotationList` | ✅ | ✅ |
 | GetQuotationList | - | - | ❌ 404 | ❌ 404 |
-| SaveSaleOrder | ecount_save_sale_order | `SaleOrderList` | ✅ | ❌ **인증되지 않음** |
+| SaveSaleOrder | ecount_sales_save_sale_order | `SaleOrderList` | ✅ | ❌ **인증되지 않음** |
 | GetSaleOrderList | - | - | ❌ 404 | ❌ 404 |
-| SaveSale | ecount_save_sale | `SaleList` | ✅ | ❌ **인증되지 않음** |
+| SaveSale | ecount_sales_save_sale | `SaleList` | ✅ | ❌ **인증되지 않음** |
 | GetSaleList | - | - | ❌ 404 | ❌ 404 |
 
 ### 6장. 구매 (발주/매입)
 
 | API | MCP 도구 | 래퍼키 | 샌드박스 | 실서버 |
 |-----|----------|--------|---------|--------|
-| GetPurchasesOrderList | ecount_list_purchase_orders | - | ✅ | ✅ |
-| SavePurchases | ecount_save_purchase | `PurchasesList` | ✅ | ❌ **인증되지 않음** |
+| GetPurchasesOrderList | ecount_purchase_list_purchase_orders | - | ✅ | ✅ |
+| SavePurchases | ecount_purchase_save_purchase | `PurchasesList` | ✅ | ❌ **인증되지 않음** |
 | GetPurchasesList | - | - | ❌ 404 | ❌ 404 |
 
 ### 7장. 생산
 
 | API | MCP 도구 | 래퍼키 | 샌드박스 | 실서버 |
 |-----|----------|--------|---------|--------|
-| SaveJobOrder | ecount_save_job_order | `JobOrderList` | ✅ | ❌ **인증되지 않음** |
-| SaveGoodsIssued | ecount_save_goods_issued | `GoodsIssuedList` | ✅ | ❌ **인증되지 않음** |
-| SaveGoodsReceipt | ecount_save_goods_receipt | `GoodsReceiptList` | ✅ | ❌ **인증되지 않음** |
+| SaveJobOrder | ecount_production_save_job_order | `JobOrderList` | ✅ | ❌ **인증되지 않음** |
+| SaveGoodsIssued | ecount_production_save_goods_issued | `GoodsIssuedList` | ✅ | ❌ **인증되지 않음** |
+| SaveGoodsReceipt | ecount_production_save_goods_receipt | `GoodsReceiptList` | ✅ | ❌ **인증되지 않음** |
 
 ### 8장. 재고
 
 | API | MCP 도구 | 샌드박스 | 실서버 |
 |-----|----------|---------|--------|
-| ViewInventoryBalanceStatus | ecount_view_inventory_balance | ✅ | ✅ |
-| GetListInventoryBalanceStatus | ecount_list_inventory_balance | ✅ | ✅ |
-| ViewInventoryBalanceStatusByLocation | ecount_view_inventory_by_location | ✅ | ✅ |
-| GetListInventoryBalanceStatusByLocation | ecount_list_inventory_by_location | ✅ | ✅ |
+| ViewInventoryBalanceStatus | ecount_inventory_view_inventory_balance | ✅ | ✅ |
+| GetListInventoryBalanceStatus | ecount_inventory_list_inventory_balance | ✅ | ✅ |
+| ViewInventoryBalanceStatusByLocation | ecount_inventory_view_inventory_by_location | ✅ | ✅ |
+| GetListInventoryBalanceStatusByLocation | ecount_inventory_list_inventory_by_location | ✅ | ✅ |
 
 ### 9장. 회계
 
 | API | MCP 도구 | 래퍼키 | 샌드박스 | 실서버 |
 |-----|----------|--------|---------|--------|
-| SaveInvoiceAuto | ecount_save_invoice_auto | `InvoiceAutoList` | ✅ | ❌ **인증되지 않음** |
+| SaveInvoiceAuto | ecount_accounting_save_invoice_auto | `InvoiceAutoList` | ✅ | ❌ **인증되지 않음** |
 
 ### 10장. 기타
 
 | API | MCP 도구 | 샌드박스 | 실서버 |
 |-----|----------|---------|--------|
-| SaveOpenMarketOrderNew | ecount_save_open_market_order | ❌ 마켓 미등록 | ❌ **인증되지 않음** |
-| SaveClockInOut | ecount_save_clock_in_out | ✅ | ✅ |
+| SaveOpenMarketOrderNew | ecount_other_save_open_market_order | ❌ 마켓 미등록 | ❌ **인증되지 않음** |
+| SaveClockInOut | ecount_other_save_clock_in_out | ✅ | ✅ |
 
 ### 11장. 게시판
 
 | API | MCP 도구 | 샌드박스 | 실서버 |
 |-----|----------|---------|--------|
-| CreateOApiBoardAction (V3) | ecount_create_board | ✅ | ✅ |
+| CreateOApiBoardAction (V3) | ecount_board_create_board | ✅ | ✅ |
 
 ---
 
