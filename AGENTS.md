@@ -8,9 +8,9 @@
 ```
 src/index.ts          Entry point (stdio transport)
 src/server.ts         McpServer factory (config -> client -> tools)
-src/config.ts         Env validation (zod): ECOUNT_COM_CODE, USER_ID, API_CERT_KEY, ZONE
+src/config.ts         Env validation (zod): ECOUNT_COM_CODE, USER_ID, API_CERT_KEY, ZONE, ECOUNT_ENABLE_EXTRAS
 src/client/           HTTP client, session managers, circuit breaker, KeyPack encoder
-src/tools/            40 MCP tool modules (Category A: ERP CRUD, B: standalone, B+: utilities)
+src/tools/            80 MCP tools default (+5 optional via ECOUNT_ENABLE_EXTRAS); name pattern: ecount_<domain>_<verb>_<noun>
 src/utils/            Error handling, response formatting, renderers, logger, stores
 src/types/            Type declarations (popbill)
 tests/                Vitest unit tests (mirrors src/ 1:1)
@@ -46,10 +46,10 @@ npm run inspector    # MCP Inspector debugging
 
 ## Adding a New Tool
 
-1. Create `src/tools/{name}.ts` with `register{Name}Tools(server, client?)`
+1. Create `src/tools/{name}.ts` with `register{Name}Tools(server, client?)`; tool names follow `ecount_<domain>_<verb>_<noun>` pattern
 2. Import + call in `src/tools/index.ts`
 3. Create `tests/tools/{name}.test.ts`
-4. Category A needs EcountClient; Category B is standalone
+4. Category A needs EcountClient; Category B is standalone; optional tools gated via `ECOUNT_ENABLE_EXTRAS` (comma list, `all`, or empty)
 
 ## Documentation Map
 
